@@ -4,11 +4,11 @@ import { onMounted, ref, watch } from 'vue';
 import {
     MagnifyingGlassIcon,
 } from '@heroicons/vue/24/solid'
-import { loadRoles } from '../composables/role-composables';
 import GPagination from "@/components/GPagination.vue";
-import CreatRoleModal from '../modals/CreateRoleModal.vue'
+import CreateCompanyModal from '../modals/CreateCompanyModal.vue'
 import GNotification from '@/components/GNotification.vue';
-const roles = ref([])
+import { loadCompanies } from '../composables/company-composables';
+const companies = ref([])
 
 const params = ref({
     page_size: 10,
@@ -22,13 +22,14 @@ const openModal = ref(false)
 const showNotif = ref(false)
 const message = ref(null)
 const type = ref(null)
+const selectedItem = ref(null)
 
-const fetchRoles = async () => {
+const fetchCompanies = async () => {
     loading.value = true
-    const { load, data, total } = loadRoles(params.value)
+    const { load, data, total } = loadCompanies(params.value)
     await load();
 
-    roles.value = data.value
+    companies.value = data.value
     totalList.value = total.value
     loading.value = false
 }
@@ -41,16 +42,17 @@ const handleChangePage = (page) => {
     params.value.page = page
 }
 
-const handleClickAddRole = () => {
+const handleClickAddCompany = () => {
     openModal.value = true
+    selectedItem.value = null
 }
 
-const handleCloseAddRoleModal = (status) => {
+const handleCloseAddCompanyModal = (status) => {
     openModal.value = false
 }
 
-const handleNewRole = (role) => {
-    roles.value.unshift(role)
+const handleNewCompany = (company) => {
+    companies.value.unshift(company)
     openModal.value = false
     showNotif.value = true
 
@@ -59,21 +61,51 @@ const handleNewRole = (role) => {
     }, 2000)
 }
 
+const handleUpdateCompany = (company) => {
+
+    companies.value.map(id => {
+        if(id.id == company.id){
+            for(let key in company) {
+                id[key] = company[key]
+            }
+        }
+
+        return id;
+    })
+    openModal.value = false
+    showNotif.value = true
+
+    setTimeout(() => {
+        showNotif.value = false
+        message.value = 'Successfully updated!'
+    }, 2000)
+}
+
+const handleClickEdit = (company) => {
+    openModal.value = true
+    selectedItem.value = company
+}
+
 onMounted(async () => {
-    await fetchRoles()
+    await fetchCompanies()
 })
 
 watch(params.value, async () => {
-    await fetchRoles();
+    await fetchCompanies();
 })
 
 </script>
 <template>
-    <CreatRoleModal :openModal="openModal" @closeModal="handleCloseAddRoleModal" @saveRole="handleNewRole"/>
+    <CreateCompanyModal 
+        :openModal="openModal" 
+        :selectedItem="selectedItem" 
+        @closeModal="handleCloseAddCompanyModal" 
+        @updateCompany="handleUpdateCompany"
+        @saveCompany="handleNewCompany"/>
     <GNotification :show-notif="showNotif"/>
     <div class="mx-auto max-w-4xl py-10">
         <div class="bg-white p-2 shadow-md rounded-lg">
-            <h1 class="text-3xl font-bold tracking-tight text-gray-700">Roles</h1>
+            <h1 class="text-3xl font-bold tracking-tight text-gray-700">Trackers Company</h1>
             <div class="px-4 sm:px-6 lg:px-8">
                 <div class="sm:flex sm:items-center">
                     <div class="sm:flex-auto">
@@ -89,9 +121,9 @@ watch(params.value, async () => {
                     </div>
                     <div class=" sm:flex-none">
                         <button type="button"
-                            @click="handleClickAddRole"
+                            @click="handleClickAddCompany"
                             class="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto">
-                            Add Role
+                            Add Company
                         </button>
                     </div>
                 </div>
@@ -111,15 +143,15 @@ watch(params.value, async () => {
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-gray-200 bg-white" v-loading="loading">
-                                        <tr v-for="role in roles" :key="role.email">
+                                        <tr v-for="company in companies" :key="company.email">
                                             <td
                                                 class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                                {{ role.name }}
+                                                {{ company.name }}
                                             </td>
                                             <td
                                                 class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                                                <a href="#" class="text-indigo-600 hover:text-indigo-900 mr-2">Edit</a>
-                                                <a href="#" class="text-red-600 hover:text-indigo-900">Delete</a>
+                                                <button class="text-indigo-600 hover:text-indigo-900 mr-2" @click="handleClickEdit(company)">Edit</button>
+                                                <button class="text-red-600 hover:text-indigo-900">Delete</button>
                                             </td>
                                         </tr>
                                     </tbody>

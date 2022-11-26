@@ -8,6 +8,7 @@ import {
   MapPinIcon,
   ListBulletIcon,
   IdentificationIcon,
+  DeviceTabletIcon,
 } from '@heroicons/vue/24/solid'
 import { ChevronLeftIcon } from '@heroicons/vue/20/solid'
 
@@ -20,6 +21,20 @@ const subNavigation = ref([
     current: true,
   },
   {
+    name: 'Tracker Devices',
+    description: 'Enim, nullam mi vel et libero urna lectus enim. Et sed in maecenas tellus.',
+    routerName: 'Tracker Devices',
+    icon: DeviceTabletIcon,
+    current: false,
+  },
+  {
+    name: 'Trackers Company',
+    description: 'Enim, nullam mi vel et libero urna lectus enim. Et sed in maecenas tellus.',
+    routerName: 'Company',
+    icon: MapPinIcon,
+    current: false,
+  },
+  {
     name: 'Price List',
     description: 'Enim, nullam mi vel et libero urna lectus enim. Et sed in maecenas tellus.',
     routerName: 'Roles',
@@ -29,7 +44,7 @@ const subNavigation = ref([
   {
     name: 'Overcharge Types',
     description: 'Enim, nullam mi vel et libero urna lectus enim. Et sed in maecenas tellus.',
-    routerName: 'Roles',
+    routerName: 'Overcharge types',
     icon: ListBulletIcon,
     current: false,
   },
@@ -52,13 +67,6 @@ const subNavigation = ref([
     description: 'Enim, nullam mi vel et libero urna lectus enim. Et sed in maecenas tellus.',
     routerName: 'Roles',
     icon: UserIcon,
-    current: false,
-  },
-  {
-    name: 'Trackers Company',
-    description: 'Enim, nullam mi vel et libero urna lectus enim. Et sed in maecenas tellus.',
-    routerName: 'Roles',
-    icon: MapPinIcon,
     current: false,
   },
 ])
@@ -99,8 +107,8 @@ const handleClickSelect = (item) => {
                 <router-link v-for="item in subNavigation" :key="item.name" :to="{ name: item.routerName }" @click="handleClickSelect(item)" :class="[item.current ? 'bg-blue-50 bg-opacity-50' : 'hover:bg-blue-50 hover:bg-opacity-50', 'flex p-6 border-b border-blue-gray-200']" :aria-current="item.current ? 'page' : undefined">
                   <component :is="item.icon" class="-mt-0.5 h-6 w-6 flex-shrink-0 text-gray-500" aria-hidden="true" />
                   <div class="ml-3 text-sm">
-                    <p class="font-bold text-blue-gray-900">{{ item.name }}</p>
-                    <p class="mt-1 text-blue-gray-500">{{ item.description }}</p>
+                    <p class="font-bold text-gray-700">{{ item.name }}</p>
+                    <p class="mt-1 text-gray-500">{{ item.description }}</p>
                   </div>
                 </router-link>
               </div>

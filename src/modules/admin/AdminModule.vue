@@ -15,11 +15,12 @@ import {
     BellIcon,
     CalendarIcon,
     ChartBarIcon,
-    FolderIcon,
+    TruckIcon,
     HomeIcon,
     InboxIcon,
     UsersIcon,
     XMarkIcon,
+    ClipboardDocumentIcon,
     AdjustmentsHorizontalIcon
 } from '@heroicons/vue/24/outline'
 import { MagnifyingGlassIcon } from '@heroicons/vue/20/solid'
@@ -34,11 +35,12 @@ const router = useRouter();
 
 const navigation = [
     { name: 'Dashboard', routeName: 'Dashboard', icon: HomeIcon, current: true },
-    { name: 'Vehicles', routeName: 'Account', icon: UsersIcon, current: false },
-    { name: 'Customers', routeName: 'Account', icon: FolderIcon, current: false },
+    { name: 'Vehicles', routeName: 'Vehicles', icon: TruckIcon, current: false },
+    { name: 'Users', routeName: 'Account', icon: UsersIcon, current: false },
     { name: 'Booking', routeName: 'Account', icon: CalendarIcon, current: false },
     { name: 'Trackers', routeName: 'Account', icon: InboxIcon, current: false },
     { name: 'Maintenance', routeName: 'Account', icon: ChartBarIcon, current: false },
+    { name: 'Reporting', routeName: 'Account', icon: ClipboardDocumentIcon, current: false },
     { name: 'Settings', routeName: 'Account', icon: AdjustmentsHorizontalIcon, current: false },
 ]
 const userNavigation = [
@@ -76,7 +78,7 @@ onMounted( async () => {
             <HeaderLayout :userNavigation="userNavigation"/>
 
             <main>
-                <router-view />
+                <router-view class=""/>
             </main>
         </div>
     </div>

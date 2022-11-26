@@ -12,6 +12,11 @@ const moduleRoute = {
             component: HomePage
         },
         {
+            path: '/admin/vehicles',
+            name: "Vehicles",
+            component: () => import('./views/VehiclePage.vue')
+        },
+        {
             path: '/admin/settings',
             component: () => import('./views/SettingsPage.vue'),
             children: [
@@ -34,6 +39,21 @@ const moduleRoute = {
                     path: '/admin/settings/payment-methods',
                     name: 'Payment Method',
                     component: () => import('./components/settings/PaymentMethods.vue')
+                },
+                {
+                    path: '/admin/settings/companies',
+                    name: 'Company',
+                    component: () => import('./components/settings/CompanySettings.vue')
+                },
+                {
+                    path: '/admin/settings/overcharge-types',
+                    name: 'Overcharge types',
+                    component: () => import('./components/settings/OverchargeTypesSettings.vue')
+                },
+                {
+                    path: '/admin/settings/tracker-devices',
+                    name: 'Tracker Devices',
+                    component: () => import('./components/settings/TrackersDeviceSettings.vue')
                 }
             ]
         }
