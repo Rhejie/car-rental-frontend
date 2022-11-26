@@ -38,9 +38,9 @@
                             class="font-semibold text-gray-900 hover:text-gray-900">{{ item.name }}</a>
                     </div>
                     <div class="hidden lg:flex lg:min-w-0 lg:flex-1 lg:justify-end">
-                        <a href="#"
+                        <button  @click="handleClickLogin"
                             class="inline-block rounded-lg px-3 py-1.5 text-sm font-semibold leading-6 text-gray-900 shadow-sm ring-1 ring-gray-900/10 hover:ring-gray-900/20">Log
-                            in</a>
+                            in</button>
                     </div>
                 </nav>
                 <Dialog as="div" @close="mobileMenuOpen = false" :open="mobileMenuOpen">
@@ -71,9 +71,9 @@
                                         }}</a>
                                 </div>
                                 <div class="py-6">
-                                    <a href="#"
+                                    <button @click="handleClickLogin"
                                         class="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-6 text-gray-900 hover:bg-gray-400/10">Log
-                                        in</a>
+                                        in</button>
                                 </div>
                             </div>
                         </div>
@@ -298,6 +298,8 @@ import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { defineComponent, h } from 'vue'
 
 import { Switch } from '@headlessui/vue'
+import { useRouter } from 'vue-router'
+const router = useRouter();
 
 const navigation = [
     { name: 'Cars', href: '#' },
@@ -377,4 +379,9 @@ const footerNavigation = [
         }),
     },
 ]
+
+const handleClickLogin = () => {
+    console.log('hello')
+    router.push('/login')
+}
 </script>

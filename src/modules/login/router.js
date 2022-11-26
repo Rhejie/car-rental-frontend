@@ -8,9 +8,11 @@ const moduleRoute = {
     children: [
         {
             path: '',
+            name: "Login",
             component: HomePage
         }
-    ]
+    ],
+    meta: false
 }
 
 export default router => {

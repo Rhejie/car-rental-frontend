@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import {
     Dialog,
     DialogPanel,
@@ -20,19 +20,26 @@ import {
     InboxIcon,
     UsersIcon,
     XMarkIcon,
+    AdjustmentsHorizontalIcon
 } from '@heroicons/vue/24/outline'
 import { MagnifyingGlassIcon } from '@heroicons/vue/20/solid'
 
 import SiderbarLayout from '@/components/SidebarLayout.vue'
 import HeaderLayout from '@/components/HeaderLayout.vue'
+import { loadUser } from '@/global-composables/get-user-profile'
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
+const store = useStore();
+const router = useRouter();
 
 const navigation = [
-    { name: 'Dashboard', href: '#', icon: HomeIcon, current: true },
-    { name: 'Vehicles', href: '#', icon: UsersIcon, current: false },
-    { name: 'Customers', href: '#', icon: FolderIcon, current: false },
-    { name: 'Booking', href: '#', icon: CalendarIcon, current: false },
-    { name: 'Trackers', href: '#', icon: InboxIcon, current: false },
-    { name: 'Maintenance', href: '#', icon: ChartBarIcon, current: false },
+    { name: 'Dashboard', routeName: 'Dashboard', icon: HomeIcon, current: true },
+    { name: 'Vehicles', routeName: 'Account', icon: UsersIcon, current: false },
+    { name: 'Customers', routeName: 'Account', icon: FolderIcon, current: false },
+    { name: 'Booking', routeName: 'Account', icon: CalendarIcon, current: false },
+    { name: 'Trackers', routeName: 'Account', icon: InboxIcon, current: false },
+    { name: 'Maintenance', routeName: 'Account', icon: ChartBarIcon, current: false },
+    { name: 'Settings', routeName: 'Account', icon: AdjustmentsHorizontalIcon, current: false },
 ]
 const userNavigation = [
     { name: 'Your Profile', href: '#' },
@@ -41,6 +48,24 @@ const userNavigation = [
 ]
 
 const sidebarOpen = ref(false)
+
+const getUser = async () => {
+    
+    const {load, data, hasError} = loadUser();
+
+    await load();
+
+    if(hasError.value) {
+        router.push('/login')
+        return
+    }
+    store.commit('login/USER_LOGGEDIN', data.value);
+}
+
+onMounted( async () => {
+    await getUser()
+})
+
 </script>
 
 <template>

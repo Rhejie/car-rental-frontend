@@ -58,12 +58,12 @@ const sidebarOpen = ref(false)
                         </div>
                         <div class="mt-5 h-0 flex-1 overflow-y-auto">
                             <nav class="space-y-1 px-2">
-                                <a v-for="item in navigation" :key="item.name" :href="item.href"
+                                <router-link v-for="item in navigation" :key="item.name" :to="{name: item.routeName}"
                                     :class="[item.current ? 'bg-indigo-800 text-white' : 'text-indigo-100 hover:bg-indigo-600', 'group flex items-center px-2 py-2 text-base font-medium rounded-md']">
                                     <component :is="item.icon" class="mr-4 h-6 w-6 flex-shrink-0 text-indigo-300"
                                         aria-hidden="true" />
                                     {{ item.name }}
-                                </a>
+                                </router-link>
                             </nav>
                         </div>
                     </DialogPanel>
@@ -84,11 +84,11 @@ const sidebarOpen = ref(false)
             </div>
             <div class="mt-5 flex flex-1 flex-col">
                 <nav class="flex-1 space-y-1 px-2 pb-4">
-                    <a v-for="item in navigation" :key="item.name" :href="item.href"
+                    <router-link v-for="item in navigation" :key="item.name" :to="{ name: item.routeName}"
                         :class="[item.current ? 'bg-indigo-800 text-white' : 'text-indigo-100 hover:bg-indigo-600', 'group flex items-center px-2 py-2 text-sm font-medium rounded-md']">
                         <component :is="item.icon" class="mr-3 h-6 w-6 flex-shrink-0 text-indigo-300" aria-hidden="true" />
                         {{ item.name }}
-                    </a>
+                    </router-link>
                 </nav>
             </div>
         </div>
