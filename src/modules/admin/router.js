@@ -17,6 +17,12 @@ const moduleRoute = {
             component: () => import('./views/VehiclePage.vue')
         },
         {
+            path: '/admin/vehicles/edit/:id',
+            name: "Edit Vehicle",
+            component: () => import('../admin/components/vehciles/EditVehiclePage.vue'),
+            props: true
+        },
+        {
             path: '/admin/settings',
             component: () => import('./views/SettingsPage.vue'),
             children: [
@@ -54,6 +60,16 @@ const moduleRoute = {
                     path: '/admin/settings/tracker-devices',
                     name: 'Tracker Devices',
                     component: () => import('./components/settings/TrackersDeviceSettings.vue')
+                },
+                {
+                    path: '/admin/settings/colors',
+                    name: 'Colors',
+                    component: () => import('./components/settings/ColorSettings.vue')
+                },
+                {
+                    path: '/admin/settings/fuel-types',
+                    name: 'Fuel Types',
+                    component: () => import('./components/settings/FuelTypeSettings.vue')
                 }
             ]
         }

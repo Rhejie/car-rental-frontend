@@ -9,6 +9,8 @@ import {
   ListBulletIcon,
   IdentificationIcon,
   DeviceTabletIcon,
+  SwatchIcon,
+  FireIcon
 } from '@heroicons/vue/24/solid'
 import { ChevronLeftIcon } from '@heroicons/vue/20/solid'
 
@@ -63,6 +65,20 @@ const subNavigation = ref([
     current: false,
   },
   {
+    name: 'Fuel Types',
+    description: 'Enim, nullam mi vel et libero urna lectus enim. Et sed in maecenas tellus.',
+    routerName: 'Fuel Types',
+    icon: FireIcon,
+    current: false,
+  },
+  {
+    name: 'Colors',
+    description: 'Enim, nullam mi vel et libero urna lectus enim. Et sed in maecenas tellus.',
+    routerName: 'Colors',
+    icon: SwatchIcon,
+    current: false,
+  },
+  {
     name: 'Roles',
     description: 'Enim, nullam mi vel et libero urna lectus enim. Et sed in maecenas tellus.',
     routerName: 'Roles',
@@ -85,7 +101,7 @@ const handleClickSelect = (item) => {
 }
 </script>
 <template>
-    <main class="flex flex-1 overflow-hidden h-screen">
+    <main class="flex flex-1 overflow-hidden">
         <div class="flex flex-1 flex-col xl:overflow-hidden">
           <!-- Breadcrumb -->
           <nav aria-label="Breadcrumb" class="border-b border-blue-gray-200 bg-white xl:hidden">
@@ -103,7 +119,7 @@ const handleClickSelect = (item) => {
               <div class="flex h-16 flex-shrink-0 items-center border-b border-blue-gray-200 px-6">
                 <p class="text-lg font-medium text-blue-gray-900">Settings</p>
               </div>
-              <div class="min-h-0 flex-1 mb-20">
+              <div class="min-h-0 flex-1 h-full overflow-y-auto">
                 <router-link v-for="item in subNavigation" :key="item.name" :to="{ name: item.routerName }" @click="handleClickSelect(item)" :class="[item.current ? 'bg-blue-50 bg-opacity-50' : 'hover:bg-blue-50 hover:bg-opacity-50', 'flex p-6 border-b border-blue-gray-200']" :aria-current="item.current ? 'page' : undefined">
                   <component :is="item.icon" class="-mt-0.5 h-6 w-6 flex-shrink-0 text-gray-500" aria-hidden="true" />
                   <div class="ml-3 text-sm">

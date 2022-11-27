@@ -2,8 +2,8 @@
 import { ref, defineProps, computed, defineEmits, onMounted, onUpdated, onUnmounted } from 'vue'
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { CheckIcon } from '@heroicons/vue/24/outline'
-import { storeTracker, updateTracker } from '../composables/trackers-device-composables'
-import { showCompaniesInSelect } from '../composables/company-composables';
+import { storeFuelType, updateFuelType } from '../composables/fuel-type-composables'
+
 const props = defineProps({
     openModal: {
         type: Boolean,
@@ -14,18 +14,14 @@ const props = defineProps({
     }
 })
 
-const emit = defineEmits(['closeModal', 'saveTracker', 'updateTracker'])
+const emit = defineEmits(['closeModal', 'saveFuelType', 'updateFuelType'])
 
 const selected = computed(() => props.selectedItem)
 const open = computed(() => props.openModal)
 
-const tracker = ref({
-    name: null,
-    company_id: null
+const fuelType = ref({
+    name: null
 })
-
-const loadingCompanies = ref(false)
-const companies = ref([])
 
 const errorValue = ref(null)
 
@@ -36,65 +32,57 @@ const handleCloseModal = () => {
 }
 
 const initializeForm = () => {
-    tracker.value = {
+    fuelType.value = {
         name: null
     }
 }
 
-const handleUpdateTracker = async () => {
+const handleUpdateFuelType = async () => {
     loading.value = true
-    const { data, update, errorData } = updateTracker(tracker.value);
+    const {data, update, errorData} = updateFuelType(fuelType.value);
     await update();
     errorValue.value = errorData.value
     loading.value = false
-    if (!loading.value && !errorValue.value, !errorData.value) {
-        emit('updateTracker', data.value)
+    if(!loading.value && !errorValue.value, !errorData.value) {
+        emit('updateFuelType', data.value)
     }
 }
 
-const handleStoreTracker = async () => {
+const handleStoreFuelType = async () => {
 
-    if (tracker.value && tracker.value.id) {
-        handleUpdateTracker()
+    if(fuelType.value && fuelType.value.id) {
+        handleUpdateFuelType()
         return;
     }
 
     loading.value = true
-    const { data, post, errorData } = storeTracker(tracker.value);
+    const {data, post, errorData} = storeFuelType(fuelType.value);
     await post();
     errorValue.value = errorData.value
     loading.value = false
-    if (!loading.value && !errorValue.value, !errorData.value) {
-        emit('saveTracker', data.value)
+    if(!loading.value && !errorValue.value, !errorData.value) {
+        emit('saveFuelType', data.value)
     }
 
 }
 
-const fetchCompanies = async () => {
-    loadingCompanies.value = true
-    const {loadSelectCompanies, data} = showCompaniesInSelect();
-    await loadSelectCompanies();
-    companies.value = data.value
-    loadingCompanies.value = false
-}
-
-onMounted( async () => {
-    await fetchCompanies();
+onMounted(() => {
+    
 })
 
 onUpdated(() => {
-    if (selected.value && selected.value.id) {
+    if(selected.value && selected.value.id) {
         errorValue.value = null
-        tracker.value = { ...selected.value }
+        fuelType.value = {...selected.value}
     }
     else {
         initializeForm()
     }
 })
 
-    (() => {
-        tracker.value.name = null
-    })
+(() => {
+    fuelType.value.name = null
+})
 
 </script>
 <template>
@@ -114,9 +102,7 @@ onUpdated(() => {
                         leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
                         <DialogPanel
                             class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all  sm:w-full sm:max-w-sm">
-                            <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-700 p-2">{{ tracker &&
-                                    tracker.id ? 'Update' : 'Create'
-                            }} Tracker Device</DialogTitle>
+                            <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-700 p-2">{{ fuelType && fuelType.id ? 'Update' : 'Create'}}  Fuel Type</DialogTitle>
                             <div class="mt-5 md:col-span-2 md:mt-0">
                                 <form>
                                     <div class="overflow-hidden shadow sm:rounded-md">
@@ -125,36 +111,22 @@ onUpdated(() => {
                                                 <div class="col-span-12">
                                                     <label for="first-name"
                                                         class="block text-sm font-medium text-gray-700">
-                                                        Name
+                                                        Name    
                                                     </label>
-                                                    <input type="text" name="first-name" v-model="tracker.name"
-                                                        class="mt-1 block w-full rounded-md border h-8 border-gray-100 focus:border-indigo-100 focus:ring-indigo-100 pl-2 sm:text-sm"
-                                                        placeholder="Tracker Name" />
-                                                    <span class="text-sm text-red-400"
+                                                    <input type="text" name="first-name" v-model="fuelType.name"
+                                                        class="mt-1 block w-full rounded-md border h-8 border-gray-100 focus:border-indigo-100 focus:ring-indigo-100 pl-2 sm:text-sm" placeholder="Fuel Type Name" />
+                                                    <span 
+                                                        class="text-sm text-red-400"
                                                         v-if="errorValue && !loading && errorValue.name">
-                                                        {{ errorValue.name[0] }}
-                                                    </span>
-                                                </div>
-                                                <div class="col-span-12">
-                                                    <label for="first-name"
-                                                        class="block text-sm font-medium text-gray-700">
-                                                        Company
-                                                    </label>
-                                                    <select id="location" v-model="tracker.company_id" name="location" v-loading="loadingCompanies"
-                                                        class="mt-1 block w-full rounded-md border h-8 border-gray-100 focus:border-indigo-100 focus:ring-indigo-100 pl-2 sm:text-sm" placeholder="Select Company">
-                                                        <option v-for="company in companies" :key="company.id" :value="company.id">{{company.name}}</option>
-                                                    </select>
-                                                    <span class="text-sm text-red-400"
-                                                        v-if="errorValue && !loading && errorValue.name">
-                                                        {{ errorValue.company_id[0] ? 'The company field is required' : '' }}
+                                                            {{errorValue.name[0]}}
                                                     </span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="bg-gray-50 px-4 py-3 text-right sm:px-6">
-                                            <button @click.prevent="handleStoreTracker" :disabled="loading"
+                                            <button @click.prevent="handleStoreFuelType" :disabled="loading"
                                                 class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                                {{ loading ? 'Saving....' : 'Save' }}
+                                                {{ loading ? 'Saving....' : 'Save'}}
                                             </button>
                                         </div>
                                     </div>

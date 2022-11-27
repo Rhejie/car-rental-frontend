@@ -1,16 +1,16 @@
 import { http } from "@/global-composables/http_service"
 import { ref } from 'vue'
 
-export const loadTrackers = (params) => {
+export const loadColors = (params) => {
 
     const data = ref([])
     const total = ref(0)
     const load = async () => {
-        await http().get(`/tracker/trackers?search=${params.search}&page=${params.page}&size=${params.page_size}`).then(res => {
+        await http().get(`/color/colors?search=${params.search}&page=${params.page}&size=${params.page_size}`).then(res => {
             data.value = res.data.data
             total.value = res.data.total
         }).catch(error => {
-            console.log('Error in getting tracker: ', error)
+            console.log('Error in getting colors: ', error)
         })
     }
 
@@ -22,16 +22,16 @@ export const loadTrackers = (params) => {
 }
 
 
-export const storeTracker = (tracker) => {
+export const storeColor = (color) => {
     const data = ref(null)
     const errorData = ref(null)
     const post = async () => {
-        await http().post('/tracker/store', tracker).then(res => {
+        await http().post('/color/store', color).then(res => {
             data.value = res.data
             errorData.value = null
         }).catch(error => {
             errorData.value = error.response.data.errors
-            console.log('Error in storing payment-method ->>', error)
+            console.log('Error in storing color ->>', error)
         })
     }
 
@@ -42,16 +42,16 @@ export const storeTracker = (tracker) => {
     }
 }
 
-export const updateTracker = (tracker) => {
+export const updateColor = (color) => {
     const data = ref(null)
     const errorData = ref(null)
     const update = async () => {
-        await http().post(`/tracker/update/${tracker.id}`, tracker).then(res => {
+        await http().post(`/color/update/${color.id}`, color).then(res => {
             data.value = res.data
             errorData.value = null
         }).catch(error => {
             errorData.value = error.response.data.errors
-            console.log('Error in storing payment-method ->>', error)
+            console.log('Error in storing color ->>', error)
         })
     }
 
@@ -62,16 +62,16 @@ export const updateTracker = (tracker) => {
     }
 }
 
-export const selectTrackers = (params) => {
-
+export const selectColors = (searchVal) => {
+    
     const data = ref([])
     
     const search = async () => {
-        await http().get(`tracker/select-tracker?search=${params}`)
+        await http().get(`color/select-color?search=${searchVal}`)
             .then(res => {
                 data.value = res.data
             }).catch(error => {
-                console.log('Error in fetch or searching tracker', error)
+                console.log('Error in fetch or searching color', error)
             })
     }
 

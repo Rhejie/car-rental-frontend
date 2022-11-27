@@ -5,10 +5,10 @@ import {
     MagnifyingGlassIcon,
 } from '@heroicons/vue/24/solid'
 import GPagination from "@/components/GPagination.vue";
-import CreateTrackerModal from '../modals/CreateTrackerModal.vue'
+import CreateColorModal from '../modals/CreateColorModal.vue'
 import GNotification from '@/components/GNotification.vue';
-import { loadTrackers } from '../composables/trackers-device-composables';
-const trackers = ref([])
+import { loadColors } from '../composables/color-composables';
+const colors = ref([])
 
 const params = ref({
     page_size: 10,
@@ -24,12 +24,12 @@ const message = ref(null)
 const type = ref(null)
 const selectedItem = ref(null)
 
-const fetchTrackerDevices = async () => {
+const fetchColors = async () => {
     loading.value = true
-    const { load, data, total } = loadTrackers(params.value)
+    const { load, data, total } = loadColors(params.value)
     await load();
 
-    trackers.value = data.value
+    colors.value = data.value
     totalList.value = total.value
     loading.value = false
 }
@@ -42,17 +42,17 @@ const handleChangePage = (page) => {
     params.value.page = page
 }
 
-const handleClickAddTracker = () => {
+const handleClickAddColor = () => {
     openModal.value = true
     selectedItem.value = null
 }
 
-const handleCloseAddTrackerModal = (status) => {
+const handleCloseAddColorModal = (status) => {
     openModal.value = false
 }
 
-const handleNewTracker = (tracker) => {
-    trackers.value.unshift(tracker)
+const handleNewColor = (color) => {
+    colors.value.unshift(color)
     openModal.value = false
     showNotif.value = true
 
@@ -61,12 +61,12 @@ const handleNewTracker = (tracker) => {
     }, 2000)
 }
 
-const handleUpdateTracker = (tracker) => {
+const handleUpdateColor = (color) => {
 
-    trackers.value.map(id => {
-        if (id.id == tracker.id) {
-            for (let key in tracker) {
-                id[key] = tracker[key]
+    colors.value.map(id => {
+        if(id.id == color.id){
+            for(let key in color) {
+                id[key] = color[key]
             }
         }
 
@@ -81,38 +81,31 @@ const handleUpdateTracker = (tracker) => {
     }, 2000)
 }
 
-const handleClickEdit = (tracker) => {
+const handleClickEdit = (color) => {
     openModal.value = true
-    selectedItem.value = tracker
-}
-
-const vehicle = (tracker) => {
-    if(tracker.vehicle && tracker.vehicle.id) {
-        return `${tracker.vehicle.model} - ${tracker.vehicle.plate_number}`
-    }
-    return 'Unused'
+    selectedItem.value = color
 }
 
 onMounted(async () => {
-    await fetchTrackerDevices()
+    await fetchColors()
 })
 
 watch(params.value, async () => {
-    await fetchTrackerDevices();
+    await fetchColors();
 })
 
 </script>
 <template>
-    <CreateTrackerModal 
+    <CreateColorModal 
         :openModal="openModal" 
         :selectedItem="selectedItem" 
-        @closeModal="handleCloseAddTrackerModal" 
-        @updateTracker="handleUpdateTracker"
-        @saveTracker="handleNewTracker"/>
+        @closeModal="handleCloseAddColorModal" 
+        @updateColor="handleUpdateColor"
+        @saveColor="handleNewColor"/>
     <GNotification :show-notif="showNotif"/>
     <div class="mx-auto max-w-4xl py-10">
         <div class="bg-white p-2 shadow-md rounded-lg">
-            <h1 class="text-3xl font-bold tracking-tight text-gray-700">Tracker Devices</h1>
+            <h1 class="text-3xl font-bold tracking-tight text-gray-700">Colors</h1>
             <div class="px-4 sm:px-6 lg:px-8">
                 <div class="sm:flex sm:items-center">
                     <div class="sm:flex-auto">
@@ -127,9 +120,10 @@ watch(params.value, async () => {
                         </div>
                     </div>
                     <div class=" sm:flex-none">
-                        <button type="button" @click="handleClickAddTracker"
+                        <button type="button"
+                            @click="handleClickAddColor"
                             class="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto">
-                            Add Tracker
+                            Add Color
                         </button>
                     </div>
                 </div>
@@ -143,43 +137,32 @@ watch(params.value, async () => {
                                             <th scope="col"
                                                 class="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6">
                                                 Name</th>
-                                            <th scope="col"
-                                                class="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6">
-                                                Company</th>
-                                            <th scope="col"
-                                                class="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6">
-                                                Use by</th>
                                             <th scope="col" class="relative py-3 pl-3 pr-4 sm:pr-6">
                                                 <span class="sr-only">Edit</span>
                                             </th>
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-gray-200 bg-white" v-loading="loading">
-                                        <tr v-for="tracker in trackers" :key="tracker.email">
+                                        <tr v-for="color in colors" :key="color.email">
                                             <td
                                                 class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                                {{ tracker.name }}
-                                            </td>
-                                            <td
-                                                class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                                {{ tracker.company.name }}
-                                            </td>
-                                            <td
-                                                class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                                {{ vehicle(tracker) }}
+                                                {{ color.name }}
                                             </td>
                                             <td
                                                 class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                                                <button class="text-indigo-600 hover:text-indigo-900 mr-2"
-                                                    @click="handleClickEdit(tracker)">Edit</button>
+                                                <button class="text-indigo-600 hover:text-indigo-900 mr-2" @click="handleClickEdit(color)">Edit</button>
                                                 <button class="text-red-600 hover:text-indigo-900">Delete</button>
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
-                                <g-pagination class="mx-2" :page_size="params.page_size" :current_size="totalList"
-                                    :current_page="params.page" @change_size="handleChangeSize"
-                                    @change_page="handleChangePage" />
+                                <g-pagination class="mx-2" 
+                                    :page_size="params.page_size" 
+                                    :current_size="totalList" 
+                                    :current_page="params.page" 
+                                    @change_size="handleChangeSize" 
+                                    @change_page="handleChangePage"
+                                />
                             </div>
                         </div>
                     </div>
