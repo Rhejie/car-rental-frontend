@@ -6,6 +6,7 @@ import { getVehicleById } from './composables/vehcile-composables';
 import SelectColor from '../settings/color-utilities/SelectColor.vue';
 import SelectTracker from '../settings/tracker-utilities/SelectTracker.vue';
 import SelectFuelType from '../settings/fuel-type-utilities/SelectFuelType.vue';
+import ImagesViewer from './utilities/ImagesViewer.vue';
 
 const props = defineProps({
     id: null
@@ -15,7 +16,7 @@ const loading = ref(true)
 
 const getVehicleInfo = async () => {
     loading.value = true
-    const {data, load} = getVehicleById(props.id)
+    const { data, load } = getVehicleById(props.id)
     await load()
     vehicle.value = data.value
     loading.value = false
@@ -33,7 +34,7 @@ const onHandleChangeFuelType = (item) => {
     console.log('Selected item', item)
 }
 
-onMounted( async () => {
+onMounted(async () => {
     await getVehicleInfo();
 })
 
@@ -61,9 +62,61 @@ const paymentMethods = [
 ]
 
 const selectedDeliveryMethod = ref(deliveryMethods[0])
+
+const product = {
+    name: 'Basic Tee',
+    price: '$35',
+    href: '#',
+    breadcrumbs: [
+        { id: 1, name: 'Women', href: '#' },
+        { id: 2, name: 'Clothing', href: '#' },
+    ],
+    images: [
+        {
+            id: 1,
+            imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-01-featured-product-shot.jpg',
+            imageAlt: "Back of women's Basic Tee in black.",
+            primary: true,
+        },
+        {
+            id: 2,
+            imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-01-product-shot-01.jpg',
+            imageAlt: "Side profile of women's Basic Tee in black.",
+            primary: false,
+        },
+        {
+            id: 3,
+            imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-01-product-shot-02.jpg',
+            imageAlt: "Front of women's Basic Tee in black.",
+            primary: false,
+        },
+    ],
+    colors: [
+        { name: 'Black', bgColor: 'bg-gray-900', selectedColor: 'ring-gray-900' },
+        { name: 'Heather Grey', bgColor: 'bg-gray-400', selectedColor: 'ring-gray-400' },
+    ],
+    sizes: [
+        { name: 'XXS', inStock: true },
+        { name: 'XS', inStock: true },
+        { name: 'S', inStock: true },
+        { name: 'M', inStock: true },
+        { name: 'L', inStock: true },
+        { name: 'XL', inStock: false },
+    ],
+    description: `
+    <p>The Basic tee is an honest new take on a classic. The tee uses super soft, pre-shrunk cotton for true comfort and a dependable fit. They are hand cut and sewn locally, with a special dye technique that gives each tee it's own look.</p>
+    <p>Looking to stock your closet? The Basic tee also comes in a 3-pack or 5-pack at a bundle discount.</p>
+  `,
+    details: [
+        'Only the best materials',
+        'Ethically and locally made',
+        'Pre-washed and pre-shrunk',
+        'Machine wash cold with similar colors',
+    ],
+}
 </script>
 <template>
-    <div class="bg-gray-50" >
+    <div class="bg-gray-50">
         <div v-if="!loading" class="mx-auto max-w-2xl px-4 pt-16 pb-24 sm:px-6 lg:max-w-7xl lg:px-8">
             <h2 class="sr-only">Vehicle Information</h2>
 
@@ -89,31 +142,36 @@ const selectedDeliveryMethod = ref(deliveryMethods[0])
                         <div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
                             <div>
                                 <div class="mt-1">
-                                    <SelectColor v-model="vehicle.color" :onHandleChangeColor="onHandleChangeColor"/>
+                                    <SelectColor v-model="vehicle.color" :onHandleChangeColor="onHandleChangeColor" />
                                 </div>
                             </div>
 
                             <div>
                                 <div class="mt-1">
-                                    <SelectTracker v-model="vehicle.tracker" :onHandleChange="onHandleChange"/>
+                                    <SelectTracker v-model="vehicle.tracker" :onHandleChange="onHandleChange" />
                                 </div>
                             </div>
                             <div>
                                 <div class="mt-1">
-                                    <SelectFuelType v-model="vehicle.fuel_type" :onHandleChangeFuelType="onHandleChangeFuelType"/>
+                                    <SelectFuelType v-model="vehicle.fuel_type"
+                                        :onHandleChangeFuelType="onHandleChangeFuelType" />
                                 </div>
                             </div>
                             <div>
-                                <label for="company" class="block text-sm font-medium text-gray-700">Fuel Capacity (L)</label>
+                                <label for="company" class="block text-sm font-medium text-gray-700">Fuel Capacity
+                                    (L)</label>
                                 <div class="mt-2">
-                                    <input type="number" min="1" v-model="vehicle.fuel_capacity" placeholder="Fuel Capacity"
+                                    <input type="number" min="1" v-model="vehicle.fuel_capacity"
+                                        placeholder="Fuel Capacity"
                                         class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm" />
                                 </div>
                             </div>
                             <div>
-                                <label for="company" class="block text-sm font-medium text-gray-700">Fuel Consumptions (per km)</label>
+                                <label for="company" class="block text-sm font-medium text-gray-700">Fuel Consumptions
+                                    (per km)</label>
                                 <div class="mt-2">
-                                    <input type="number" min="1" v-model="vehicle.fuel_consumption" placeholder="Fuel Consumptions"
+                                    <input type="number" min="1" v-model="vehicle.fuel_consumption"
+                                        placeholder="Fuel Consumptions"
                                         class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm" />
                                 </div>
                             </div>
@@ -126,7 +184,8 @@ const selectedDeliveryMethod = ref(deliveryMethods[0])
                             </div>
 
                             <div class="sm:col-span-2">
-                                <label for="company" class="block text-sm font-medium text-gray-700">Plate Number</label>
+                                <label for="company" class="block text-sm font-medium text-gray-700">Plate
+                                    Number</label>
                                 <div class="mt-1">
                                     <input type="text" v-model="vehicle.plate_number" placeholder="Plate Number"
                                         class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm" />
@@ -148,21 +207,25 @@ const selectedDeliveryMethod = ref(deliveryMethods[0])
                             <div>
                                 <label for="company" class="block text-sm font-medium text-gray-700">Engine No.</label>
                                 <div class="mt-2">
-                                    <input type="text" min="1" v-model="vehicle.fuel_consumption" placeholder="Engine Number"
+                                    <input type="text" min="1" v-model="vehicle.fuel_consumption"
+                                        placeholder="Engine Number"
                                         class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm" />
                                 </div>
                             </div>
                             <div>
                                 <label for="company" class="block text-sm font-medium text-gray-700">Chassis No.</label>
                                 <div class="mt-2">
-                                    <input type="text" min="1" v-model="vehicle.fuel_consumption" placeholder="Chassis Number"
+                                    <input type="text" min="1" v-model="vehicle.fuel_consumption"
+                                        placeholder="Chassis Number"
                                         class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm" />
                                 </div>
                             </div>
                             <div>
-                                <label for="company" class="block text-sm font-medium text-gray-700">CR Expiration Date</label>
+                                <label for="company" class="block text-sm font-medium text-gray-700">CR Expiration
+                                    Date</label>
                                 <div class="mt-2">
-                                    <input type="date" min="1" v-model="vehicle.fuel_consumption" placeholder="Expiration Date"
+                                    <input type="date" min="1" v-model="vehicle.fuel_consumption"
+                                        placeholder="Expiration Date"
                                         class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm" />
                                 </div>
                             </div>
@@ -172,77 +235,11 @@ const selectedDeliveryMethod = ref(deliveryMethods[0])
 
                 <!-- Order summary -->
                 <div class="mt-10 lg:mt-0">
-                    <h2 class="text-lg font-medium text-gray-900">Order summary</h2>
+                    <h2 class="text-lg font-medium text-gray-900">Images</h2>
 
                     <div class="mt-4 rounded-lg border border-gray-200 bg-white shadow-sm">
                         <h3 class="sr-only">Items in your cart</h3>
-                        <ul role="list" class="divide-y divide-gray-200">
-                            <li v-for="product in products" :key="product.id" class="flex py-6 px-4 sm:px-6">
-                                <div class="flex-shrink-0">
-                                    <img :src="product.imageSrc" :alt="product.imageAlt" class="w-20 rounded-md" />
-                                </div>
-
-                                <div class="ml-6 flex flex-1 flex-col">
-                                    <div class="flex">
-                                        <div class="min-w-0 flex-1">
-                                            <h4 class="text-sm">
-                                                <a :href="product.href"
-                                                    class="font-medium text-gray-700 hover:text-gray-800">{{
-                                                            product.title
-                                                    }}</a>
-                                            </h4>
-                                            <p class="mt-1 text-sm text-gray-500">{{ product.color }}</p>
-                                            <p class="mt-1 text-sm text-gray-500">{{ product.size }}</p>
-                                        </div>
-
-                                        <div class="ml-4 flow-root flex-shrink-0">
-                                            <button type="button"
-                                                class="-m-2.5 flex items-center justify-center bg-white p-2.5 text-gray-400 hover:text-gray-500">
-                                                <span class="sr-only">Remove</span>
-                                                <TrashIcon class="h-5 w-5" aria-hidden="true" />
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <div class="flex flex-1 items-end justify-between pt-2">
-                                        <p class="mt-1 text-sm font-medium text-gray-900">{{ product.price }}</p>
-
-                                        <div class="ml-4">
-                                            <label for="quantity" class="sr-only">Quantity</label>
-                                            <select id="quantity" name="quantity"
-                                                class="rounded-md border border-gray-300 text-left text-base font-medium text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
-                                                <option value="6">6</option>
-                                                <option value="7">7</option>
-                                                <option value="8">8</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                        <dl class="space-y-6 border-t border-gray-200 py-6 px-4 sm:px-6">
-                            <div class="flex items-center justify-between">
-                                <dt class="text-sm">Subtotal</dt>
-                                <dd class="text-sm font-medium text-gray-900">$64.00</dd>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <dt class="text-sm">Shipping</dt>
-                                <dd class="text-sm font-medium text-gray-900">$5.00</dd>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <dt class="text-sm">Taxes</dt>
-                                <dd class="text-sm font-medium text-gray-900">$5.52</dd>
-                            </div>
-                            <div class="flex items-center justify-between border-t border-gray-200 pt-6">
-                                <dt class="text-base font-medium">Total</dt>
-                                <dd class="text-base font-medium text-gray-900">$75.52</dd>
-                            </div>
-                        </dl>
+                        <ImagesViewer :imagesData="product.images"/>
 
                         <div class="border-t border-gray-200 py-6 px-4 sm:px-6">
                             <button type="submit"
