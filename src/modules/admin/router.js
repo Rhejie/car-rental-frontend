@@ -29,6 +29,12 @@ const moduleRoute = {
             props: true
         },
         {
+            path: '/admin/trackers',
+            name: "Trackers",
+            component: () => import('./views/TrackerPage.vue'),
+            props: true
+        },
+        {
             path: '/admin/settings',
             component: () => import('./views/SettingsPage.vue'),
             children: [
