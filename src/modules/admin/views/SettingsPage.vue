@@ -10,7 +10,8 @@ import {
   IdentificationIcon,
   DeviceTabletIcon,
   SwatchIcon,
-  FireIcon
+  FireIcon,
+  CpuChipIcon
 } from '@heroicons/vue/24/solid'
 import { ChevronLeftIcon } from '@heroicons/vue/20/solid'
 
@@ -62,6 +63,13 @@ const subNavigation = ref([
     description: 'Enim, nullam mi vel et libero urna lectus enim. Et sed in maecenas tellus.',
     routerName: 'Identifications',
     icon: IdentificationIcon,
+    current: false,
+  },
+  {
+    name: 'Vehicle Brands',
+    description: 'Enim, nullam mi vel et libero urna lectus enim. Et sed in maecenas tellus.',
+    routerName: 'Vehicle Brands',
+    icon: CpuChipIcon,
     current: false,
   },
   {

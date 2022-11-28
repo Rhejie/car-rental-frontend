@@ -26,3 +26,18 @@ export const loadUser = () => {
         hasError
     }
 }
+
+export const logoutUser = () => {
+    const logout = async () => {
+        await http().post('/user/logout').then(res => {
+            console.log(res)
+            router.push('/login')
+        }).catch(error => {
+            console.log('Error in logout', error)
+        })
+    }
+
+    return {
+        logout
+    }
+}

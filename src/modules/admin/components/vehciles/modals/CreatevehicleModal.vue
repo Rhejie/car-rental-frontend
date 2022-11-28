@@ -7,6 +7,7 @@ import SelectColor from '../../settings/color-utilities/SelectColor.vue'
 import { createVehicle } from '../composables/vehcile-composables';
 import { useRouter } from 'vue-router'
 import SelectFuelType from '../../settings/fuel-type-utilities/SelectFuelType.vue'
+import SelectVehicleBrand from '../../settings/vehicle-brand-utilities/SelectVehicleBrand.vue'
 
 const props = defineProps({
     openModal: {
@@ -45,6 +46,10 @@ const onHandleChangeColor = (item) => {
 }
 
 const onHandleChangeFuelType = (item) => {
+    console.log('change color item ->', item)
+}
+
+const onHandleChangeVehicleBrand = (item) => {
     console.log('change color item ->', item)
 }
 
@@ -119,6 +124,14 @@ const handleCreateVehicle = async () => {
                                                         class="text-sm text-red-400"
                                                         v-if="errorValue && !loading && errorValue.fuel_type">
                                                             {{errorValue.fuel_type[0]}}
+                                                    </span>
+                                                </div>
+                                                <div class="col-span-12">
+                                                    <SelectVehicleBrand v-model="vehicle.vehicle_brand" :onHandleChangeVehicleBrand="onHandleChangeVehicleBrand"/>
+                                                    <span 
+                                                        class="text-sm text-red-400"
+                                                        v-if="errorValue && !loading && errorValue.vehicle_brand">
+                                                            {{errorValue.vehicle_brand[0]}}
                                                     </span>
                                                 </div>
                                             </div>

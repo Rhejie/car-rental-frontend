@@ -11,7 +11,6 @@ module.exports = {
       xl: '1280px',
       '2xl': '1536px',
     },
-    supports: {},
     colors: ({ colors }) => ({
       inherit: colors.inherit,
       current: colors.current,
@@ -40,6 +39,19 @@ module.exports = {
       fuchsia: colors.fuchsia,
       pink: colors.pink,
       rose: colors.rose,
+      'untitled-gray': {
+          25: '#FCFCFD',
+          50: '#F9FAFB',
+          100: '#F2F4F7',
+          200: '#EAECF0',
+          300: '#D0D5DD',
+          400: '#98A2B3',
+          500: '#667085',
+          600: '#475467',
+          700: '#344054',
+          800: '#1D2939',
+          900: '#101828',
+        },
     }),
     columns: {
       auto: 'auto',
@@ -112,16 +124,6 @@ module.exports = {
       ping: 'ping 1s cubic-bezier(0, 0, 0.2, 1) infinite',
       pulse: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
       bounce: 'bounce 1s infinite',
-    },
-    aria: {
-      checked: 'checked="true"',
-      disabled: 'disabled="true"',
-      expanded: 'expanded="true"',
-      hidden: 'hidden="true"',
-      pressed: 'pressed="true"',
-      readonly: 'readonly="true"',
-      required: 'required="true"',
-      selected: 'selected="true"',
     },
     aspectRatio: {
       auto: 'auto',
@@ -295,10 +297,7 @@ module.exports = {
       '2xl': '0 25px 25px rgb(0 0 0 / 0.15)',
       none: '0 0 #0000',
     },
-    fill: ({ theme }) => ({
-      none: 'none',
-      ...theme('colors'),
-    }),
+    fill: ({ theme }) => theme('colors'),
     grayscale: {
       0: '0',
       DEFAULT: '100%',
@@ -360,11 +359,10 @@ module.exports = {
       0: '0',
       DEFAULT: '1',
     },
-    fontFamily:{
+    fontFamily: {
       sans: ['Montserrat', 'sans-serif'],
       heading: ['Rubik', 'sans-serif'],
       button: ['Rubik', 'sans-serif'],
-      a: ['Rubik', 'sans-serif'],
     },
     fontSize: {
       xs: ['0.75rem', { lineHeight: '1rem' }],
@@ -712,7 +710,7 @@ module.exports = {
       8: '8px',
     },
     ringColor: ({ theme }) => ({
-      DEFAULT: theme('colors.blue.500', '#3b82f6'),
+      DEFAULT: theme(`colors.blue.500`, '#3b82f6'),
       ...theme('colors'),
     }),
     ringOffsetColor: ({ theme }) => theme('colors'),
@@ -784,10 +782,7 @@ module.exports = {
     space: ({ theme }) => ({
       ...theme('spacing'),
     }),
-    stroke: ({ theme }) => ({
-      none: 'none',
-      ...theme('colors'),
-    }),
+    stroke: ({ theme }) => theme('colors'),
     strokeWidth: {
       0: '0',
       1: '1',

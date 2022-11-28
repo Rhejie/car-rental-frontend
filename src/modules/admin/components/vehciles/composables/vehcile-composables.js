@@ -1,5 +1,26 @@
-import { http } from "@/global-composables/http_service"
+import { http, httpServer } from "@/global-composables/http_service"
 import { ref } from 'vue'
+
+export const fetchVehicles = (params) => {
+    const data = ref([])
+    const totalVehicle = ref(0)
+
+    const load = async () => {
+        await http().get(`/vehicle/list?search=${params.search}&page=${params.page}&size=${params.page_size}`)
+            .then(res => {
+                data.value = res.data.data
+                totalVehicle.value = res.data.total
+            }).catch(error => {
+                console.log('Error in fetching vehicles', error)
+            })
+    }
+
+    return {
+        load,
+        data,
+        totalVehicle
+    }
+}
 
 export const createVehicle = (vehicle) => {
     const data = ref(null)
@@ -35,5 +56,49 @@ export const getVehicleById = (id) => {
     return {
         data,
         load
+    }
+}
+
+export const fileUpload = async (file) => {
+    const uploadProgress = ref(0);
+    const files = ref()
+    await httpServer().post('vehicle/upload', file, {
+        onUploadProgress: function ( progressEvent ) {
+            uploadProgress.value = parseInt( Math.round( ( progressEvent.loaded * 100 ) / progressEvent.total ) )
+            console.log(uploadProgress.value, 'progress');
+        }
+    }).then((res) => {
+        files.value = res.data
+        ElNotification({
+            title: 'Success',
+            message: 'Successfully Uploaded!',
+            type: 'success',
+          })
+    })
+
+    return {
+        uploadProgress,
+        files
+    }
+}
+
+export const updateVehicle = (vehicle) => {
+    const data = ref(vehicle)
+    const errorData = ref(null)
+    const update = async () => {
+        await http().post(`/vehicle/update/${vehicle.id}`, vehicle)
+            .then(res => {
+                data.value = res.data
+                errorData.value = null
+            }).catch(error => {
+                errorData.value = error.response.data.errors
+                console.log('Error in updating vehicle: ' + error)
+            })
+    }
+
+    return {
+        data,
+        update,
+        errorData
     }
 }

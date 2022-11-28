@@ -23,6 +23,12 @@ const moduleRoute = {
             props: true
         },
         {
+            path: '/admin/vehicles/:id',
+            name: "Show Vehicle",
+            component: () => import('../admin/components/vehciles/ShowVehiclePage.vue'),
+            props: true
+        },
+        {
             path: '/admin/settings',
             component: () => import('./views/SettingsPage.vue'),
             children: [
@@ -70,6 +76,11 @@ const moduleRoute = {
                     path: '/admin/settings/fuel-types',
                     name: 'Fuel Types',
                     component: () => import('./components/settings/FuelTypeSettings.vue')
+                },
+                {
+                    path: '/admin/settings/vehicle-brands',
+                    name: 'Vehicle Brands',
+                    component: () => import('./components/settings/VehicleBrandSettings.vue')
                 }
             ]
         }

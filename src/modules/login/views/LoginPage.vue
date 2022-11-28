@@ -44,7 +44,11 @@ const handleClickLogIn = async () => {
     localStorage.setItem('car_rental_access_token', data.value.token)
     auth.remember(JSON.stringify(auth.user()));
     store.commit('login/USER_LOGGEDIN', data.value.user);
-    router.push('/admin')
+    if(data.value.user.role.name.toLowerCase() == 'admin') {
+        router.push('/admin')
+        return
+    }
+    router.push('/user')
 }
 </script>
 <template>

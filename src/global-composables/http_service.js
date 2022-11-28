@@ -9,3 +9,18 @@ export function http() {
         }
     })
 }
+
+export function httpServer() {
+    return axios.create({
+        baseURL: '/api',
+        headers: {
+            'Authorization': 'Bearer '+ accessToken(),
+            'Content-Type': 'multipart/form-data'
+        }
+    });
+}
+
+
+export const storageUrl = () => {
+    return process.env.VUE_APP_API_URL + '/storage/'
+}

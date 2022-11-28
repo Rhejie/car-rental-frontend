@@ -1,387 +1,587 @@
-<!-- This example requires Tailwind CSS v3.0+ -->
+<!--
+  This example requires some changes to your config:
+  
+  ```
+  // tailwind.config.js
+  module.exports = {
+    // ...
+    plugins: [
+      // ...
+      require('@tailwindcss/forms'),
+      require('@tailwindcss/aspect-ratio'),
+    ],
+  }
+  ```
+-->
 <template>
-    <div class="isolate bg-white">
-        <div class="absolute inset-x-0 top-[-10rem] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[-20rem]">
-            <svg class="relative left-[calc(50%-11rem)] -z-10 h-[21.1875rem] max-w-none -translate-x-1/2 rotate-[30deg] sm:left-[calc(50%-30rem)] sm:h-[42.375rem]"
-                viewBox="0 0 1155 678" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path fill="url(#45de2b6b-92d5-4d68-a6a0-9b9b2abad533)" fill-opacity=".3"
-                    d="M317.219 518.975L203.852 678 0 438.341l317.219 80.634 204.172-286.402c1.307 132.337 45.083 346.658 209.733 145.248C936.936 126.058 882.053-94.234 1031.02 41.331c119.18 108.451 130.68 295.337 121.53 375.223L855 299l21.173 362.054-558.954-142.079z" />
-                <defs>
-                    <linearGradient id="45de2b6b-92d5-4d68-a6a0-9b9b2abad533" x1="1155.49" x2="-78.208" y1=".177"
-                        y2="474.645" gradientUnits="userSpaceOnUse">
-                        <stop stop-color="#9089FC" />
-                        <stop offset="1" stop-color="#FF80B5" />
-                    </linearGradient>
-                </defs>
-            </svg>
-        </div>
-        <div class="px-6 pt-6 lg:px-8">
-            <div>
-                <nav class="flex h-9 items-center justify-between" aria-label="Global">
-                    <div class="flex lg:min-w-0 lg:flex-1" aria-label="Global">
-                        <a href="#" class="-m-1.5 p-1.5">
-                            <span class="sr-only">Your Company</span>
-                            <img class="h-8" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                                alt="" />
-                        </a>
-                    </div>
-                    <div class="flex lg:hidden">
-                        <button type="button"
-                            class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
-                            @click="mobileMenuOpen = true">
-                            <span class="sr-only">Open main menu</span>
-                            <Bars3Icon class="h-6 w-6" aria-hidden="true" />
-                        </button>
-                    </div>
-                    <div class="hidden lg:flex lg:min-w-0 lg:flex-1 lg:justify-center lg:gap-x-12">
-                        <a v-for="item in navigation" :key="item.name" :href="item.href"
-                            class="font-semibold text-gray-900 hover:text-gray-900">{{ item.name }}</a>
-                    </div>
-                    <div class="hidden lg:flex lg:min-w-0 lg:flex-1 lg:justify-end">
-                        <button  @click="handleClickLogin"
-                            class="inline-block rounded-lg px-3 py-1.5 text-sm font-semibold leading-6 text-gray-900 shadow-sm ring-1 ring-gray-900/10 hover:ring-gray-900/20">Log
-                            in</button>
-                    </div>
-                </nav>
-                <Dialog as="div" @close="mobileMenuOpen = false" :open="mobileMenuOpen">
-                    <DialogPanel focus="true" class="fixed inset-0 z-10 overflow-y-auto bg-white px-6 py-6 lg:hidden">
-                        <div class="flex h-9 items-center justify-between">
-                            <div class="flex">
-                                <a href="#" class="-m-1.5 p-1.5">
-                                    <span class="sr-only">Your Company</span>
-                                    <img class="h-8"
-                                        src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="" />
-                                </a>
-                            </div>
-                            <div class="flex">
+    <div class="bg-white">
+        <!-- Mobile menu -->
+        <TransitionRoot as="template" :show="mobileMenuOpen">
+            <Dialog as="div" class="relative z-40 lg:hidden" @close="mobileMenuOpen = false">
+                <TransitionChild as="template" enter="transition-opacity ease-linear duration-300"
+                    enter-from="opacity-0" enter-to="opacity-100" leave="transition-opacity ease-linear duration-300"
+                    leave-from="opacity-100" leave-to="opacity-0">
+                    <div class="fixed inset-0 bg-black bg-opacity-25" />
+                </TransitionChild>
+
+                <div class="fixed inset-0 z-40 flex">
+                    <TransitionChild as="template" enter="transition ease-in-out duration-300 transform"
+                        enter-from="-translate-x-full" enter-to="translate-x-0"
+                        leave="transition ease-in-out duration-300 transform" leave-from="translate-x-0"
+                        leave-to="-translate-x-full">
+                        <DialogPanel
+                            class="relative flex w-full max-w-xs flex-col overflow-y-auto bg-white pb-12 shadow-xl">
+                            <div class="flex px-4 pt-5 pb-2">
                                 <button type="button"
-                                    class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+                                    class="-m-2 inline-flex items-center justify-center rounded-md p-2 text-gray-400"
                                     @click="mobileMenuOpen = false">
                                     <span class="sr-only">Close menu</span>
                                     <XMarkIcon class="h-6 w-6" aria-hidden="true" />
                                 </button>
                             </div>
-                        </div>
-                        <div class="mt-6 flow-root">
-                            <div class="-my-6 divide-y divide-gray-500/10">
-                                <div class="space-y-2 py-6">
-                                    <a v-for="item in navigation" :key="item.name" :href="item.href"
-                                        class="-mx-3 block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-400/10">{{
-                                                item.name
-                                        }}</a>
+
+                            <!-- Links -->
+                            <TabGroup as="div" class="mt-2">
+                                <div class="border-b border-gray-200">
+                                    <TabList class="-mb-px flex space-x-8 px-4">
+                                        <Tab as="template" v-for="category in navigation.categories"
+                                            :key="category.name" v-slot="{ selected }">
+                                            <button
+                                                :class="[selected ? 'text-indigo-600 border-indigo-600' : 'text-gray-900 border-transparent', 'flex-1 whitespace-nowrap border-b-2 py-4 px-1 text-base font-medium']">{{
+                                                        category.name
+                                                }}</button>
+                                        </Tab>
+                                    </TabList>
                                 </div>
-                                <div class="py-6">
-                                    <button @click="handleClickLogin"
-                                        class="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-6 text-gray-900 hover:bg-gray-400/10">Log
-                                        in</button>
+                                <TabPanels as="template">
+                                    <TabPanel v-for="category in navigation.categories" :key="category.name"
+                                        class="space-y-12 px-4 py-6">
+                                        <div class="grid grid-cols-2 gap-x-4 gap-y-10">
+                                            <div v-for="item in category.featured" :key="item.name"
+                                                class="group relative">
+                                                <div
+                                                    class="aspect-w-1 aspect-h-1 overflow-hidden rounded-md bg-gray-100 group-hover:opacity-75">
+                                                    <img :src="item.imageSrc" :alt="item.imageAlt"
+                                                        class="object-cover object-center" />
+                                                </div>
+                                                <a :href="item.href"
+                                                    class="mt-6 block text-sm font-medium text-gray-900">
+                                                    <span class="absolute inset-0 z-10" aria-hidden="true" />
+                                                    {{ item.name }}
+                                                </a>
+                                                <p aria-hidden="true" class="mt-1 text-sm text-gray-500">Shop now</p>
+                                            </div>
+                                        </div>
+                                    </TabPanel>
+                                </TabPanels>
+                            </TabGroup>
+
+                            <div class="space-y-6 border-t border-gray-200 py-6 px-4">
+                                <div v-for="page in navigation.pages" :key="page.name" class="flow-root">
+                                    <a :href="page.href" class="-m-2 block p-2 font-medium text-gray-900">{{ page.name
+                                    }}</a>
+                                </div>
+                            </div>
+
+                            <div class="space-y-6 border-t border-gray-200 py-6 px-4">
+                                <div class="flow-root">
+                                    <a href="#" class="-m-2 block p-2 font-medium text-gray-900">Create an account</a>
+                                </div>
+                                <div class="flow-root">
+                                    <router-link to="/login" class="-m-2 block p-2 font-medium text-gray-900">Sign in</router-link>
+                                </div>
+                            </div>
+
+                            <div class="space-y-6 border-t border-gray-200 py-6 px-4">
+                                <!-- Currency selector -->
+                                <form>
+                                    <div class="inline-block">
+                                        <label for="mobile-currency" class="sr-only">Currency</label>
+                                        <div
+                                            class="group relative -ml-2 rounded-md border-transparent focus-within:ring-2 focus-within:ring-white">
+                                            <select id="mobile-currency" name="currency"
+                                                class="flex items-center rounded-md border-transparent bg-none py-0.5 pl-2 pr-5 text-sm font-medium text-gray-700 focus:border-transparent focus:outline-none focus:ring-0 group-hover:text-gray-800">
+                                                <option v-for="currency in currencies" :key="currency">{{ currency }}
+                                                </option>
+                                            </select>
+                                            <div
+                                                class="pointer-events-none absolute inset-y-0 right-0 flex items-center">
+                                                <ChevronDownIcon class="h-5 w-5 text-gray-500" aria-hidden="true" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </DialogPanel>
+                    </TransitionChild>
+                </div>
+            </Dialog>
+        </TransitionRoot>
+
+        <!-- Hero section -->
+        <div class="relative bg-gray-900">
+            <!-- Decorative image and overlay -->
+            <div aria-hidden="true" class="absolute inset-0 overflow-hidden">
+                <img src=".././assets/car1.jpg" alt=""
+                    class="h-full w-full object-cover object-center" />
+            </div>
+            <div aria-hidden="true" class="absolute inset-0 bg-gray-900 opacity-50" />
+
+            <!-- Navigation -->
+            <header class="relative z-10">
+                <nav aria-label="Top">
+                    <!-- Top navigation -->
+                    <div class="bg-gray-900">
+                        <div class="mx-auto flex h-10 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+                            <!-- Currency selector -->
+                            <form>
+                                <div>
+                                    <label for="desktop-currency" class="sr-only">Currency</label>
+                                    <div
+                                        class="group relative -ml-2 rounded-md border-transparent bg-gray-900 focus-within:ring-2 focus-within:ring-white">
+                                        <!-- <select id="desktop-currency" name="currency" class="flex items-center rounded-md border-transparent bg-gray-900 bg-none py-0.5 pl-2 pr-5 text-sm font-medium text-white focus:border-transparent focus:outline-none focus:ring-0 group-hover:text-gray-100">
+                        <option v-for="currency in currencies" :key="currency">{{ currency }}</option>
+                      </select>
+                      <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center">
+                        <ChevronDownIcon class="h-5 w-5 text-gray-300" aria-hidden="true" />
+                      </div> -->
+                                        <span class="text-white">Car Rental System</span>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <div class="flex items-center space-x-6">
+                                <router-link to="/login" class="text-sm font-medium text-white hover:text-gray-100">Sign in</router-link>
+                                <a href="#" class="text-sm font-medium text-white hover:text-gray-100">Create an
+                                    account</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Secondary navigation -->
+                    <div class="bg-white bg-opacity-10 backdrop-blur-md backdrop-filter">
+                        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                            <div>
+                                <div class="flex h-16 items-center justify-between">
+                                    <!-- Logo (lg+) -->
+                                    <div class="hidden lg:flex lg:flex-1 lg:items-center">
+                                        <a href="#">
+                                            <span class="sr-only">Your Company</span>
+                                            <img class="h-8 w-auto"
+                                                src="https://tailwindui.com/img/logos/mark.svg?color=white" alt="" />
+                                        </a>
+                                    </div>
+
+                                    <div class="hidden h-full lg:flex">
+                                        <!-- Flyout menus -->
+                                        <PopoverGroup class="inset-x-0 bottom-0 px-4">
+                                            <div class="flex h-full justify-center space-x-8">
+                                                <!-- <Popover v-for="category in navigation.categories" :key="category.name"
+                                                    class="flex" v-slot="{ open }">
+                                                    <div class="relative flex">
+                                                        <PopoverButton
+                                                            class="relative z-10 flex items-center justify-center text-sm font-medium text-white transition-colors duration-200 ease-out">
+                                                            {{ category.name }}
+                                                            <span
+                                                                :class="[open ? 'bg-white' : '', 'absolute inset-x-0 -bottom-px h-0.5 transition duration-200 ease-out']"
+                                                                aria-hidden="true" />
+                                                        </PopoverButton>
+                                                    </div>
+
+                                                    <transition enter-active-class="transition ease-out duration-200"
+                                                        enter-from-class="opacity-0" enter-to-class="opacity-100"
+                                                        leave-active-class="transition ease-in duration-150"
+                                                        leave-from-class="opacity-100" leave-to-class="opacity-0">
+                                                        <PopoverPanel
+                                                            class="absolute inset-x-0 top-full text-sm text-gray-500">
+                                                            <div class="absolute inset-0 top-1/2 bg-white shadow"
+                                                                aria-hidden="true" />
+
+                                                            <div class="relative bg-white">
+                                                                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                                                                    <div
+                                                                        class="grid grid-cols-4 gap-y-10 gap-x-8 py-16">
+                                                                        <div v-for="item in category.featured"
+                                                                            :key="item.name" class="group relative">
+                                                                            <div
+                                                                                class="aspect-w-1 aspect-h-1 overflow-hidden rounded-md bg-gray-100 group-hover:opacity-75">
+                                                                                <img :src="item.imageSrc"
+                                                                                    :alt="item.imageAlt"
+                                                                                    class="object-cover object-center" />
+                                                                            </div>
+                                                                            <a :href="item.href"
+                                                                                class="mt-4 block font-medium text-gray-900">
+                                                                                <span class="absolute inset-0 z-10"
+                                                                                    aria-hidden="true" />
+                                                                                {{ item.name }}
+                                                                            </a>
+                                                                            <p aria-hidden="true" class="mt-1">Shop now
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </PopoverPanel>
+                                                    </transition>
+                                                </Popover> -->
+
+                                                <a v-for="page in navigation.pages" :key="page.name" :href="page.href"
+                                                    class="flex items-center text-sm font-medium text-white">{{
+                                                            page.name
+                                                    }}</a>
+                                            </div>
+                                        </PopoverGroup>
+                                    </div>
+
+                                    <!-- Mobile menu and search (lg-) -->
+                                    <div class="flex flex-1 items-center lg:hidden">
+                                        <button type="button" class="-ml-2 p-2 text-white"
+                                            @click="mobileMenuOpen = true">
+                                            <span class="sr-only">Open menu</span>
+                                            <Bars3Icon class="h-6 w-6" aria-hidden="true" />
+                                        </button>
+
+                                        <!-- Search -->
+                                        <a href="#" class="ml-2 p-2 text-white">
+                                            <span class="sr-only">Search</span>
+                                            <MagnifyingGlassIcon class="h-6 w-6" aria-hidden="true" />
+                                        </a>
+                                    </div>
+
+                                    <!-- Logo (lg-) -->
+                                    <a href="#" class="lg:hidden">
+                                        <span class="sr-only">Your Company</span>
+                                        <img src="https://tailwindui.com/img/logos/mark.svg?color=white" alt=""
+                                            class="h-8 w-auto" />
+                                    </a>
+
+                                    <div class="flex flex-1 items-center justify-end">
+                                        <!-- <a href="#" class="hidden text-sm font-medium text-white lg:block">Search</a>
+  
+                      <div class="flex items-center lg:ml-8">
+                        
+                        <a href="#" class="p-2 text-white lg:hidden">
+                          <span class="sr-only">Help</span>
+                          <QuestionMarkCircleIcon class="h-6 w-6" aria-hidden="true" />
+                        </a>
+                        <a href="#" class="hidden text-sm font-medium text-white lg:block">Help</a>
+                        
+                        <div class="ml-4 flow-root lg:ml-8">
+                          <a href="#" class="group -m-2 flex items-center p-2">
+                            <ShoppingBagIcon class="h-6 w-6 flex-shrink-0 text-white" aria-hidden="true" />
+                            <span class="ml-2 text-sm font-medium text-white">0</span>
+                            <span class="sr-only">items in cart, view bag</span>
+                          </a>
+                        </div>
+                      </div> -->
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </DialogPanel>
-                </Dialog>
+                    </div>
+                </nav>
+            </header>
+
+            <div class="relative mx-auto flex max-w-3xl flex-col items-center py-32 px-6 text-center sm:py-64 lg:px-0">
+                <h1 class="text-4xl font-bold tracking-tight text-white lg:text-6xl">Your are safe here</h1>
+                <p class="mt-4 text-xl text-white">The new arrivals have, well, newly arrived. Check out the latest
+                    options from our summer small-batch release while they're still in stock.</p>
+                <button 
+                    class="mt-8 inline-block rounded-md border border-transparent bg-white py-3 px-8 text-base font-medium text-gray-900 hover:bg-gray-100">
+                    Book now
+                </button>
             </div>
         </div>
+
         <main>
-            <div class="relative px-6 lg:px-8">
-                <div class="mx-auto max-w-3xl pt-20 pb-32 sm:pt-48 sm:pb-40">
-                    <div>
-                        <div class="hidden sm:mb-8 sm:flex sm:justify-center">
+            <!-- Category section -->
+            <section aria-labelledby="category-heading" class="pt-24 sm:pt-32 xl:mx-auto xl:max-w-7xl xl:px-8">
+                <div class="px-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8 xl:px-0">
+                    <h2 id="category-heading" class="text-2xl font-bold tracking-tight text-gray-900">Vehicles
+                    </h2>
+                    <a href="#" class="hidden text-sm font-semibold text-indigo-600 hover:text-indigo-500 sm:block">
+                        Show all vehicles
+                        <span aria-hidden="true"> &rarr;</span>
+                    </a>
+                </div>
+
+                <div class="mt-4 flow-root">
+                    <div class="-my-2">
+                        <div class="relative box-content h-80 overflow-x-auto py-2 xl:overflow-visible">
                             <div
-                                class="relative overflow-hidden rounded-full py-1.5 px-4 text-sm leading-6 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
-                                <span class="text-gray-600">
-                                    Announcing our next round of funding. <a href="#"
-                                        class="font-semibold text-indigo-600"><span class="absolute inset-0"
-                                            aria-hidden="true" />Read more <span aria-hidden="true">&rarr;</span></a>
-                                </span>
-                            </div>
-                        </div>
-                        <div>
-                            <h1 class="text-4xl font-bold tracking-tight sm:text-center sm:text-6xl">Data to enrich your
-                                online business</h1>
-                            <p class="mt-6 text-lg leading-8 text-gray-600 sm:text-center">Anim aute id magna aliqua ad
-                                ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt amet fugiat
-                                veniam occaecat fugiat aliqua.</p>
-                            <div class="mt-8 flex gap-x-4 sm:justify-center">
-                                <a href="#"
-                                    class="inline-block rounded-lg bg-indigo-600 px-4 py-1.5 text-base font-semibold leading-7 text-white shadow-sm ring-1 ring-indigo-600 hover:bg-indigo-700 hover:ring-indigo-700">
-                                    Get started
-                                    <span class="text-indigo-200" aria-hidden="true">&rarr;</span>
-                                </a>
-                                <a href="#"
-                                    class="inline-block rounded-lg px-4 py-1.5 text-base font-semibold leading-7 text-gray-900 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
-                                    Live demo
-                                    <span class="text-gray-400" aria-hidden="true">&rarr;</span>
+                                class="min-w-screen-xl absolute flex space-x-8 px-4 sm:px-6 lg:px-8 xl:relative xl:grid xl:grid-cols-5 xl:gap-x-8 xl:space-x-0 xl:px-0">
+                                <a v-for="category in categories" :key="category.name" :href="category.href"
+                                    class="relative flex h-80 w-56 flex-col overflow-hidden rounded-lg p-6 hover:opacity-75 xl:w-auto">
+                                    <span aria-hidden="true" class="absolute inset-0">
+                                        <img :src="category.imageSrc" alt=""
+                                            class="h-full w-full object-cover object-center" />
+                                    </span>
+                                    <span aria-hidden="true"
+                                        class="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-gray-800 opacity-50" />
+                                    <span class="relative mt-auto text-center text-xl font-bold text-white">{{
+                                            category.name
+                                    }}</span>
                                 </a>
                             </div>
                         </div>
-                        <div
-                            class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]">
-                            <svg class="relative left-[calc(50%+3rem)] h-[21.1875rem] max-w-none -translate-x-1/2 sm:left-[calc(50%+36rem)] sm:h-[42.375rem]"
-                                viewBox="0 0 1155 678" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path fill="url(#ecb5b0c9-546c-4772-8c71-4d3f06d544bc)" fill-opacity=".3"
-                                    d="M317.219 518.975L203.852 678 0 438.341l317.219 80.634 204.172-286.402c1.307 132.337 45.083 346.658 209.733 145.248C936.936 126.058 882.053-94.234 1031.02 41.331c119.18 108.451 130.68 295.337 121.53 375.223L855 299l21.173 362.054-558.954-142.079z" />
-                                <defs>
-                                    <linearGradient id="ecb5b0c9-546c-4772-8c71-4d3f06d544bc" x1="1155.49" x2="-78.208"
-                                        y1=".177" y2="474.645" gradientUnits="userSpaceOnUse">
-                                        <stop stop-color="#9089FC" />
-                                        <stop offset="1" stop-color="#FF80B5" />
-                                    </linearGradient>
-                                </defs>
-                            </svg>
+                    </div>
+                </div>
+
+                <div class="mt-6 px-4 sm:hidden">
+                    <a href="#" class="block text-sm font-semibold text-indigo-600 hover:text-indigo-500">
+                        Browse all categories
+                        <span aria-hidden="true"> &rarr;</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Featured section -->
+            <section aria-labelledby="social-impact-heading"
+                class="mx-auto max-w-7xl px-4 pt-24 sm:px-6 sm:pt-32 lg:px-8">
+                <div class="relative overflow-hidden rounded-lg">
+                    <div class="absolute inset-0">
+                        <img src="https://tailwindui.com/img/ecommerce-images/home-page-01-feature-section-01.jpg"
+                            alt="" class="h-full w-full object-cover object-center" />
+                    </div>
+                    <div class="relative bg-gray-900 bg-opacity-75 py-32 px-6 sm:py-40 sm:px-12 lg:px-16">
+                        <div class="relative mx-auto flex max-w-3xl flex-col items-center text-center">
+                            <h2 id="social-impact-heading"
+                                class="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+                                <span class="block sm:inline">Level up</span>
+                                <span class="block sm:inline">your desk</span>
+                            </h2>
+                            <p class="mt-3 text-xl text-white">Make your desk beautiful and organized. Post a picture to
+                                social media and watch it get more likes than life-changing announcements. Reflect on
+                                the shallow nature of existence. At least you have a really nice desk setup.</p>
+                            <a href="#"
+                                class="mt-8 block w-full rounded-md border border-transparent bg-white py-3 px-8 text-base font-medium text-gray-900 hover:bg-gray-100 sm:w-auto">Shop
+                                Workspace</a>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="bg-indigo-800">
-                <div class="mx-auto max-w-7xl py-12 px-4 sm:py-16 sm:px-6 lg:px-8 lg:py-20">
-                    <div class="mx-auto max-w-4xl text-center">
-                        <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">Trusted by developers from over 80
-                            planets</h2>
-                        <p class="mt-3 text-xl text-indigo-200 sm:mt-4">Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                            Repellendus repellat laudantium.</p>
-                    </div>
-                    <dl class="mt-10 text-center sm:mx-auto sm:grid sm:max-w-3xl sm:grid-cols-3 sm:gap-8">
-                        <div class="flex flex-col">
-                            <dt class="order-2 mt-2 text-lg font-medium leading-6 text-indigo-200">Pepperoni</dt>
-                            <dd class="order-1 text-5xl font-bold tracking-tight text-white">100%</dd>
+            </section>
+
+            <!-- Collection section -->
+            <section aria-labelledby="collection-heading"
+                class="mx-auto max-w-xl px-4 pt-24 sm:px-6 sm:pt-32 lg:max-w-7xl lg:px-8">
+                <h2 id="collection-heading" class="text-2xl font-bold tracking-tight text-gray-900">Shop by Collection
+                </h2>
+                <p class="mt-4 text-base text-gray-500">Each season, we collaborate with world-class designers to create
+                    a collection inspired by the natural world.</p>
+
+                <div class="mt-10 space-y-12 lg:grid lg:grid-cols-3 lg:gap-x-8 lg:space-y-0">
+                    <a v-for="collection in collections" :key="collection.name" :href="collection.href"
+                        class="group block">
+                        <div aria-hidden="true"
+                            class="aspect-w-3 aspect-h-2 overflow-hidden rounded-lg group-hover:opacity-75 lg:aspect-w-5 lg:aspect-h-6">
+                            <img :src="collection.imageSrc" :alt="collection.imageAlt"
+                                class="h-full w-full object-cover object-center" />
                         </div>
-                        <div class="mt-10 flex flex-col sm:mt-0">
-                            <dt class="order-2 mt-2 text-lg font-medium leading-6 text-indigo-200">Delivery</dt>
-                            <dd class="order-1 text-5xl font-bold tracking-tight text-white">24/7</dd>
-                        </div>
-                        <div class="mt-10 flex flex-col sm:mt-0">
-                            <dt class="order-2 mt-2 text-lg font-medium leading-6 text-indigo-200">Calories</dt>
-                            <dd class="order-1 text-5xl font-bold tracking-tight text-white">100k+</dd>
-                        </div>
-                    </dl>
+                        <h3 class="mt-4 text-base font-semibold text-gray-900">{{ collection.name }}</h3>
+                        <p class="mt-2 text-sm text-gray-500">{{ collection.description }}</p>
+                    </a>
                 </div>
-            </div>
-            <div class="overflow-hidden bg-white py-16 px-4 sm:px-6 lg:px-8 lg:py-24">
-                <div class="relative mx-auto max-w-xl">
-                    <svg class="absolute left-full translate-x-1/2 transform" width="404" height="404" fill="none"
-                        viewBox="0 0 404 404" aria-hidden="true">
-                        <defs>
-                            <pattern id="85737c0e-0916-41d7-917f-596dc7edfa27" x="0" y="0" width="20" height="20"
-                                patternUnits="userSpaceOnUse">
-                                <rect x="0" y="0" width="4" height="4" class="text-gray-200" fill="currentColor" />
-                            </pattern>
-                        </defs>
-                        <rect width="404" height="404" fill="url(#85737c0e-0916-41d7-917f-596dc7edfa27)" />
-                    </svg>
-                    <svg class="absolute right-full bottom-0 -translate-x-1/2 transform" width="404" height="404" fill="none"
-                        viewBox="0 0 404 404" aria-hidden="true">
-                        <defs>
-                            <pattern id="85737c0e-0916-41d7-917f-596dc7edfa27" x="0" y="0" width="20" height="20"
-                                patternUnits="userSpaceOnUse">
-                                <rect x="0" y="0" width="4" height="4" class="text-gray-200" fill="currentColor" />
-                            </pattern>
-                        </defs>
-                        <rect width="404" height="404" fill="url(#85737c0e-0916-41d7-917f-596dc7edfa27)" />
-                    </svg>
-                    <div class="text-center">
-                        <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Register</h2>
-                        <p class="mt-4 text-lg leading-6 text-gray-500">Nullam risus blandit ac aliquam justo ipsum. Quam mauris
-                            volutpat massa dictumst amet. Sapien tortor lacus arcu.</p>
+            </section>
+
+            <!-- Featured section -->
+            <section aria-labelledby="comfort-heading" class="mx-auto max-w-7xl py-24 px-4 sm:py-32 sm:px-6 lg:px-8">
+                <div class="relative overflow-hidden rounded-lg">
+                    <div class="absolute inset-0">
+                        <img src="https://tailwindui.com/img/ecommerce-images/home-page-01-feature-section-02.jpg"
+                            alt="" class="h-full w-full object-cover object-center" />
                     </div>
-                    <div class="mt-12">
-                        <form action="#" method="POST" class="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8">
+                    <div class="relative bg-gray-900 bg-opacity-75 py-32 px-6 sm:py-40 sm:px-12 lg:px-16">
+                        <div class="relative mx-auto flex max-w-3xl flex-col items-center text-center">
+                            <h2 id="comfort-heading" class="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+                                Simple productivity</h2>
+                            <p class="mt-3 text-xl text-white">Endless tasks, limited hours, a single piece of paper.
+                                Not really a haiku, but we're doing our best here. No kanban boards, burndown charts, or
+                                tangled flowcharts with our Focus system. Just the undeniable urge to fill empty
+                                circles.</p>
+                            <a href="#"
+                                class="mt-8 block w-full rounded-md border border-transparent bg-white py-3 px-8 text-base font-medium text-gray-900 hover:bg-gray-100 sm:w-auto">Shop
+                                Focus</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer aria-labelledby="footer-heading" class="bg-gray-900">
+            <h2 id="footer-heading" class="sr-only">Footer</h2>
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="py-20 xl:grid xl:grid-cols-3 xl:gap-8">
+                    <div class="grid grid-cols-2 gap-8 xl:col-span-2">
+                        <div class="space-y-12 md:grid md:grid-cols-2 md:gap-8 md:space-y-0">
                             <div>
-                                <label for="first-name" class="block text-sm font-medium text-gray-700">First name</label>
-                                <div class="mt-1">
-                                    <input type="text" name="first-name" id="first-name" autocomplete="given-name"
-                                        class="block w-full rounded-md border-gray-300 py-3 px-4 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
-                                </div>
+                                <h3 class="text-sm font-medium text-white">Shop</h3>
+                                <ul role="list" class="mt-6 space-y-6">
+                                    <li v-for="item in footerNavigation.shop" :key="item.name" class="text-sm">
+                                        <a :href="item.href" class="text-gray-300 hover:text-white">{{ item.name }}</a>
+                                    </li>
+                                </ul>
                             </div>
                             <div>
-                                <label for="last-name" class="block text-sm font-medium text-gray-700">Last name</label>
-                                <div class="mt-1">
-                                    <input type="text" name="last-name" id="last-name" autocomplete="family-name"
-                                        class="block w-full rounded-md border-gray-300 py-3 px-4 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
-                                </div>
+                                <h3 class="text-sm font-medium text-white">Company</h3>
+                                <ul role="list" class="mt-6 space-y-6">
+                                    <li v-for="item in footerNavigation.company" :key="item.name" class="text-sm">
+                                        <a :href="item.href" class="text-gray-300 hover:text-white">{{ item.name }}</a>
+                                    </li>
+                                </ul>
                             </div>
-                            <div class="sm:col-span-2">
-                                <label for="company" class="block text-sm font-medium text-gray-700">Company</label>
-                                <div class="mt-1">
-                                    <input type="text" name="company" id="company" autocomplete="organization"
-                                        class="block w-full rounded-md border-gray-300 py-3 px-4 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
-                                </div>
+                        </div>
+                        <div class="space-y-12 md:grid md:grid-cols-2 md:gap-8 md:space-y-0">
+                            <div>
+                                <h3 class="text-sm font-medium text-white">Account</h3>
+                                <ul role="list" class="mt-6 space-y-6">
+                                    <li v-for="item in footerNavigation.account" :key="item.name" class="text-sm">
+                                        <a :href="item.href" class="text-gray-300 hover:text-white">{{ item.name }}</a>
+                                    </li>
+                                </ul>
                             </div>
-                            <div class="sm:col-span-2">
-                                <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                                <div class="mt-1">
-                                    <input id="email" name="email" type="email" autocomplete="email"
-                                        class="block w-full rounded-md border-gray-300 py-3 px-4 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
-                                </div>
+                            <div>
+                                <h3 class="text-sm font-medium text-white">Connect</h3>
+                                <ul role="list" class="mt-6 space-y-6">
+                                    <li v-for="item in footerNavigation.connect" :key="item.name" class="text-sm">
+                                        <a :href="item.href" class="text-gray-300 hover:text-white">{{ item.name }}</a>
+                                    </li>
+                                </ul>
                             </div>
-                            <div class="sm:col-span-2">
-                                <label for="phone-number" class="block text-sm font-medium text-gray-700">Phone Number</label>
-                                <!-- <div class="relative mt-1 rounded-md shadow-sm">
-                                    <div class="absolute inset-y-0 left-0 flex items-center">
-                                        <label for="country" class="sr-only">Country</label>
-                                        <select id="country" name="country"
-                                            class="h-full rounded-md border-transparent bg-transparent py-0 pl-4 pr-8 text-gray-500 focus:border-indigo-500 focus:ring-indigo-500">
-                                            <option>US</option>
-                                            <option>CA</option>
-                                            <option>EU</option>
-                                        </select>
-                                    </div>
-                                    <input type="text" name="phone-number" id="phone-number" autocomplete="tel"
-                                        class="block w-full rounded-md border-gray-300 py-3 px-4 pl-20 focus:border-indigo-500 focus:ring-indigo-500"
-                                        placeholder="+1 (555) 987-6543" />
-                                </div> -->
-                                <div class="mt-1">
-                                    <input type="text" name="phone-number" id="phone-number" autocomplete="tel"
-                                        class="block w-full rounded-md border-gray-300 py-3 px-4 focus:border-indigo-500 focus:ring-indigo-500"
-                                        placeholder="+63 (950) 712-6543" />
-                                </div>
-                            </div>
-                            <div class="sm:col-span-2">
-                                <label for="message" class="block text-sm font-medium text-gray-700">Message</label>
-                                <div class="mt-1">
-                                    <textarea id="message" name="message" rows="4"
-                                        class="block w-full rounded-md border-gray-300 py-3 px-4 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
-                                </div>
-                            </div>
-                            <div class="sm:col-span-2">
-                                <div class="flex items-start">
-                                    <div class="flex-shrink-0">
-                                        <Switch v-model="agreed"
-                                            :class="[agreed ? 'bg-indigo-600' : 'bg-gray-200', 'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2']">
-                                            <span class="sr-only">Agree to policies</span>
-                                            <span aria-hidden="true"
-                                                :class="[agreed ? 'translate-x-5' : 'translate-x-0', 'inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out']" />
-                                        </Switch>
-                                    </div>
-                                    <div class="ml-3">
-                                        <p class="text-base text-gray-500">
-                                            By selecting this, you agree to the
-                                            {{ ' ' }}
-                                            <a href="#" class="font-medium text-gray-700 underline">Privacy Policy</a>
-                                            {{ ' ' }}
-                                            and
-                                            {{ ' ' }}
-                                            <a href="#" class="font-medium text-gray-700 underline">Cookie Policy</a>.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="sm:col-span-2">
+                        </div>
+                    </div>
+                    <div class="mt-12 md:mt-16 xl:mt-0">
+                        <h3 class="text-sm font-medium text-white">Sign up for our newsletter</h3>
+                        <p class="mt-6 text-sm text-gray-300">The latest deals and savings, sent to your inbox weekly.
+                        </p>
+                        <form class="mt-2 flex sm:max-w-md">
+                            <label for="email-address" class="sr-only">Email address</label>
+                            <input id="email-address" type="text" autocomplete="email" required=""
+                                class="w-full min-w-0 appearance-none rounded-md border border-white bg-white py-2 px-4 text-base text-gray-900 placeholder-gray-500 shadow-sm focus:border-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-900" />
+                            <div class="ml-4 flex-shrink-0">
                                 <button type="submit"
-                                    class="inline-flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Let's
-                                    talk</button>
+                                    class="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-900">Sign
+                                    up</button>
                             </div>
                         </form>
                     </div>
                 </div>
-            </div>
-        </main>
-    </div>
-    <footer class="bg-white">
-        <div class="mx-auto max-w-7xl py-12 px-4 sm:px-6 md:flex md:items-center md:justify-between lg:px-8">
-            <div class="flex justify-center space-x-6 md:order-2">
-                <a v-for="item in footerNavigation" :key="item.name" :href="item.href" class="text-gray-400 hover:text-gray-500">
-                    <span class="sr-only">{{ item.name }}</span>
-                    <component :is="item.icon" class="h-6 w-6" aria-hidden="true" />
-                </a>
-            </div>
-            <div class="mt-8 md:order-1 md:mt-0">
-                <p class="text-center text-base text-gray-400">&copy; 2020 Your Company, Inc. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-</template>
 
+                <div class="border-t border-gray-800 py-10">
+                    <p class="text-sm text-gray-400">Copyright &copy; 2021 Your Company, Inc.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+</template>
+  
 <script setup>
 import { ref } from 'vue'
-import { Dialog, DialogPanel } from '@headlessui/vue'
-import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline'
-import { defineComponent, h } from 'vue'
+import {
+    Dialog,
+    DialogPanel,
+    Popover,
+    PopoverButton,
+    PopoverGroup,
+    PopoverPanel,
+    Tab,
+    TabGroup,
+    TabList,
+    TabPanel,
+    TabPanels,
+    TransitionChild,
+    TransitionRoot,
+} from '@headlessui/vue'
+import {
+    Bars3Icon,
+    MagnifyingGlassIcon,
+    QuestionMarkCircleIcon,
+    ShoppingBagIcon,
+    XMarkIcon,
+} from '@heroicons/vue/24/outline'
+import { ChevronDownIcon } from '@heroicons/vue/20/solid'
 
-import { Switch } from '@headlessui/vue'
-import { useRouter } from 'vue-router'
-const router = useRouter();
-
-const navigation = [
-    { name: 'Cars', href: '#' },
-    { name: 'Features', href: '#' },
-    { name: 'Marketplace', href: '#' },
-    { name: 'Company', href: '#' },
-]
-const agreed = ref(false)
-const mobileMenuOpen = ref(false)
-const footerNavigation = [
-    {
-        name: 'Facebook',
-        href: '#',
-        icon: defineComponent({
-            render: () =>
-                h('svg', { fill: 'currentColor', viewBox: '0 0 24 24' }, [
-                    h('path', {
-                        'fill-rule': 'evenodd',
-                        d: 'M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z',
-                        'clip-rule': 'evenodd',
-                    }),
-                ]),
-        }),
-    },
-    {
-        name: 'Instagram',
-        href: '#',
-        icon: defineComponent({
-            render: () =>
-                h('svg', { fill: 'currentColor', viewBox: '0 0 24 24' }, [
-                    h('path', {
-                        'fill-rule': 'evenodd',
-                        d: 'M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z',
-                        'clip-rule': 'evenodd',
-                    }),
-                ]),
-        }),
-    },
-    {
-        name: 'Twitter',
-        href: '#',
-        icon: defineComponent({
-            render: () =>
-                h('svg', { fill: 'currentColor', viewBox: '0 0 24 24' }, [
-                    h('path', {
-                        d: 'M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84',
-                    }),
-                ]),
-        }),
-    },
-    {
-        name: 'GitHub',
-        href: '#',
-        icon: defineComponent({
-            render: () =>
-                h('svg', { fill: 'currentColor', viewBox: '0 0 24 24' }, [
-                    h('path', {
-                        'fill-rule': 'evenodd',
-                        d: 'M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z',
-                        'clip-rule': 'evenodd',
-                    }),
-                ]),
-        }),
-    },
-    {
-        name: 'Dribbble',
-        href: '#',
-        icon: defineComponent({
-            render: () =>
-                h('svg', { fill: 'currentColor', viewBox: '0 0 24 24' }, [
-                    h('path', {
-                        'fill-rule': 'evenodd',
-                        d: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c5.51 0 10-4.48 10-10S17.51 2 12 2zm6.605 4.61a8.502 8.502 0 011.93 5.314c-.281-.054-3.101-.629-5.943-.271-.065-.141-.12-.293-.184-.445a25.416 25.416 0 00-.564-1.236c3.145-1.28 4.577-3.124 4.761-3.362zM12 3.475c2.17 0 4.154.813 5.662 2.148-.152.216-1.443 1.941-4.48 3.08-1.399-2.57-2.95-4.675-3.189-5A8.687 8.687 0 0112 3.475zm-3.633.803a53.896 53.896 0 013.167 4.935c-3.992 1.063-7.517 1.04-7.896 1.04a8.581 8.581 0 014.729-5.975zM3.453 12.01v-.26c.37.01 4.512.065 8.775-1.215.25.477.477.965.694 1.453-.109.033-.228.065-.336.098-4.404 1.42-6.747 5.303-6.942 5.629a8.522 8.522 0 01-2.19-5.705zM12 20.547a8.482 8.482 0 01-5.239-1.8c.152-.315 1.888-3.656 6.703-5.337.022-.01.033-.01.054-.022a35.318 35.318 0 011.823 6.475 8.4 8.4 0 01-3.341.684zm4.761-1.465c-.086-.52-.542-3.015-1.659-6.084 2.679-.423 5.022.271 5.314.369a8.468 8.468 0 01-3.655 5.715z',
-                        'clip-rule': 'evenodd',
-                    }),
-                ]),
-        }),
-    },
-]
-
-const handleClickLogin = () => {
-    console.log('hello')
-    router.push('/login')
+const currencies = ['CAD', 'USD', 'AUD', 'EUR', 'GBP']
+const navigation = {
+    pages: [
+        { name: 'Vehicles', href: '#' },
+        { name: 'Places', href: '#' },
+        { name: 'Drivers', href: '#' },
+    ],
 }
+const categories = [
+    {
+        name: 'New Arrivals',
+        href: '#',
+        imageSrc: 'https://tailwindui.com/img/ecommerce-images/home-page-01-category-01.jpg',
+    },
+    {
+        name: 'Productivity',
+        href: '#',
+        imageSrc: 'https://tailwindui.com/img/ecommerce-images/home-page-01-category-02.jpg',
+    },
+    {
+        name: 'Workspace',
+        href: '#',
+        imageSrc: 'https://tailwindui.com/img/ecommerce-images/home-page-01-category-04.jpg',
+    },
+    {
+        name: 'Accessories',
+        href: '#',
+        imageSrc: 'https://tailwindui.com/img/ecommerce-images/home-page-01-category-05.jpg',
+    },
+    { name: 'Sale', href: '#', imageSrc: 'https://tailwindui.com/img/ecommerce-images/home-page-01-category-03.jpg' },
+]
+const collections = [
+    {
+        name: 'Handcrafted Collection',
+        href: '#',
+        imageSrc: 'https://tailwindui.com/img/ecommerce-images/home-page-01-collection-01.jpg',
+        imageAlt: 'Brown leather key ring with brass metal loops and rivets on wood table.',
+        description: 'Keep your phone, keys, and wallet together, so you can lose everything at once.',
+    },
+    {
+        name: 'Organized Desk Collection',
+        href: '#',
+        imageSrc: 'https://tailwindui.com/img/ecommerce-images/home-page-01-collection-02.jpg',
+        imageAlt: 'Natural leather mouse pad on white desk next to porcelain mug and keyboard.',
+        description: 'The rest of the house will still be a mess, but your desk will look great.',
+    },
+    {
+        name: 'Focus Collection',
+        href: '#',
+        imageSrc: 'https://tailwindui.com/img/ecommerce-images/home-page-01-collection-03.jpg',
+        imageAlt: 'Person placing task list card into walnut card holder next to felt carrying case on leather desk pad.',
+        description: 'Be more productive than enterprise project managers with a single piece of paper.',
+    },
+]
+const footerNavigation = {
+    shop: [
+        { name: 'Bags', href: '#' },
+        { name: 'Tees', href: '#' },
+        { name: 'Objects', href: '#' },
+        { name: 'Home Goods', href: '#' },
+        { name: 'Accessories', href: '#' },
+    ],
+    company: [
+        { name: 'Who we are', href: '#' },
+        { name: 'Sustainability', href: '#' },
+        { name: 'Press', href: '#' },
+        { name: 'Careers', href: '#' },
+        { name: 'Terms & Conditions', href: '#' },
+        { name: 'Privacy', href: '#' },
+    ],
+    account: [
+        { name: 'Manage Account', href: '#' },
+        { name: 'Returns & Exchanges', href: '#' },
+        { name: 'Redeem a Gift Card', href: '#' },
+    ],
+    connect: [
+        { name: 'Contact Us', href: '#' },
+        { name: 'Twitter', href: '#' },
+        { name: 'Instagram', href: '#' },
+        { name: 'Pinterest', href: '#' },
+    ],
+}
+
+const mobileMenuOpen = ref(false)
 </script>

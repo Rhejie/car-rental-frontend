@@ -1,4 +1,5 @@
 <script setup>
+import { storageUrl } from '@/global-composables/http_service';
 import {
     Tab,
     TabGroup,
@@ -16,6 +17,7 @@ const props = defineProps({
 })
 
 const images = computed(() => props.imagesData)
+const url = storageUrl();
 </script>
 <template>
     <div class="lg:grid grid-cols-1 lg:items-start lg:gap-x-8 p-2">
@@ -28,10 +30,10 @@ const images = computed(() => props.imagesData)
                         v-slot="{ selected }">
                         <span class="sr-only"> {{ image.name }} </span>
                         <span class="absolute inset-0 overflow-hidden rounded-md">
-                            <img :src="image.imageSrc" alt="" class="h-full w-full object-cover object-center" />
+                            <img :src="`${url}`+image.image_url" alt="" class="h-full w-full object-cover object-center" />
                         </span>
                         <span
-                            :class="[selected ? 'ring-indigo-500' : 'ring-transparent', 'pointer-events-none absolute inset-0 rounded-md ring-2 ring-offset-2']"
+                            :class="[selected ? 'ring-gray-500' : 'ring-transparent', 'pointer-events-none absolute inset-0 rounded-md ring-2 ring-offset-2']"
                             aria-hidden="true" />
                     </Tab>
                 </TabList>
@@ -39,7 +41,7 @@ const images = computed(() => props.imagesData)
 
             <TabPanels class="aspect-w-1 aspect-h-1 w-full">
                 <TabPanel v-for="image in images" :key="image.id">
-                    <img :src="image.imageSrc" :alt="image.alt"
+                    <img :src="`${url}`+image.image_url" :alt="image.alt"
                         class="h-96 w-full object-cover object-center sm:rounded-lg" />
                 </TabPanel>
             </TabPanels>
