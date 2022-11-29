@@ -1,6 +1,7 @@
 <script setup>
 import { computed, onUpdated, ref, watch } from 'vue'
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
+import { storeBook } from '../composables/booking-composables'
 import { BookmarkIcon } from '@heroicons/vue/24/outline'
 
 const props = defineProps({
@@ -20,9 +21,10 @@ const open = computed(() => props.openModal)
 const vehicle = computed(() => props.vehicle)
 
 const book = ref({
-    bookingStart: null,
-    bookingEnd: null,
-    vehicle_place_id: null
+    booking_start: null,
+    booking_end: null,
+    vehicle_place_id: null,
+    vehicle_id: props.vehicle.id
 })
 
 const price = computed({
@@ -43,8 +45,8 @@ const errorValue = ref(null)
 
 const countDays = computed({
     get() {
-        if(price.value && book.value.bookingStart && book.value.bookingEnd) {
-            const newDate = (new Date(book.value.bookingEnd).getTime()) - (new Date(book.value.bookingStart).getTime())
+        if(price.value && book.value.booking_start && book.value.booking_end) {
+            const newDate = (new Date(book.value.booking_end).getTime()) - (new Date(book.value.booking_start).getTime())
             const totalData =  newDate / (1000 * 60 * 60 * 24)
             return totalData
         }
@@ -70,17 +72,32 @@ const totalPrice = computed({
      newValue;
     }
 })
+
+const loading = ref(false)
 const handleCLose = () => {
     props.handleClickCloseModal()
 }
 
 const initialize = () => {
      book.value = {
-        bookingStart: null,
-        bookingEnd: null,
-        vehicle_place_id: null
+        booking_start: null,
+        booking_end: null,
+        vehicle_place_id: null,
+        vehicle_id: props.vehicle.id
     }
 
+}
+
+const storeData = async () => {
+    loading.value = true
+    const {post, data, errorData} = storeBook(book.value);
+    await post();
+    errorValue.value = errorData.value
+    loading.value = false
+
+    if(!loading.value && !errorValue.value, !errorData.value) {
+        // emit('saveColor', data.value)
+    }
 }
 
 onUpdated(() => {
@@ -264,16 +281,17 @@ onUpdated(() => {
                                                                     class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
                                                                     <div>
                                                                         <label for="email"
-                                                                            class="block text-sm font-medium text-gray-700">First
-                                                                            Name</label>
+                                                                            class="block text-sm font-medium text-gray-700">
+                                                                            Booking Start
+                                                                        </label>
                                                                         <div class="mt-1">
                                                                             <input id="email" type="date"
                                                                                 placeholder="Book Start"
-                                                                                v-model="book.bookingStart"
+                                                                                v-model="book.booking_start"
                                                                                 class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
                                                                             <span class="text-sm text-red-400"
-                                                                                v-if="errorValue && !loading && errorValue.first_name">
-                                                                                {{ errorValue.first_name[0] }}
+                                                                                v-if="errorValue && !loading && errorValue.booking_start">
+                                                                                {{ errorValue.booking_start[0] }}
                                                                             </span>
                                                                         </div>
                                                                     </div>
@@ -283,12 +301,12 @@ onUpdated(() => {
                                                                             </label>
                                                                         <div class="mt-1">
                                                                             <input id="email" type="date"
-                                                                                v-model="book.bookingEnd"
+                                                                                v-model="book.booking_end"
                                                                                 placeholder="First Name"
                                                                                 class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
                                                                             <span class="text-sm text-red-400"
-                                                                                v-if="errorValue && !loading && errorValue.last_name">
-                                                                                {{ errorValue.last_name[0] }}
+                                                                                v-if="errorValue && !loading && errorValue.booking_end">
+                                                                                {{ errorValue.booking_end[0] }}
                                                                             </span>
                                                                         </div>
                                                                     </div>
@@ -302,6 +320,10 @@ onUpdated(() => {
                                                                         <select id="location" v-model="book.vehicle_place_id" name="location" class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                                                             <option v-for="place in vehicle.vehicle_place" :key="place.id" :value="place.id">{{place.place.name}}</option>
                                                                         </select>
+                                                                        <span class="text-sm text-red-400"
+                                                                                v-if="errorValue && !loading && errorValue.vehicle_place_id">
+                                                                                {{ errorValue.vehicle_place_id[0] ? 'Destination is required' : '' }}
+                                                                            </span>
                                                                     </div>
                                                                 </div>
                                                                 <div class="space-y-1 flex flex-col">
@@ -314,7 +336,7 @@ onUpdated(() => {
                                                                 class="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
                                                                 <button type="button"
                                                                     class="inline-flex w-full justify-center rounded-md border border-transparent bg-cyan-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 sm:col-start-2 sm:text-sm"
-                                                                    @click="handleCLose">Book Now</button>
+                                                                    @click="storeData">Book Now</button>
                                                                 <button type="button"
                                                                     class="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 sm:col-start-1 sm:mt-0 sm:text-sm"
                                                                     @click="handleCLose"

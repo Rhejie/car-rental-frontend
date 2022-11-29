@@ -35,6 +35,12 @@ const moduleRoute = {
             props: true
         },
         {
+            path: '/admin/bookings',
+            name: "Admin Bookings",
+            component: () => import('./views/BookingsPage.vue'),
+            props: true
+        },
+        {
             path: '/admin/settings',
             component: () => import('./views/SettingsPage.vue'),
             children: [
