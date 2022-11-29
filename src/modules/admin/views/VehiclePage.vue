@@ -24,7 +24,8 @@ const params = ref({
   status: 'all',
   brands: null,
   colors: null,
-  fuelTypes: null
+  fuelTypes: null,
+  place_id: null
 })
 
 
@@ -68,7 +69,7 @@ const handleSetStatusPublish = (vehicleStatus) => {
 }
 
 const handleSetStatus = (vehicleStatus) => {
-  return vehicleStatus ? 'Unused' : 'Used'
+  return vehicleStatus ? 'Available' : 'Unavailable'
 }
 
 const handleChangeSize = (size) => {
@@ -98,14 +99,12 @@ watch(params.value, () => {
   <div class="px-4 bg-gray-200 h-screen sm:px-6 sm:py-4 lg:px-8">
     <div class="sm:flex sm:items-center">
       <div class="sm:flex-auto">
-        <h1 class="text-xl font-semibold text-gray-900">Vehicles</h1>
-        <p class="mt-2 text-sm text-gray-700">Publis and drafts vehicles.</p>
+        <p class="mt-2 text-sm text-gray-700">Publish and drafts vehicles.</p>
       </div>
       <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-        <button type="button"
-        @click="handleClickAddVehicle"
+        <button type="button" @click="handleClickAddVehicle"
           class="inline-flex items-center justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:w-auto">
-          <PlusCircleIcon  class="-ml-0.5 mr-2 h-4 w-4"/>
+          <PlusCircleIcon class="-ml-0.5 mr-2 h-4 w-4" />
           Add vehicle
         </button>
       </div>
@@ -164,18 +163,19 @@ watch(params.value, () => {
                   <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ vehicle.fuel_capacity }} Letters
                   </td>
                   <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ vehicle.capacity }} Person</td>
-                  <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ handleSetStatusPublish(vehicle.publish) }}</td>
-                  <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ handleSetStatus(vehicle.status) }}</td>
+                  <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{
+                      handleSetStatusPublish(vehicle.publish)
+                  }}</td>
+                  <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ handleSetStatus(vehicle.status) }}
+                  </td>
                   <td class="relative whitespace-nowrap py-2 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                    <button type="button"
-                      @click="handleClickEdit(vehicle)"
+                    <button type="button" @click="handleClickEdit(vehicle)"
                       class="inline-flex items-center rounded-md mr-2 border border-transparent bg-green-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
                       <PencilSquareIcon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
                       Edit
                     </button>
 
-                    <button type="button"
-                      @click="handleClickDetails(vehicle)"
+                    <button type="button" @click="handleClickDetails(vehicle)"
                       class="inline-flex items-center rounded-md mr-2 border border-transparent bg-cyan-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2">
                       <EyeIcon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
                       View

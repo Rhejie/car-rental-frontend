@@ -6,7 +6,9 @@ import FilterColors from '@/modules/admin/components/settings/color-utilities/Fi
 import FilterFuelTypes from '@/modules/admin/components/settings/fuel-type-utilities/FilterFuelTypes.vue';
 import FilterVehicleBrand from '@/modules/admin/components/settings/vehicle-brand-utilities/FilterVehicleBrand.vue';
 import { fetchVehicles } from '@/modules/admin/components/vehciles/composables/vehcile-composables';
+import GPagination from "@/components/GPagination.vue";
 import { onMounted, ref, watch } from 'vue';
+import SelectPlace from '@/modules/admin/components/settings/place-utilities/SelectPlace.vue';
 const loading = ref(true)
 const vehicles = ref([])
 const total = ref(0)
@@ -14,13 +16,16 @@ const selectedColors = ref([])
 const selectedFuelType = ref([])
 const selectedBrands = ref([])
 const params = ref({
-    size: 10,
+    size: 100,
     page: 1,
     search: null,
     brands: null,
     colors: null,
-    fuelTypes: null
+    fuelTypes: null,
+    place_id: null
 })
+
+const place = ref(null)
 
 
 
@@ -37,6 +42,23 @@ const fetch = async () => {
     loading.value = false
 }
 
+const handleClearFilter = () => {
+    params.value.size = 100;
+    params.value.page = 1;
+    params.value.search = null
+    params.value.brands = null;
+    params.value.colors = null;
+    params.value.fuelTypes = null;
+    params.value.place_id = null;
+
+    selectedColors.value = []
+    selectedFuelType.value = []
+    selectedBrands.value = []
+}
+
+const onHandleChangePlace = (item) => {
+    params.value.place_id = item.id
+}
 
 const getFirstImage = (vehicle) => {
     if (!loading.value && vehicle && vehicle.id && vehicle.vehicle_images.length > 0) {
@@ -63,6 +85,15 @@ const handleToogleColor = (item) => {
         return
     }
     params.value.colors = item
+}
+
+
+const handleChangeSize = (size) => {
+    params.value.page_size = size
+}
+
+const handleChangePage = (page) => {
+    params.value.page = page
 }
 
 const handleToogleFuelType = (item) => {
@@ -120,8 +151,12 @@ onMounted(async () => {
         <div class="pt-12 pb-24 lg:grid lg:grid-cols-3 lg:gap-x-8 xl:grid-cols-4">
             <aside>
                 <h2 class="text-sm">Filters</h2>
+                <button type="button" @click="handleClearFilter()"
+                    class="inline-flex items-center justify-center float-right mb-2 rounded-md border border-gray-200 px-4 h-6 text-sm font-medium shadow-xl hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-100">
+                    Clear Filters
+                </button>
                 <div class="mt-1">
-                    <input type="text" min="1" v-model="params.search" placeholder="Search Here.."
+                    <input type="text" min="1" v-model="place" placeholder="Search Here.."
                         class="w-full rounded-md h-8 border border-gray-300 bg-white py-2 pl-3 pr-2 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500 sm:text-sm" />
                 </div>
                 <button type="button" class="inline-flex items-center lg:hidden" @click="mobileFiltersOpen = true">
@@ -130,6 +165,9 @@ onMounted(async () => {
                 </button>
 
                 <div class="hidden lg:block">
+                <div class="pt-4">
+                    <SelectPlace v-model="params.place" :onHandleChangePlace="onHandleChangePlace" :label="`Choose your destination`"/>
+                </div>
                     <FilterColors v-model="selectedColors" :handleToogleColor="handleToogleColor" />
                     <FilterFuelTypes v-model="selectedFuelType" :handleToogleFuelType="handleToogleFuelType" />
                     <FilterVehicleBrand v-model="selectedBrands" :handleToogleBrand="handleToogleBrand" />
@@ -140,10 +178,14 @@ onMounted(async () => {
             <section aria-labelledby="product-heading" class="mt-6 lg:col-span-2 lg:mt-0 xl:col-span-3">
                 <h2 id="product-heading" class="sr-only">Vehciles</h2>
                 <GLoadingDiv v-if="loading" />
+                <div>
+                    <g-pagination :page_size="params.size" :current_size="total" :current_page="params.page"
+                        @change_size="handleChangeSize" @change_page="handleChangePage" />
+                </div>
                 <div v-if="!loading"
                     class="grid grid-cols-1 gap-y-4 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-10 lg:gap-x-8 xl:grid-cols-3">
                     <div v-for="vehicle in vehicles" :key="vehicle.id"
-                        class="group relative flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white">
+                        class="group relative flex flex-col overflow-hidden shadow-md rounded-lg border border-gray-200 bg-white">
                         <div class="aspect-w-3 aspect-h-4 bg-gray-200 group-hover:opacity-75 sm:aspect-none sm:h-96">
                             <img :src="`${url}` + getFirstImage(vehicle)" :alt="vehicle.imageAlt"
                                 class="h-full w-full object-cover object-center sm:h-full sm:w-full" />

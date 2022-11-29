@@ -1,37 +1,37 @@
 import { http, httpServer } from "@/global-composables/http_service"
 import { ref } from 'vue'
 
-export const fetchVehicles = (params) => {
+export const fetchVehiclePlaces = (params, vehicle_id) => {
     const data = ref([])
-    const totalVehicle = ref(0)
+    const totalVehiclePlace = ref(0)
 
     const load = async () => {
-        await http().get(`/vehicle/list?search=${params.search}&page=${params.page}&size=${params.size}&brands=${params.brands}&fuelTypes=${params.fuelTypes}&colors=${params.colors}&place=${params.place_id}`)
+        await http().get(`/vehicle-place/list/${vehicle_id}?search=${params.search}&page=${params.page}&size=${params.size}`)
             .then(res => {
                 data.value = res.data.data
-                totalVehicle.value = res.data.total
+                totalVehiclePlace.value = res.data.total
             }).catch(error => {
-                console.log('Error in fetching vehicles', error)
+                console.log('Error in fetching vehiclePlaces', error)
             })
     }
 
     return {
         load,
         data,
-        totalVehicle
+        totalVehiclePlace
     }
 }
 
-export const createVehicle = (vehicle) => {
+export const storeVehiclePlace = (vehiclePlacePlace) => {
     const data = ref(null)
     const errorData = ref(null)
     const post = async () => {
-        await http().post('/vehicle/create', vehicle)
+        await http().post('/vehicle-place/create', vehiclePlacePlace)
             .then(res => {
                 data.value = res.data
                 errorData.value = null
             }).catch(error => {
-                console.log('Error in storing vehicle -->', error)
+                console.log('Error in storing vehiclePlacePlace -->', error)
                 errorData.value = error.response.data.errors
             })
     }
@@ -43,13 +43,13 @@ export const createVehicle = (vehicle) => {
     }
 }
 
-export const getVehicleById = (id) => {
+export const getVehiclePlaceById = (id) => {
     const data = ref(null);
     const load = async () => {
-        await http().get(`vehicle/show/${id}`).then(res => {
+        await http().get(`vehicle-place/show/${id}`).then(res => {
             data.value = res.data
         }).catch(error => {
-            console.log('Error in getting vehicle', error)
+            console.log('Error in getting vehiclePlace-place', error)
         })
     }
 
@@ -62,7 +62,7 @@ export const getVehicleById = (id) => {
 export const fileUpload = async (file) => {
     const uploadProgress = ref(0);
     const files = ref()
-    await httpServer().post('vehicle/upload', file, {
+    await httpServer().post('vehicle-place/upload', file, {
         onUploadProgress: function ( progressEvent ) {
             uploadProgress.value = parseInt( Math.round( ( progressEvent.loaded * 100 ) / progressEvent.total ) )
             console.log(uploadProgress.value, 'progress');
@@ -82,17 +82,17 @@ export const fileUpload = async (file) => {
     }
 }
 
-export const updateVehicle = (vehicle) => {
-    const data = ref(vehicle)
+export const updateVehiclePlace = (vehiclePlacePlace) => {
+    const data = ref(vehiclePlacePlace)
     const errorData = ref(null)
     const update = async () => {
-        await http().post(`/vehicle/update/${vehicle.id}`, vehicle)
+        await http().post(`/vehicle-place/update/${vehiclePlacePlace.id}`, vehiclePlacePlace)
             .then(res => {
                 data.value = res.data
                 errorData.value = null
             }).catch(error => {
                 errorData.value = error.response.data.errors
-                console.log('Error in updating vehicle: ' + error)
+                console.log('Error in updating vehiclePlacePlace: ' + error)
             })
     }
 

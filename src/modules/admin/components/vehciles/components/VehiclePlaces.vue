@@ -2,27 +2,112 @@
 <script setup>
 import { EyeIcon, PencilSquareIcon, MapPinIcon, TrashIcon } from '@heroicons/vue/24/outline';
 import GPagination from "@/components/GPagination.vue";
-import { ref } from 'vue';
+import { ref, defineProps, onMounted, watch } from 'vue';
+import { fetchVehiclePlaces } from '../composables/vehicle-places-composables';
+import CreateVehiclePlaceModal from '../modals/CreateVehiclePlaceModal.vue';
+import GNotification from '@/components/GNotification.vue';
+
+const props = defineProps({
+    vehicle_id: {
+        default: null
+    }
+})
 
 const params = ref({
   size: 10,
   page: 1,
   search: null,
-  status: 'all',
-  brands: null,
-  colors: null,
-  fuelTypes: null
 })
+
+const total = ref(0)
+
+const showNotif = ref(false)
 
 const places = ref([])
 
+const openModal = ref(false)
+
+const message = ref(null)
+
 const loading = ref(true)
+
+const selectedItem = ref(null)
 const handleClickAddVehicle = () => {
-    
+    openModal.value = true
 }
+
+const handleCloseAddVehiclePlaceModal = () => {
+    openModal.value = false
+    selectedItem.value = null
+}
+
+const handleNewVehiclePlace = (place) => {
+    places.value.unshift(place)
+    openModal.value = false
+}
+
+const handleUpdateVehiclePlace = (place) => {
+    
+    places.value.map(id => {
+        if(id.id == place.id){
+            for(let key in place) {
+                id[key] = place[key]
+            }
+        }
+
+        return id;
+    })
+    openModal.value = false
+    showNotif.value = true
+
+    setTimeout(() => {
+        showNotif.value = false
+        message.value = 'Successfully updated!'
+    }, 2000)
+}
+
+const handleClickEdit = (item) => {
+    openModal.value = true,
+    selectedItem.value = item
+}
+
+const fetch = async () => {
+    const {load, data, totalVehiclePlace} = fetchVehiclePlaces(params.value, props.vehicle_id)
+    await load();
+    places.value = data.value
+    total.value = totalVehiclePlace.value
+    loading.value = false
+}
+
+const handleChangeSize = (size) => {
+    loading.value = true
+    params.value.size = size
+}
+
+const handleChangePage = (page) => {
+    loading.value = true
+    params.value.page = page
+}
+
+watch(params.value, () => {
+    fetch();
+})
+
+onMounted(async () => {
+    await fetch();
+})
 </script>
 <template>
-    <div class="w-full shadow-md mt-2">
+    
+    <CreateVehiclePlaceModal 
+        :openModal="openModal" 
+        :selectedItem="selectedItem" 
+        :vehicle_id="props.vehicle_id"
+        @closeModal="handleCloseAddVehiclePlaceModal" 
+        @updateVehiclePlace="handleUpdateVehiclePlace"
+        @saveVehiclePlace="handleNewVehiclePlace"/>
+    <GNotification :show-notif="showNotif"/>
+    <div class="w-full mt-2">
         <div class="px-4 bg-gray-200 h-screen sm:px-6 sm:py-4 lg:px-8">
             <div class="sm:flex sm:items-center">
                 <div class="sm:flex-auto">
@@ -64,27 +149,21 @@ const handleClickAddVehicle = () => {
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-200 bg-white" v-loading="loading">
-                                    <tr v-for="vehicle in places" :key="vehicle.id">
+                                    <tr v-for="place in places" :key="place.id">
                                         <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 sm:pl-6">{{
-                                            vehicle.tracker.name
+                                            place.from
                                             }}</td>
                                         <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{
-                                            vehicle.model }}
+                                            place.place.name }}
                                         </td>
-                                        <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ vehicle.cr_no
+                                        <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ place.price
                                             }}</td>
                                         <td
                                             class="relative whitespace-nowrap py-2 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                                            <button type="button" @click="handleClickEdit(vehicle)"
+                                            <button type="button" @click="handleClickEdit(place)"
                                                 class="inline-flex items-center rounded-md mr-2 border border-transparent bg-green-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
                                                 <PencilSquareIcon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
                                                 Edit
-                                            </button>
-
-                                            <button type="button" @click="handleClickDetails(vehicle)"
-                                                class="inline-flex items-center rounded-md mr-2 border border-transparent bg-cyan-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2">
-                                                <EyeIcon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
-                                                View
                                             </button>
 
                                             <button type="button"
