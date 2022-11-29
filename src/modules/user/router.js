@@ -13,6 +13,12 @@ const moduleRoute = {
             path: '/user/profile',
             name: 'User Profile',
             component: () => import('./views/UserProfile.vue')
+        },
+        {
+            path: '/details/:id',
+            name: 'User Vehicle Details',
+            component: () => import('./views/VehicleDetails.vue'),
+            props: true
         }
     ]
 }

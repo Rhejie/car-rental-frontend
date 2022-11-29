@@ -19,7 +19,7 @@
                   </div>
                 </TransitionChild>
                 <div class="flex flex-shrink-0 items-center px-4">
-                  <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=cyan&shade=300" alt="Easywire logo" />
+                  <img class="h-8 w-auto" src="../../assets/APCLogo.jpg" alt="Easywire logo" /> Car Rental
                 </div>
                 <nav class="mt-5 h-full flex-shrink-0 divide-y divide-cyan-800 overflow-y-auto" aria-label="Sidebar">
                   <div class="space-y-1 px-2">
@@ -51,7 +51,7 @@
         <!-- Sidebar component, swap this element with another sidebar if you like -->
         <div class="flex flex-grow flex-col overflow-y-auto bg-cyan-700 pt-5 pb-4">
           <div class="flex flex-shrink-0 items-center px-4">
-            <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=cyan&shade=300" alt="Easywire logo" />
+            <img class="h-8 w-auto" src="../../assets/APCLogo.jpg" alt="Easywire logo" /> <span class="text-white text-sm ml-2">Car Rental</span>
           </div>
           <nav class="mt-5 flex flex-1 flex-col divide-y divide-cyan-800 overflow-y-auto" aria-label="Sidebar">
             <div class="space-y-1 px-2">

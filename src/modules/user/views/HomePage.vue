@@ -9,6 +9,10 @@ import { fetchVehicles } from '@/modules/admin/components/vehciles/composables/v
 import GPagination from "@/components/GPagination.vue";
 import { onMounted, ref, watch } from 'vue';
 import SelectPlace from '@/modules/admin/components/settings/place-utilities/SelectPlace.vue';
+import GNoVehicles from '@/components/GNoVehicles.vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter()
 const loading = ref(true)
 const vehicles = ref([])
 const total = ref(0)
@@ -22,7 +26,8 @@ const params = ref({
     brands: null,
     colors: null,
     fuelTypes: null,
-    place_id: null
+    place_id: null,
+    place: null
 })
 
 const place = ref(null)
@@ -54,6 +59,7 @@ const handleClearFilter = () => {
     selectedColors.value = []
     selectedFuelType.value = []
     selectedBrands.value = []
+    // params.value.place = null
 }
 
 const onHandleChangePlace = (item) => {
@@ -106,7 +112,7 @@ const handleToogleFuelType = (item) => {
 }
 
 const handleClickDetails = (vehicle) => {
-
+    router.push({name: 'User Vehicle Details', params: {id: vehicle.id }})
 }
 
 const handleClickBook = (vehicle) => {
@@ -156,7 +162,7 @@ onMounted(async () => {
                     Clear Filters
                 </button>
                 <div class="mt-1">
-                    <input type="text" min="1" v-model="place" placeholder="Search Here.."
+                    <input type="text" min="1" v-model="params.search" placeholder="Search Here.."
                         class="w-full rounded-md h-8 border border-gray-300 bg-white py-2 pl-3 pr-2 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500 sm:text-sm" />
                 </div>
                 <button type="button" class="inline-flex items-center lg:hidden" @click="mobileFiltersOpen = true">
@@ -216,6 +222,9 @@ onMounted(async () => {
                             </button>
                         </div>
                     </div>
+                </div>
+                <div v-if="!loading && vehicles.length == 0">
+                    <GNoVehicles/>
                 </div>
             </section>
         </div>
