@@ -38,10 +38,10 @@ const subNavigation = ref([
     current: false,
   },
   {
-    name: 'Price List',
+    name: 'Places',
     description: 'Enim, nullam mi vel et libero urna lectus enim. Et sed in maecenas tellus.',
-    routerName: 'Roles',
-    icon: ListBulletIcon,
+    routerName: 'Places',
+    icon: MapPinIcon,
     current: false,
   },
   {

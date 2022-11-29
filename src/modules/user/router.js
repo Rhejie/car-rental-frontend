@@ -8,6 +8,11 @@ const moduleRoute = {
             path: '',
             name: 'UserHome',
             component: () => import('./views/HomePage.vue')
+        },
+        {
+            path: '/user/profile',
+            name: 'User Profile',
+            component: () => import('./views/UserProfile.vue')
         }
     ]
 }

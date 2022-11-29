@@ -6,7 +6,13 @@ export const fetchVehicles = (params) => {
     const totalVehicle = ref(0)
 
     const load = async () => {
-        await http().get(`/vehicle/list?search=${params.search}&page=${params.page}&size=${params.page_size}`)
+        await http().get(`/vehicle/list?
+            search=${params.search}&
+            page=${params.page}&
+            size=${params.size}&
+            brands=${params.brands}&
+            fuelTypes=${params.fuelTypes}&
+            colors=${params.colors}`)
             .then(res => {
                 data.value = res.data.data
                 totalVehicle.value = res.data.total

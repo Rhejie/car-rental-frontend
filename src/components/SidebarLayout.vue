@@ -32,7 +32,7 @@ const sidebarOpen = ref(false)
             <TransitionChild as="template" enter="transition-opacity ease-linear duration-300" enter-from="opacity-0"
                 enter-to="opacity-100" leave="transition-opacity ease-linear duration-300" leave-from="opacity-100"
                 leave-to="opacity-0">
-                <div class="fixed inset-0 bg-gray-600 bg-opacity-75" />
+                <div class="fixed inset-0 bg-teal-600 bg-opacity-75" />
             </TransitionChild>
     
             <div class="fixed inset-0 z-40 flex">
@@ -40,7 +40,7 @@ const sidebarOpen = ref(false)
                     enter-from="-translate-x-full" enter-to="translate-x-0"
                     leave="transition ease-in-out duration-300 transform" leave-from="translate-x-0"
                     leave-to="-translate-x-full">
-                    <DialogPanel class="relative flex w-full max-w-xs flex-1 flex-col bg-indigo-700 pt-5 pb-4">
+                    <DialogPanel class="relative flex w-full max-w-xs flex-1 flex-col bg-teal-700 pt-5 pb-4">
                         <TransitionChild as="template" enter="ease-in-out duration-300" enter-from="opacity-0"
                             enter-to="opacity-100" leave="ease-in-out duration-300" leave-from="opacity-100"
                             leave-to="opacity-0">
@@ -59,8 +59,8 @@ const sidebarOpen = ref(false)
                         <div class="mt-5 h-0 flex-1 overflow-y-auto">
                             <nav class="space-y-1 px-2">
                                 <router-link v-for="item in navigation" :key="item.name" :to="{name: item.routeName}"
-                                    :class="[item.current ? 'bg-indigo-800 text-white' : 'text-indigo-100 hover:bg-indigo-600', 'group flex items-center px-2 py-2 text-base font-medium rounded-md']">
-                                    <component :is="item.icon" class="mr-4 h-6 w-6 flex-shrink-0 text-indigo-300"
+                                    :class="[item.current ? 'bg-teal-800 text-white' : 'text-teal-100 hover:bg-teal-600', 'group flex items-center px-2 py-2 text-base font-medium rounded-md']">
+                                    <component :is="item.icon" class="mr-4 h-6 w-6 flex-shrink-0 text-teal-300"
                                         aria-hidden="true" />
                                     {{ item.name }}
                                 </router-link>
@@ -78,15 +78,15 @@ const sidebarOpen = ref(false)
     <!-- Static sidebar for desktop -->
     <div class="hidden md:fixed md:inset-y-0 md:flex md:w-64 md:flex-col">
         <!-- Sidebar component, swap this element with another sidebar if you like -->
-        <div class="flex flex-grow flex-col overflow-y-auto bg-indigo-700 pt-5">
+        <div class="flex flex-grow flex-col overflow-y-auto bg-teal-700 pt-5">
             <div class="flex flex-shrink-0 items-center px-4">
                 <span class="text-white">Car Rental Admin</span>
             </div>
             <div class="mt-5 flex flex-1 flex-col">
                 <nav class="flex-1 space-y-1 px-2 pb-4">
                     <router-link v-for="item in navigation" :key="item.name" :to="{ name: item.routeName}"
-                        :class="[item.current ? 'bg-indigo-800 text-white' : 'text-indigo-100 hover:bg-indigo-600', 'group flex items-center px-2 py-2 text-sm font-medium rounded-md']">
-                        <component :is="item.icon" class="mr-3 h-6 w-6 flex-shrink-0 text-indigo-300" aria-hidden="true" />
+                        :class="[item.current ? 'bg-teal-800 text-white' : 'text-teal-100 hover:bg-teal-600', 'group flex items-center px-2 py-2 text-sm font-medium rounded-md']">
+                        <component :is="item.icon" class="mr-3 h-6 w-6 flex-shrink-0 text-teal-300" aria-hidden="true" />
                         {{ item.name }}
                     </router-link>
                 </nav>

@@ -1,4 +1,5 @@
 <script setup>
+import GLoadingDiv from '@/components/GLoadingDiv.vue';
 import { storageUrl } from '@/global-composables/http_service';
 import {
     Menu,
@@ -28,6 +29,7 @@ import { useRouter } from 'vue-router';
 import { getVehicleById } from './composables/vehcile-composables';
 import ImagesViewer from './utilities/ImagesViewer.vue';
 import SelectStatus from './utilities/SelectStatus.vue';
+import VehiclePlaces from './components/VehiclePlaces.vue'
 const router = useRouter();
 const props = defineProps({
     id: null
@@ -44,7 +46,7 @@ const getVehicleInfo = async () => {
 }
 
 const getFirstImage = () => {
-    if(!loading.value && vehicle.value && vehicle.value.id && vehicle.value.vehicle_images.length > 0) {
+    if (!loading.value && vehicle.value && vehicle.value.id && vehicle.value.vehicle_images.length > 0) {
         return vehicle.value.vehicle_images[0].image_url
     }
 
@@ -52,7 +54,7 @@ const getFirstImage = () => {
 }
 
 const handleClickEdit = () => {
-    router.push({name: 'Edit Vehicle', params: {id: vehicle.value.id} })
+    router.push({ name: 'Edit Vehicle', params: { id: vehicle.value.id } })
 }
 
 onMounted(async () => {
@@ -65,6 +67,13 @@ const eventTypes = {
     advanced: { icon: HandThumbUpIcon, bgColorClass: 'bg-gray-500' },
     completed: { icon: CheckIcon, bgColorClass: 'bg-green-500' },
 }
+
+const tabs = [
+    { name: 'Booking History', href: '#', current: true },
+    { name: 'Images', href: '#', current: false },
+    { name: 'Maintenance', href: '#', current: false },
+    { name: 'Places', href: '#', current: false },
+]
 const timeline = [
     {
         id: 1,
@@ -118,7 +127,132 @@ const timeline = [
 
 </script>
 <template>
-    <div class="py-2" v-if="!loading">
+    <GLoadingDiv v-if="loading" />
+    <div v-if="!loading">
+        <div class="w-full bg-gray-500">
+            <div class="mx-auto max-w-2xl  py-4 px-4 lg:max-w-7xl lg:px-0">
+                <h1 class="text-2xl font-bold tracking-tight text-white sm:text-3xl">Manage Vehicle: {{ vehicle.model }}
+                </h1>
+            </div>
+        </div>
+    </div>
+    <div class="px-4 bg-gray-200 h-full sm:px-6 sm:py-4 lg:px-8">
+        <div class="flex">
+            <div class="w-2/5 mr-2">
+                <div class="overflow-hidden w-full bg-white shadow sm:rounded-lg mb-2" v-if="!loading">
+                    <div class="px-4 py-5 sm:px-6">
+                        <h3 class="text-lg font-medium leading-6 text-gray-900">Model Information</h3>
+                        <p class="mt-1 max-w-2xl text-sm text-gray-500">Vehicle details and application.</p>
+                    </div>
+                    <div class="border-t border-gray-200">
+                        <dl>
+                            <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                <dt class="text-sm font-medium text-gray-500">Full Name</dt>
+                                <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{
+                                        vehicle.vehicle_brand.name
+                                }}</dd>
+                            </div>
+                            <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                <dt class="text-sm font-medium text-gray-500">Birthday</dt>
+                                <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ vehicle.birthday }}</dd>
+                            </div>
+                            <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                <dt class="text-sm font-medium text-gray-500">Gender</dt>
+                                <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ vehicle.gender }}</dd>
+                            </div>
+                            <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                <dt class="text-sm font-medium text-gray-500">Email address</dt>
+                                <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ vehicle.email }}</dd>
+                            </div>
+                            <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                <dt class="text-sm font-medium text-gray-500">Contact Number</dt>
+                                <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ vehicle.contact_number
+                                }}
+                                </dd>
+                            </div>
+                            <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                <dt class="text-sm font-medium text-gray-500">Email address</dt>
+                                <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ vehicle.email }}</dd>
+                            </div>
+                            <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                <dt class="text-sm font-medium text-gray-500">Address</dt>
+                                <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ vehicle.address }}</dd>
+                            </div>
+                        </dl>
+                    </div>
+                </div>
+                <div class="overflow-hidden w-full bg-white shadow sm:rounded-lg" v-if="!loading">
+                    <div class="px-4 py-5 sm:px-6">
+                        <h3 class="text-lg font-medium leading-6 text-gray-900">Legal Information</h3>
+                        <p class="mt-1 max-w-2xl text-sm text-gray-500">Vehicle details and application.</p>
+                    </div>
+                    <div class="border-t border-gray-200">
+                        <dl>
+                            <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                <dt class="text-sm font-medium text-gray-500">Full Name</dt>
+                                <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{
+                                        vehicle.vehicle_brand.name
+                                }}</dd>
+                            </div>
+                            <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                <dt class="text-sm font-medium text-gray-500">Birthday</dt>
+                                <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ vehicle.birthday }}</dd>
+                            </div>
+                            <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                <dt class="text-sm font-medium text-gray-500">Gender</dt>
+                                <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ vehicle.gender }}</dd>
+                            </div>
+                            <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                <dt class="text-sm font-medium text-gray-500">Email address</dt>
+                                <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ vehicle.email }}</dd>
+                            </div>
+                            <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                <dt class="text-sm font-medium text-gray-500">Contact Number</dt>
+                                <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ vehicle.contact_number
+                                }}
+                                </dd>
+                            </div>
+                            <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                <dt class="text-sm font-medium text-gray-500">Email address</dt>
+                                <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ vehicle.email }}</dd>
+                            </div>
+                            <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                <dt class="text-sm font-medium text-gray-500">Address</dt>
+                                <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ vehicle.address }}</dd>
+                            </div>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="w-full">
+                <div>
+                    <div class="sm:hidden">
+                        <label for="tabs" class="sr-only">Select a tab</label>
+                        <!-- Use an "onChange" listener to redirect the user to the selected tab URL. -->
+                        <select id="tabs" name="tabs"
+                            class="block w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
+                            <option v-for="tab in tabs" :key="tab.name" :selected="tab.current">{{ tab.name }}</option>
+                        </select>
+                    </div>
+                    <div class="hidden sm:block">
+                        <nav class="isolate flex divide-x divide-gray-200 rounded-lg shadow" aria-label="Tabs">
+                            <a v-for="(tab, tabIdx) in tabs" :key="tab.name" :href="tab.href"
+                                :class="[tab.current ? 'text-gray-900' : 'text-gray-500 hover:text-gray-700', tabIdx === 0 ? 'rounded-l-lg' : '', tabIdx === tabs.length - 1 ? 'rounded-r-lg' : '', 'group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-4 text-sm font-medium text-center hover:bg-gray-50 focus:z-10']"
+                                :aria-current="tab.current ? 'page' : undefined">
+                                <span>{{ tab.name }}</span>
+                                <span aria-hidden="true"
+                                    :class="[tab.current ? 'bg-indigo-500' : 'bg-transparent', 'absolute inset-x-0 bottom-0 h-0.5']" />
+                            </a>
+                        </nav>
+                        <VehiclePlaces/>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <!-- <div class="py-2" v-if="!loading">
 
         <div
             
@@ -157,7 +291,6 @@ const timeline = [
         <div
             class="mx-auto mt-8 grid max-w-3xl grid-cols-1 gap-6 sm:px-6 lg:max-w-7xl lg:grid-flow-col-dense lg:grid-cols-3">
             <div class="space-y-6 lg:col-span-2 lg:col-start-1">
-                <!-- Description list-->
                 <section aria-labelledby="applicant-information-title">
                     <div class="bg-white shadow sm:rounded-lg">
                         <div class="px-4 py-5 sm:px-6">
@@ -243,14 +376,12 @@ const timeline = [
                         <ImagesViewer :imagesData="vehicle.vehicle_images" />
                     </div>
                 </section>
-                <!-- Comments-->
             </div>
 
             <section aria-labelledby="timeline-title" class="lg:col-span-1 lg:col-start-3">
                 <div class="bg-white px-4 py-5 shadow sm:rounded-lg sm:px-6">
+                    <ImagesViewer :imagesData="vehicle.vehicle_images" />
                     <h2 id="timeline-title" class="text-lg font-bold text-gray-900">Maintenance History</h2>
-
-                    <!-- Activity Feed -->
                     
                     <div class="justify-stretch mt-6 flex flex-col">
                         <button type="button"
@@ -293,5 +424,5 @@ const timeline = [
                 </div>
             </section>
         </div>
-    </div>
+    </div> -->
 </template>

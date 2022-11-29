@@ -87,6 +87,11 @@ const moduleRoute = {
                     path: '/admin/settings/vehicle-brands',
                     name: 'Vehicle Brands',
                     component: () => import('./components/settings/VehicleBrandSettings.vue')
+                },
+                {
+                    path: '/admin/settings/places',
+                    name: 'Places',
+                    component: () => import('./components/settings/PlacesSettings.vue')
                 }
             ]
         }

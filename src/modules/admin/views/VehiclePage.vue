@@ -7,6 +7,9 @@ import CreatevehicleModal from '../components/vehciles/modals/CreatevehicleModal
 import SelectStatusFilter from '@/components/SelectStatusFilter.vue'
 import GSkeletonLoading from '@/components/GSkeletonLoading.vue'
 
+import GPagination from "@/components/GPagination.vue";
+import { PencilSquareIcon, EyeIcon, TrashIcon, PlusCircleIcon } from '@heroicons/vue/20/solid'
+
 const router = useRouter()
 
 const openModal = ref(false)
@@ -15,10 +18,13 @@ const vehicles = ref([])
 const loading = ref(true)
 const total = ref(0)
 const params = ref({
-  page_size: 10,
+  size: 10,
   page: 1,
   search: null,
-  status: 'all'
+  status: 'all',
+  brands: null,
+  colors: null,
+  fuelTypes: null
 })
 
 
@@ -57,8 +63,20 @@ const handleClickDetails = (vehicle) => {
   router.push({ name: 'Show Vehicle', params: { id: vehicle.id } })
 }
 
-const handleSetStatus = (vehicleStatus) => {
+const handleSetStatusPublish = (vehicleStatus) => {
   return vehicleStatus ? 'Publish' : 'Draft'
+}
+
+const handleSetStatus = (vehicleStatus) => {
+  return vehicleStatus ? 'Unused' : 'Used'
+}
+
+const handleChangeSize = (size) => {
+  params.value.page_size = size
+}
+
+const handleChangePage = (page) => {
+  params.value.page = page
 }
 
 onMounted(async () => {
@@ -72,63 +90,108 @@ watch(params.value, () => {
 </script>
 <template>
   <CreatevehicleModal :openModal="openModal" @closeModal="handleCloseAddVehicleModal" />
-  <div class="w-full bg-gray-200">
+  <div class="w-full bg-gray-500">
     <div class="mx-auto max-w-2xl  py-4 px-4 lg:max-w-7xl lg:px-0">
-      <h1 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Vehicle List</h1>
-      <p class="mt-2 text-sm text-gray-500">All publish and draft vehciles.</p>
+      <h1 class="text-2xl font-bold tracking-tight text-white sm:text-3xl">Manage Vehicles</h1>
     </div>
   </div>
-  <div class="w-full relative shadow-md">
-    <div class="mx-auto max-w-2xl flex  py-4 px-4 lg:max-w-7xl lg:px-0">
-      <button type="button" @click="handleClickAddVehicle" :disabled="false"
-        class="inline-flex items-center rounded border border-transparent bg-indigo-600 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-        Add Vehicle
-      </button>
-      <div class="px-2">
-        <input type="text" min="1" v-model="params.search" placeholder="Search Here.."
-          class="w-40 rounded-md border border-gray-300 bg-white py-2 pl-3 pr-2 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500 sm:text-sm" />
+  <div class="px-4 bg-gray-200 h-screen sm:px-6 sm:py-4 lg:px-8">
+    <div class="sm:flex sm:items-center">
+      <div class="sm:flex-auto">
+        <h1 class="text-xl font-semibold text-gray-900">Vehicles</h1>
+        <p class="mt-2 text-sm text-gray-700">Publis and drafts vehicles.</p>
       </div>
-      <div class="flex">
-        <span class="mr-2 text-md text-gray-500 mt-2">Status: </span>
-        <SelectStatusFilter v-model="params.status"/>
+      <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+        <button type="button"
+        @click="handleClickAddVehicle"
+          class="inline-flex items-center justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:w-auto">
+          <PlusCircleIcon  class="-ml-0.5 mr-2 h-4 w-4"/>
+          Add vehicle
+        </button>
       </div>
     </div>
-  </div>
+    <div class=" flex flex-col">
+      <div class=" max-w-2xl flex  py-4 px-4 lg:max-w-7xl lg:px-0">
+        <div class="px-2">
+          <input type="text" min="1" v-model="params.search" placeholder="Search Here.."
+            class="w-40 rounded-md border border-gray-300 bg-white py-1 pl-3 pr-2 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500 sm:text-sm" />
+        </div>
+        <div class="flex">
+          <span class="mr-2 text-md text-gray-500 mt-2">Status: </span>
+          <SelectStatusFilter v-model="params.status" />
+        </div>
+      </div>
+      <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+        <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+          <div class="overflow-hidden bg-white shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+            <table class="min-w-full divide-y divide-gray-300">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th scope="col"
+                    class="whitespace-nowrap py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                    Tracker ID</th>
+                  <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    Model</th>
+                  <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    Plate No.</th>
+                  <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    CR Expiration Date</th>
+                  <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    CR No.</th>
+                  <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    Fuel Capacity</th>
+                  <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    Seating Capacity</th>
+                  <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    Publish</th>
+                  <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    Status</th>
+                  <th scope="col" class="relative whitespace-nowrap py-3.5 pl-3 pr-4 sm:pr-6">
+                    <span class="sr-only">Edit</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200 bg-white" v-loading="loading">
+                <tr v-for="vehicle in vehicles" :key="vehicle.id">
+                  <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 sm:pl-6">{{ vehicle.tracker.name
+                  }}</td>
+                  <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ vehicle.model }}
+                  </td>
+                  <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900">{{ vehicle.plate_number }}</td>
+                  <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ vehicle.cr_expiration_date }}
+                  </td>
+                  <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ vehicle.cr_no }}</td>
+                  <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ vehicle.fuel_capacity }} Letters
+                  </td>
+                  <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ vehicle.capacity }} Person</td>
+                  <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ handleSetStatusPublish(vehicle.publish) }}</td>
+                  <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ handleSetStatus(vehicle.status) }}</td>
+                  <td class="relative whitespace-nowrap py-2 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                    <button type="button"
+                      @click="handleClickEdit(vehicle)"
+                      class="inline-flex items-center rounded-md mr-2 border border-transparent bg-green-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                      <PencilSquareIcon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
+                      Edit
+                    </button>
 
-  <div class=" ">
-    <div class="mx-auto max-w-2xl py-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-      <GSkeletonLoading v-if="loading"/>
-      <div v-if="!loading" class="mt-8 grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
-        <div v-for="vehicle in vehicles" :key="vehicle.id" class="shadow-xl p-2 border border-gray-300">
-          <div class="relative">
-            <div class="relative h-72 w-full overflow-hidden rounded-lg">
-              <img :src="`${url}` + getFirstImage(vehicle)" :alt="vehicle.model"
-                class="h-full w-full object-cover object-center" />
-            </div>
-            <div class="relative mt-4">
-              <p class="mt-1 text-md text-gray-500"><span class="text-gray-700 font-bold">Tracker ID: </span>{{ vehicle.tracker.name }}</p>
-              <p class="mt-1 text-md text-gray-500"><span class="text-gray-700 font-bold">Color: </span>{{ vehicle.color.name }}</p>
-              <p class="mt-1 text-md text-gray-500"><span class="text-gray-700 font-bold">Company: </span>{{ vehicle.vehicle_brand.name }}</p>
-              <p class="mt-1 text-md text-gray-500"><span class="text-gray-700 font-bold">Seating: </span>{{ vehicle.capacity }}</p>
-              <p class="mt-1 text-md text-gray-500"><span class="text-gray-700 font-bold">Status: </span>{{ handleSetStatus(vehicle.publish) }}</p>
-            </div>
-            <div class="absolute inset-x-0 top-0 flex h-72 items-end justify-end overflow-hidden rounded-lg p-4">
-              <div aria-hidden="true" class="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-black opacity-50" />
-              <p class="relative text-lg font-semibold text-white">{{ vehicle.model }}</p>
-            </div>
-          </div>
-          <div class="mt-6">
-            <div
-              class="justify-stretch mt-6 flex flex-col-reverse space-y-4 space-y-reverse sm:flex-row-reverse sm:justify-end sm:space-y-0 sm:space-x-3 sm:space-x-reverse md:mt-0 md:flex-row md:space-x-3">
-              <button type="button" @click="handleClickDetails(vehicle)"
-                class="inline-flex items-center justify-center rounded-md border border-gray-200 px-4 py-2 text-sm font-medium shadow-xl hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-100">
-                Details
-              </button>
-              <button type="button" @click="handleClickEdit(vehicle)"
-                class="inline-flex cursor-pointer items-center justify-center rounded-md border border-transparent bg-gray-600 px-4 py-2 text-sm font-medium text-white shadow-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-100">
-                Edit
-              </button>
-            </div>
+                    <button type="button"
+                      @click="handleClickDetails(vehicle)"
+                      class="inline-flex items-center rounded-md mr-2 border border-transparent bg-cyan-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2">
+                      <EyeIcon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
+                      View
+                    </button>
+
+                    <button type="button"
+                      class="inline-flex items-center rounded-md mr-2 border border-transparent bg-red-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                      <TrashIcon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <g-pagination :page_size="params.page_size" :current_size="total" :current_page="params.page"
+              @change_size="handleChangeSize" @change_page="handleChangePage" />
           </div>
         </div>
       </div>
