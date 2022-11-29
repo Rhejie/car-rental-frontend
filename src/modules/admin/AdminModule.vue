@@ -150,9 +150,9 @@
   
   const navigation = [
     { name: 'Dashboard', routeName: 'Dashboard', icon: HomeIcon, current: true },
-    { name: 'Vehicles', routeName: 'Vehicles', icon: TruckIcon, current: false },
     { name: 'Users', routeName: 'Account', icon: UsersIcon, current: false },
     { name: 'Booking', routeName: 'Admin Bookings', icon: CalendarIcon, current: false },
+    { name: 'Vehicles', routeName: 'Vehicles', icon: TruckIcon, current: false },
     { name: 'Trackers', routeName: 'Trackers', icon: InboxIcon, current: false },
     { name: 'Maintenance', routeName: 'Account', icon: ChartBarIcon, current: false },
     { name: 'Reporting', routeName: 'Account', icon: ClipboardDocumentIcon, current: false },
