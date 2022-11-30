@@ -60,14 +60,6 @@
                 {{ item.name }}
               </router-link>
             </div>
-            <div class="mt-6 pt-6">
-              <div class="space-y-1 px-2">
-                <a v-for="item in secondaryNavigation" :key="item.name" :href="item.href" class="group flex items-center rounded-md px-2 py-2 text-sm font-medium leading-6 text-cyan-100 hover:bg-cyan-600 hover:text-white">
-                  <component :is="item.icon" class="mr-4 h-6 w-6 text-cyan-200" aria-hidden="true" />
-                  {{ item.name }}
-                </a>
-              </div>
-            </div>
           </nav>
         </div>
       </div>
@@ -137,7 +129,8 @@
     InboxIcon,
     UsersIcon,
     ClipboardDocumentIcon,
-    AdjustmentsHorizontalIcon
+    AdjustmentsHorizontalIcon,
+    RocketLaunchIcon
   } from '@heroicons/vue/24/outline'
   import {
     BanknotesIcon,
@@ -151,7 +144,8 @@
   const navigation = [
     { name: 'Dashboard', routeName: 'Dashboard', icon: HomeIcon, current: true },
     { name: 'Users', routeName: 'Admin Users', icon: UsersIcon, current: false },
-    { name: 'Booking', routeName: 'Admin Bookings', icon: CalendarIcon, current: false },
+    { name: 'Booking Applications', routeName: 'Admin Bookings', icon: CalendarIcon, current: false },
+    { name: 'Deployed Vehicles', routeName: 'Admin Bookings', icon: RocketLaunchIcon, current: false },
     { name: 'Vehicles', routeName: 'Vehicles', icon: TruckIcon, current: false },
     { name: 'Trackers', routeName: 'Trackers', icon: InboxIcon, current: false },
     { name: 'Maintenance', routeName: 'Account', icon: ChartBarIcon, current: false },

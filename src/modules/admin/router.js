@@ -22,6 +22,12 @@ const moduleRoute = {
             component: () => import('./views/UsersPage.vue')
         },
         {
+            path: '/admin/users/:id',
+            name: "Admin User Profile",
+            component: () => import('../admin/components/users/AdminUserProfile.vue'),
+            props: true
+        },
+        {
             path: '/admin/vehicles/edit/:id',
             name: "Edit Vehicle",
             component: () => import('../admin/components/vehciles/EditVehiclePage.vue'),

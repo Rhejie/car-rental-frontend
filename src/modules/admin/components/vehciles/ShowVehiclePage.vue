@@ -32,6 +32,7 @@ import ImagesViewer from './utilities/ImagesViewer.vue';
 import SelectStatus from './utilities/SelectStatus.vue';
 import VehiclePlaces from './components/VehiclePlaces.vue'
 import VehiclePhotos from './components/VehiclePhotos.vue';
+import VehicleBookingHistory from './components/VehicleBookingHistory.vue';
 const router = useRouter();
 const props = defineProps({
     id: null
@@ -232,6 +233,7 @@ onMounted(async () => {
                         </nav>
                         <VehiclePlaces :vehicle_id="props.id" v-if="!loading && tabs.find(t => t.name == 'Places' && t.current == true)" />
                         <VehiclePhotos :images="vehicle.vehicle_images" v-if="!loading && tabs.find(t => t.name == 'Images' && t.current == true)"/>
+                        <VehicleBookingHistory :vehicle_id="props.id" v-if="!loading && tabs.find(t => t.name == 'Booking History' && t.current == true)" />
                     </div>
                 </div>
             </div>

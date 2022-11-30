@@ -50,7 +50,7 @@ const statusStyles = {
                                         alt="" />
                                     <h1
                                         class="ml-3 text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:leading-9">
-                                        Good morning, Emilia Birch</h1>
+                                        Welcome Admin!</h1>
                                 </div>
                             </div>
                         </div>

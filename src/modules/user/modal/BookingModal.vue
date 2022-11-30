@@ -3,6 +3,7 @@ import { computed, onUpdated, ref, watch } from 'vue'
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { storeBook } from '../composables/booking-composables'
 import { BookmarkIcon } from '@heroicons/vue/24/outline'
+import { useRouter } from 'vue-router';
 
 const props = defineProps({
     openModal: {
@@ -16,6 +17,8 @@ const props = defineProps({
         type: Object,
     }
 })
+
+const router = useRouter()
 const open = computed(() => props.openModal)
 
 const vehicle = computed(() => props.vehicle)
@@ -97,6 +100,7 @@ const storeData = async () => {
 
     if(!loading.value && !errorValue.value, !errorData.value) {
         // emit('saveColor', data.value)
+        router.push({name: 'User Bookings'})
     }
 }
 
