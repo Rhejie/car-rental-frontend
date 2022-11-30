@@ -48,7 +48,7 @@ const countDays = computed({
         if(price.value && book.value.booking_start && book.value.booking_end) {
             const newDate = (new Date(book.value.booking_end).getTime()) - (new Date(book.value.booking_start).getTime())
             const totalData =  newDate / (1000 * 60 * 60 * 24)
-            return totalData
+            return totalData.toFixed(0)
         }
 
         return 0
@@ -285,7 +285,7 @@ onUpdated(() => {
                                                                             Booking Start
                                                                         </label>
                                                                         <div class="mt-1">
-                                                                            <input id="email" type="date"
+                                                                            <input id="email" type="datetime-local"
                                                                                 placeholder="Book Start"
                                                                                 v-model="book.booking_start"
                                                                                 class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
@@ -297,10 +297,10 @@ onUpdated(() => {
                                                                     </div>
                                                                     <div>
                                                                         <label for="email"
-                                                                            class="block text-sm font-medium text-gray-700">Book End
+                                                                            class="block text-sm font-medium text-gray-700">Booking End
                                                                             </label>
                                                                         <div class="mt-1">
-                                                                            <input id="email" type="date"
+                                                                            <input id="email" type="datetime-local"
                                                                                 v-model="book.booking_end"
                                                                                 placeholder="First Name"
                                                                                 class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />

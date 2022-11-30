@@ -53,6 +53,7 @@ const handleClickDetails = (book) => {
 }
 
 const handleUserName = (user) => {
+
   return user.last_name + ', ' + user.first_name
 }
 
@@ -70,6 +71,23 @@ const handleDestination = (destination) => {
 
 const handleSetStatus = (vehicleStatus) => {
   return vehicleStatus ? 'Available' : 'Unavailable'
+}
+
+const handleBookingStatusColor = (status) => {
+  if(status == 'pending') {
+    return 'bg-yellow-600 px-2 rounded-md py-1 shadow'
+  }
+  if(status == 'accept') {
+    return 'bg-green-600 px-2 rounded-md py-1 shadow'
+  }
+  
+  if(status == 'decline') {
+    return 'bg-red-600 px-2 rounded-md py-1 shadow'
+  }
+  
+  if(status == 'accept') {
+    return 'bg-orange-600 px-2 rounded-md py-1 shadow'
+  }
 }
 
 const handleChangeSize = (size) => {
@@ -121,6 +139,8 @@ watch(params.value, () => {
             <table class="min-w-full divide-y divide-gray-300">
               <thead class="bg-gray-50">
                 <tr>
+                  <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    Status</th>
                   <th scope="col"
                     class="whitespace-nowrap py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
                     User </th>
@@ -133,8 +153,6 @@ watch(params.value, () => {
                   <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">
                     Date End</th>
                   <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">
-                    Status</th>
-                  <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">
                     Destination</th>
                   <th scope="col" class="relative whitespace-nowrap py-3.5 pl-3 pr-4 sm:pr-6">
                     <span class="sr-only">Edit</span>
@@ -143,6 +161,9 @@ watch(params.value, () => {
               </thead>
               <tbody class="divide-y divide-gray-200 bg-white" v-loading="loading">
                 <tr v-for="book in bookings" :key="book.id">
+                  <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">
+                    <span :class="['text-white text-sm', handleBookingStatusColor(book.booking_status)]">{{ book.booking_status }}</span>
+                  </td>
                   <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 sm:pl-6">
                     {{handleUserName(book.user)}}
                 </td>
@@ -153,7 +174,6 @@ watch(params.value, () => {
                   <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900">{{ book.booking_start }}</td>
                   <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ book.booking_end }}
                   </td>
-                  <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ book.booking_status }}</td>
                   <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ handleDestination(book.vehicle_place) }}
                   </td>
                   <td class="relative whitespace-nowrap py-2 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">

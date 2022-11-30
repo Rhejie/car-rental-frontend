@@ -19,6 +19,12 @@ const moduleRoute = {
             name: 'User Vehicle Details',
             component: () => import('./views/VehicleDetails.vue'),
             props: true
+        },
+        {
+            path: '/user/bookings',
+            name: 'User Bookings',
+            component: () => import('./views/BookingPage.vue'),
+            props: true
         }
     ]
 }

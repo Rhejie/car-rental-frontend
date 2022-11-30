@@ -267,7 +267,7 @@ const selectedBrands = ref([])
 const navigation = {
   pages: [
     { name: 'Home', routeName: 'UserHome' },
-    { name: 'Booking', routeName: 'UserHome' },
+    { name: 'Booking', routeName: 'User Bookings' },
   ],
 }
 const breadcrumbs = [{ id: 1, name: 'Home', href: '#' }]

@@ -20,3 +20,17 @@ export const storeBook = (book) => {
         errorData
     }
 }
+
+export const getCurrentBook = () => {
+    const data = ref(null)
+    const load = async () => {
+        await http().get('/booking/get-current-book').then(res => {
+            data.value = res.data
+        })
+    }
+
+    return {
+        load,
+        data
+    }
+}

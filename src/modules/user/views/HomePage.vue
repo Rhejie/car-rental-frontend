@@ -149,13 +149,13 @@ onMounted(async () => {
     </div>
 
     <main class="mx-auto max-w-2xl px-4 lg:max-w-7xl lg:px-8">
-        <div class="border-b border-gray-200 pt-12 pb-10">
+        <div class="border-b border-gray-400 pt-12 pb-10">
             <h1 class="text-4xl font-bold tracking-tight text-gray-900">Vehicles</h1>
             <p class="mt-4 text-base text-gray-500">Checkout out the latest and beautifull cars!</p>
         </div>
 
         <div class="pt-12 pb-24 lg:grid lg:grid-cols-3 lg:gap-x-8 xl:grid-cols-4">
-            <aside>
+            <aside class="border-r pr-2 border-gray-400">
                 <h2 class="text-sm">Filters</h2>
                 <button type="button" @click="handleClearFilter()"
                     class="inline-flex items-center justify-center float-right mb-2 rounded-md border border-gray-200 px-4 h-6 text-sm font-medium shadow-xl hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-100">

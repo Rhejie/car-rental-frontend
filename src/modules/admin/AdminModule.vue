@@ -150,7 +150,7 @@
   
   const navigation = [
     { name: 'Dashboard', routeName: 'Dashboard', icon: HomeIcon, current: true },
-    { name: 'Users', routeName: 'Account', icon: UsersIcon, current: false },
+    { name: 'Users', routeName: 'Admin Users', icon: UsersIcon, current: false },
     { name: 'Booking', routeName: 'Admin Bookings', icon: CalendarIcon, current: false },
     { name: 'Vehicles', routeName: 'Vehicles', icon: TruckIcon, current: false },
     { name: 'Trackers', routeName: 'Trackers', icon: InboxIcon, current: false },
