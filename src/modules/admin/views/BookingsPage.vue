@@ -8,8 +8,11 @@ import SelectStatusFilter from '@/components/SelectStatusFilter.vue'
 import GSkeletonLoading from '@/components/GSkeletonLoading.vue'
 
 import GPagination from "@/components/GPagination.vue";
-import { CheckCircleIcon, EyeIcon, XCircleIcon, XMarkIcon, PlusCircleIcon } from '@heroicons/vue/20/solid'
+import { CheckCircleIcon, EyeIcon, XCircleIcon, XMarkIcon, PlusCircleIcon, RocketLaunchIcon } from '@heroicons/vue/20/solid'
 import { loadBookings } from '../components/composables/booking-composables';
+import AcceptBookingModal from '../components/modals/AcceptBookingModal.vue';
+import GNotification from '@/components/GNotification.vue';
+import DeployBookingModal from '../components/modals/DeployBookingModal.vue';
 
 const router = useRouter()
 
@@ -24,6 +27,11 @@ const params = ref({
   search: null,
 })
 
+const showNotif = ref(false)
+const message = ref('')
+const selectedBooking = ref(null)
+const showDeployModal = ref(false)
+
 
 const url = storageUrl();
 
@@ -31,8 +39,28 @@ const handleClickAddVehicle = () => {
   openModal.value = true
 }
 
-const handleCloseAddVehicleModal = () => {
+const handleAcceptedBook = (selected) => {
+  message.value = "Successfully accepted!"
+  showNotif.value = true
+  bookings.value.map(book => {
+    if(selected.id == book.id) {
+      for(let key in selected) {
+        book[key] = selected[key]
+      }
+    }
+    return book
+  })
+
   openModal.value = false
+  setTimeout(() => {
+        showNotif.value = false
+    }, 2000)
+}
+
+
+const handleCloseModal = () => {
+  openModal.value = false
+  showDeployModal.value = false
 }
 
 const fetch = async () => {
@@ -44,8 +72,9 @@ const fetch = async () => {
   loading.value = false
 }
 
-const handleClickEdit = (book) => {
-  router.push({ name: 'Edit Vehicle', params: { id: book.id } })
+const handleAcceptBook = (book) => {
+  selectedBooking.value = book
+  openModal.value = true
 }
 
 const handleClickDetails = (book) => {
@@ -55,6 +84,10 @@ const handleClickDetails = (book) => {
 const handleUserName = (user) => {
 
   return user.last_name + ', ' + user.first_name
+}
+
+const handleLickUser = (user) => {
+  router.push({name: 'Admin User Profile', params: { id: user.id } })
 }
 
 const handleVehicleName = (vehicle) => {
@@ -98,6 +131,22 @@ const handleChangePage = (page) => {
   params.value.page = page
 }
 
+const handleDeployeButton = (book, index) => {
+  showDeployModal.value = true
+  selectedBooking.value = book
+}
+
+const handleDeployedBooking = (book) => {
+  let _index = bookings.value.findIndex(b => b.id == book.id);
+  bookings.value.splice(_index, 1)
+  message.value = "Successfully deployed!"
+  showNotif.value = true
+
+  setTimeout(() => {
+        showNotif.value = false
+    }, 2000)
+}
+
 onMounted(async () => {
   fetch();
 })
@@ -108,7 +157,10 @@ watch(params.value, () => {
 
 </script>
 <template>
-  <CreatevehicleModal :openModal="openModal" @closeModal="handleCloseAddVehicleModal" />
+  
+  <GNotification :show-notif="showNotif" :message="message"/>
+  <AcceptBookingModal :openModal="openModal" :selected-book="selectedBooking" @closeModal="handleCloseModal" @acceptBook="handleAcceptedBook"/>
+  <DeployBookingModal :openModal="showDeployModal" :selected-booking="selectedBooking" @closeModal="handleCloseModal" @acceptBook="handleDeployedBooking"/>
   <div class="w-full bg-gray-500">
     <div class="mx-auto max-w-2xl  py-4 px-4 lg:max-w-7xl lg:px-0">
       <h1 class="text-2xl font-bold tracking-tight text-white sm:text-3xl">Manage Bookings</h1>
@@ -160,11 +212,11 @@ watch(params.value, () => {
                 </tr>
               </thead>
               <tbody class="divide-y divide-gray-200 bg-white" v-loading="loading">
-                <tr v-for="book in bookings" :key="book.id">
+                <tr v-for="(book, index) in bookings" :key="book.id">
                   <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">
                     <span :class="['text-white text-sm', handleBookingStatusColor(book.booking_status)]">{{ book.booking_status }}</span>
                   </td>
-                  <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 sm:pl-6">
+                  <td @click="handleLickUser(book.user)" class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-cyan-500 sm:pl-6 cursor-pointer" >
                     {{handleUserName(book.user)}}
                 </td>
                   <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ handleVehicleTracker(book.vehicle) }}</td>
@@ -184,22 +236,31 @@ watch(params.value, () => {
                       <EyeIcon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
                       View
                     </button> -->
-                    
-                    <button type="button" @click="handleClickEdit(book)"
+                    <!-- Pending Booking -->
+                    <button type="button" @click="handleAcceptBook(book)"  v-if="book.booking_status != 'accept' && book.booking_status != 'decline' && book.booking_status != 'cancel'"
                       class="inline-flex items-center rounded-md mr-2 border border-transparent bg-green-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
                       <CheckCircleIcon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
                       Accept
                     </button>
-
+                    
                     <button type="button"
-                      class="inline-flex items-center rounded-md mr-2 border border-transparent bg-orange-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
-                      <XCircleIcon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
-                      Cancel
-                    </button>
-                    <button type="button"
+                    v-if="book.booking_status != 'accept' && book.booking_status != 'decline' && book.booking_status != 'cancel'"
                       class="inline-flex items-center rounded-md mr-2 border border-transparent bg-red-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
                       <XMarkIcon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
                       Decline
+                    </button>
+
+                    <!-- Accepted Booking -->
+                    <button type="button" @click="handleDeployeButton(book, index)"  v-if="book.booking_status != 'pending' && book.booking_status != 'decline'"
+                      class="inline-flex items-center rounded-md mr-2 border border-transparent bg-cyan-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2">
+                      <RocketLaunchIcon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
+                      Deploy
+                    </button>
+
+                    <button type="button" @click="handleDeployeButton(book, index)"  v-if="book.booking_status != 'pending' && book.booking_status != 'decline'"
+                      class="inline-flex items-center rounded-md mr-2 border border-transparent bg-orange-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
+                      <XCircleIcon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
+                      Cancel
                     </button>
                   </td>
                 </tr>

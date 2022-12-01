@@ -21,6 +21,38 @@ export const loadBookings = (params) => {
     }
 }
 
+export const acceptBooking = (book) => {
+    const data = ref(null)
+
+    const post = async () => {
+        await http().post('/booking/accept', book).then(res => {
+            data.value = res.data
+        }).catch(error => {
+            console.log('Error in accepting Booking: ', error)
+        })
+    }
+
+    return {
+        data,
+        post
+    }
+}
+
+export const deployBooking = (book) => {
+    const data = ref(null)
+    const post = async () => {
+        await http().post(`/booking/deploy/${book.id}`).then(res => {
+            data.value = res.data
+        }).catch(error => {
+            console.log('Error in deploy Booking: ', error)
+        })
+    }
+
+    return {
+        data, post
+    }
+}
+
 export const loadBookingHistory = (params, vehicle_id) => {
 
     const data = ref([])

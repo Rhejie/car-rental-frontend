@@ -61,3 +61,19 @@ export const updatePaymentMethod = (paymentMethod) => {
         errorData
     }
 }
+
+export const selectPaymentMethods = (search) => {
+    const data = ref(null)
+
+    const load = async () => {
+        await http().get(`/payment-method/select-payment-method?search=${search}`).then(res => {
+            data.value = res.data
+        }).catch(error => {
+            console.log('Error in getting paymentMethods', error)
+        })
+    }
+
+    return {
+        data, load
+    }
+}
