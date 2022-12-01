@@ -49,10 +49,6 @@ watch(query, (val) => {
     selectPaymentMethod()
 })
 
-watch(selectedPaymentMethod, (val) => {
-    props.onHandleChangePaymentMethod(val)
-})
-
 onMounted(async () => {
     await selectPaymentMethod();
 })

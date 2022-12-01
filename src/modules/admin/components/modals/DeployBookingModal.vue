@@ -21,7 +21,7 @@
                                     <div class="space-y-6 lg:col-span-2 lg:col-start-1">
                                         <!-- Description list-->
                                         <section aria-labelledby="applicant-information-title">
-                                            <div class="bg-white shadow sm:rounded-lg">
+                                            <div class="bg-white shadow sm:rounded-lg border-t border-cyan-300">
                                                 <div class="px-4 py-5 sm:px-6">
                                                     <h2 id="applicant-information-title"
                                                         class="text-lg font-medium leading-6 text-gray-900">Application
@@ -80,7 +80,7 @@
                                                 </div>
                                                 <div>
                                                     <span
-                                                        class="block bg-gray-50 px-4 py-4 text-center text-sm font-medium text-gray-500 hover:text-gray-700 sm:rounded-b-lg">
+                                                        class="block bg-gray-50 px-4 py-4 font-bold text-center text-sm font-medium text-gray-500 hover:text-gray-700 sm:rounded-b-lg">
                                                         Total Price {{ totalPrice }} Php
                                                     </span>
                                                 </div>
@@ -89,33 +89,57 @@
                                     </div>
 
                                     <section aria-labelledby="timeline-title" class="lg:col-span-1 lg:col-start-3">
-                                        <div class="bg-white px-4 py-5 shadow sm:rounded-lg sm:px-6">
+                                        <div
+                                            class="bg-white px-4 py-5 shadow sm:rounded-lg sm:px-6  border-t border-cyan-300">
                                             <h2 id="timeline-title" class="text-lg font-medium text-gray-900">Payment
                                                 Details
                                             </h2>
 
                                             <!-- Activity Feed -->
                                             <div class="mt-6 flow-root">
-                                                <form class="">
-                                                    <div
-                                                        class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
-                                                        <div>
-                                                            <SelectPayment v-model="payment.type"/>
+                                                <form class="space-y-6">
+                                                    <div>
+                                                        <SelectPayment v-model="payment.type" />
+                                                        <span class="text-sm text-red-400"
+                                                            v-if="(errorValue && !loading && errorValue.type)">
+                                                            {{ errorValue.type[0] }}
+                                                        </span>
+                                                    </div>
+                                                    <div>
+                                                        <SelectPaymentMethod v-model="payment.payment_method"
+                                                            :onHandleChangePaymentMethod="onHandleChangePaymentMethod" />
+                                                        <span class="text-sm text-red-400"
+                                                            v-if="(errorValue && !loading && errorValue.payment_method)">
+                                                            {{ errorValue.payment_method[0] }}
+                                                        </span>
+                                                    </div>
+                                                    <div class="space-y-1"
+                                                        v-if="(payment.payment_method && payment.payment_method.name.toLowerCase() != 'cash')">
+                                                        <label for="password"
+                                                            class="block text-sm font-medium text-gray-700">Reference
+                                                            No.</label>
+                                                        <div class="mt-1">
+                                                            <input id="password" v-model="payment.reference_number"
+                                                                name="password" type="text"
+                                                                placeholder="Enter your reference number"
+                                                                class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
+                                                            <span class="text-sm text-red-400"
+                                                                v-if="errorValue && !loading && errorValue.reference_number">
+                                                                {{ errorValue.reference_number[0] }}
+                                                            </span>
                                                         </div>
-                                                        <div>
-                                                            <!-- <label for="email"
-                                                                class="block text-sm font-medium text-gray-700">Last
-                                                                Name</label>
-                                                            <div class="mt-1">
-                                                                <input id="email" type="text"
-                                                                    v-model="registerData.last_name"
-                                                                    placeholder="First Name"
-                                                                    class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
-                                                                <span class="text-sm text-red-400"
-                                                                    v-if="errorValue && !loading && errorValue.last_name">
-                                                                    {{ errorValue.last_name[0] }}
-                                                                </span>
-                                                            </div> -->
+                                                    </div>
+                                                    <div class="space-y-1">
+                                                        <label for="password"
+                                                            class="block text-sm font-medium text-gray-700">Payment</label>
+                                                        <div class="mt-1">
+                                                            <input id="password" v-model="payment.price" name="password"
+                                                                type="number" placeholder="Enter your reference number"
+                                                                class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
+                                                            <span class="text-sm text-red-400"
+                                                                v-if="errorValue && !loading && errorValue.price">
+                                                                {{ errorValue.price[0] }}
+                                                            </span>
                                                         </div>
                                                     </div>
                                                 </form>
@@ -127,7 +151,7 @@
                             <div class="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
                                 <button type="button"
                                     class="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:col-start-2 sm:text-sm"
-                                    @click="handleCloseModal()">
+                                    @click="handleDeployClick()">
                                     Deploy
                                 </button>
                                 <button type="button"
@@ -147,6 +171,8 @@ import { ref, defineEmits, defineProps, computed, } from 'vue'
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { RocketLaunchIcon } from '@heroicons/vue/24/outline'
 import SelectPayment from '../settings/payment-utilities/SelectPayment.vue';
+import SelectPaymentMethod from '../settings/payment-utilities/SelectPaymentMethod.vue'
+import { deployBooking } from '../composables/booking-composables';
 const props = defineProps({
     openModal: {
         type: Boolean,
@@ -159,9 +185,6 @@ const props = defineProps({
 
 const emit = defineEmits(['closeModal'])
 
-const payment = ref({
-    type: null
-})
 const open = computed(() => props.openModal)
 const selected = computed(() => props.selectedBooking)
 
@@ -193,14 +216,39 @@ const totalPrice = computed({
         newValue;
     }
 })
+const payment = ref({
+    type: null,
+    payment_method: null,
+    reference_number: null,
+    booking: selected.value,
+    total_price: 0
+})
+const loading = ref(false)
 
+const errorValue = ref(null)
 const handleCloseModal = () => {
     emit('closeModal')
+}
+
+const handleDeployClick = async () => {
+    loading.value = true;
+    payment.value.total_price = totalPrice.value
+    const { data, errorData, post } = deployBooking(selected.value, payment.value);
+    await post();
+    errorValue.value = errorData.value
+    loading.value = false
+    if (!loading.value && !errorValue.value, !errorData.value) {
+        // emit('saveRole', data.value)
+    }
 }
 
 const handleUserName = (user) => {
 
     return user.last_name + ', ' + user.first_name
+}
+
+const onHandleChangePaymentMethod = () => {
+
 }
 
 </script>

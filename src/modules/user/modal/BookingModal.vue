@@ -15,6 +15,7 @@ const props = defineProps({
     },
     vehicle: {
         type: Object,
+        default: null
     }
 })
 
@@ -27,7 +28,7 @@ const book = ref({
     booking_start: null,
     booking_end: null,
     vehicle_place_id: null,
-    vehicle_id: props.vehicle.id
+    vehicle_id: vehicle.value.id
 })
 
 const price = computed({
@@ -145,7 +146,7 @@ onUpdated(() => {
                                         Book a vehicle
                                     </DialogTitle>
                                     <div class="mt-2">
-                                        <main class="">
+                                        <main class="" v-if="vehicle && vehicle.id">
                                             <div
                                                 class="mx-auto mt-2 grid grid-cols-1 gap-6 sm:px-6 lg:grid-flow-col-dense lg:grid-cols-3">
                                                 <div class="space-y-6 lg:col-span-1 lg:col-start-1">

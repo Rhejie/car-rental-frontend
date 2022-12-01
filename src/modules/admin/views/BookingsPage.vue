@@ -214,7 +214,7 @@ watch(params.value, () => {
               <tbody class="divide-y divide-gray-200 bg-white" v-loading="loading">
                 <tr v-for="(book, index) in bookings" :key="book.id">
                   <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">
-                    <span :class="['text-white text-sm', handleBookingStatusColor(book.booking_status)]">{{ book.booking_status }}</span>
+                    <span :class="['text-white text-sm', handleBookingStatusColor(book.booking_status)]">{{ (book.booking_status).toUpperCase() }}</span>
                   </td>
                   <td @click="handleLickUser(book.user)" class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-cyan-500 sm:pl-6 cursor-pointer" >
                     {{handleUserName(book.user)}}

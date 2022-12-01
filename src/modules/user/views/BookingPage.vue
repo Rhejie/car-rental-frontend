@@ -110,7 +110,7 @@
                                                         <div>
                                                             <button type="button"
                                                                 v-if="handleBookingCancelButton(book.booking_status)"
-                                                                class="inline-flex h-6 items-center rounded border border-transparent bg-red-300 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                                                                class="inline-flex h-6 items-center rounded border border-transparent bg-red-500 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
                                                                 <XCircleIcon class="h-5 w-5 text-white"
                                                                     aria-hidden="true" />
                                                                 Cancel

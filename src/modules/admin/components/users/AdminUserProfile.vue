@@ -235,7 +235,7 @@
   <script setup>
   
   import GloadingList from '@/components/GloadingList.vue';
-  import { loadUser } from '@/global-composables/get-user-profile';
+  import { loadUser, loadUserProfile } from '@/global-composables/get-user-profile';
   import {
     ScaleIcon,
     BanknotesIcon,
@@ -244,9 +244,13 @@
     XCircleIcon,
     InformationCircleIcon
   } from '@heroicons/vue/24/outline'
-  import { computed, onMounted, ref } from 'vue';
+  import { computed, onMounted, ref, defineProps } from 'vue';
   import { useRouter } from 'vue-router';
   import { useStore } from 'vuex';
+
+  const props = defineProps({
+    id: null
+  })
   
   const store = useStore();
   const router = useRouter();
@@ -281,9 +285,27 @@
     store.commit('login/USER_LOGGEDIN', data.value);
     loading.value = false
   }
+
+  const getUserProfile = async () => {
+    const {load, data, hasError} = loadUserProfile(props.id);
+    await load();
+  
+    if (hasError.value) {
+      router.push('/login')
+      return
+    }
+    userProfile.value = data.value
+    store.commit('login/USER_LOGGEDIN', data.value);
+    loading.value = false
+  }
   
   onMounted(async () => {
-    await getUser();
+    if(props.id) {
+      await getUserProfile();
+    }
+    else {
+      await getUser();
+    }
   })
   
   const transactions = [

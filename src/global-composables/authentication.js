@@ -18,6 +18,7 @@ export const registerUser = (user) => {
 
     return {
         register,
-        errorData
+        errorData,
+        messageData
     }
 }

@@ -11,6 +11,7 @@ import { onMounted, ref, watch } from 'vue';
 import SelectPlace from '@/modules/admin/components/settings/place-utilities/SelectPlace.vue';
 import GNoVehicles from '@/components/GNoVehicles.vue';
 import { useRouter } from 'vue-router';
+import BookingModal from '../modal/BookingModal.vue';
 
 const router = useRouter()
 const loading = ref(true)
@@ -35,9 +36,13 @@ const place = ref(null)
 
 
 const breadcrumbs = [{ id: 1, name: 'Home', href: '#' }]
+const selectedBook = ref({
+    id: null
+})
 
 
 const url = storageUrl();
+const openModalBook = ref(false)
 const fetch = async () => {
     loading.value = true
     const { data, load, totalVehicle } = fetchVehicles(params.value);
@@ -116,7 +121,12 @@ const handleClickDetails = (vehicle) => {
 }
 
 const handleClickBook = (vehicle) => {
+    selectedBook.value = vehicle
+    openModalBook.value = true
+}
 
+const handleClickCloseModal = (book) => {
+    openModalBook.value = false
 }
 
 watch(params.value, async () => {
@@ -128,6 +138,8 @@ onMounted(async () => {
 })
 </script>
 <template>
+    
+    <BookingModal v-if="openModalBook" :open-modal="openModalBook" :handleClickCloseModal="handleClickCloseModal" :vehicle="selectedBook"/>
     <div class="border-b border-gray-200">
         <nav aria-label="Breadcrumb" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <ol role="list" class="flex items-center space-x-4 py-4">
@@ -216,7 +228,7 @@ onMounted(async () => {
                                 class="inline-flex items-center justify-center rounded-md border border-gray-200 px-4 py-2 text-sm font-medium shadow-xl hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-100">
                                 Details
                             </button>
-                            <button type="button" @click="handleClickEdit(vehicle)"
+                            <button type="button" @click="handleClickBook(vehicle)"
                                 class="inline-flex cursor-pointer items-center justify-center rounded-md border border-transparent bg-gray-600 px-4 py-2 text-sm font-medium text-white shadow-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-100">
                                 Book
                             </button>

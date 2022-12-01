@@ -38,18 +38,20 @@ export const acceptBooking = (book) => {
     }
 }
 
-export const deployBooking = (book) => {
+export const deployBooking = (book, payment) => {
     const data = ref(null)
+    const errorData = ref(null)
     const post = async () => {
-        await http().post(`/booking/deploy/${book.id}`).then(res => {
+        await http().post(`/booking/deploy/${book.id}`, payment).then(res => {
             data.value = res.data
         }).catch(error => {
             console.log('Error in deploy Booking: ', error)
+            errorData.value = error.response.data.errors
         })
     }
 
     return {
-        data, post
+        data, post, errorData
     }
 }
 

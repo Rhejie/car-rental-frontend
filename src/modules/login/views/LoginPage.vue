@@ -19,18 +19,18 @@ const login = ref({
 });
 
 const handleClickLogIn = async () => {
-    const {loggedIn , data, errorValue, errorStatus, } = loginUser(login.value);
+    const {loggedIn , data, errorValue, errorStatus, messageData} = loginUser(login.value);
     await loggedIn();
     if(errorValue.value && errorStatus.value == 422) {
         error.value = errorValue.value.errors
-        errorMessage.value = ''
+        errorMessage.value = messageData.value
         return ;
     }
     else if (errorValue.value && errorStatus.value == 401) 
     {
         error.value.email = []
         error.value.password = []
-        errorMessage.value = errorValue.value.message
+        errorMessage.value = messageData.value
         return;
     }
     else if(errorStatus.value == 500){
@@ -60,6 +60,7 @@ const handleClickLogIn = async () => {
                 <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">Sign in to your account</h2>
             </div>
             <form class="mt-8 space-y-6">
+                <span class="text-red-400 text-sm" v-if="errorMessage"> {{errorMessage}}</span>
                 <input type="hidden" name="remember" value="true" />
                 <div class="-space-y-px rounded-md shadow-sm">
                     <div>

@@ -6,6 +6,7 @@ export const loginUser = (user) => {
     const hasError = ref(false)
     const errorStatus = ref(null)
     const errorValue = ref(null)
+    const messageData = ref(null)
     const loggedIn = async () => {
         await http().post('/user/login', user).then(res => {
             data.value = res.data
@@ -18,6 +19,7 @@ export const loginUser = (user) => {
             console.log("error in storing data -->", error)
             errorValue.value = error.response.data
             errorStatus.value = error.response.status
+            messageData.value = error.response.data.message
         })
     }
 
@@ -26,6 +28,7 @@ export const loginUser = (user) => {
         data,
         errorStatus,
         hasError,
-        errorValue
+        errorValue,
+        messageData
     }
 }

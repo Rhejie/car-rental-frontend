@@ -62,11 +62,11 @@ export const updatePaymentMethod = (paymentMethod) => {
     }
 }
 
-export const selectPaymentMethods = (search) => {
+export const selectPaymentMethods = (searchVal) => {
     const data = ref(null)
 
-    const load = async () => {
-        await http().get(`/payment-method/select-payment-method?search=${search}`).then(res => {
+    const search = async () => {
+        await http().get(`/payment-method/select-payment-method?search=${searchVal}`).then(res => {
             data.value = res.data
         }).catch(error => {
             console.log('Error in getting paymentMethods', error)
@@ -74,6 +74,6 @@ export const selectPaymentMethods = (search) => {
     }
 
     return {
-        data, load
+        data, search
     }
 }

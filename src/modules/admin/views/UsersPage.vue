@@ -11,12 +11,14 @@ import GPagination from "@/components/GPagination.vue";
 import { CheckCircleIcon, EyeIcon, XCircleIcon, XMarkIcon, PlusCircleIcon } from '@heroicons/vue/20/solid'
 import { loadBookings } from '../components/composables/booking-composables';
 import { fectUsersData } from '../components/users/composables/users-composables';
+import { verifiedUser } from './../composables/admin-user-composable'
+import GNotification from '@/components/GNotification.vue';
 
 const router = useRouter()
 
 const openModal = ref(false)
 
-const bookings = ref([])
+const users = ref([])
 const loading = ref(true)
 const total = ref(0)
 const params = ref({
@@ -25,6 +27,8 @@ const params = ref({
     search: null,
 })
 
+const loadingVerified = ref(false)
+const showNotif = ref(false)
 
 const url = storageUrl();
 
@@ -40,13 +44,33 @@ const fetch = async () => {
     loading.value = true
     const { data, load, totalUsers } = fectUsersData(params.value);
     await load();
-    bookings.value = data.value
+    users.value = data.value
     total.value = totalUsers.value
     loading.value = false
 }
 
 const handleViewUser = (user) => {
     router.push({name: 'Admin User Profile', params: {id: user.id}})
+}
+
+const handleClickVerifiedUser = async (user) => {
+    loadingVerified.value = true
+    const {data, post} = verifiedUser(user)
+    await post();
+    showNotif.value = true
+
+    users.value.map(user => {
+        if(user.id == data.id) {
+            for(let key in data) {
+                user[key] = data[key]
+            }
+        }
+    })
+    
+    setTimeout(() => {
+        showNotif.value = false
+    }, 2000)
+    loadingVerified.value = false
 }
 
 const handleUserName = (user) => {
@@ -106,6 +130,8 @@ watch(params.value, () => {
 </script>
 <template>
     <CreatevehicleModal :openModal="openModal" @closeModal="handleCloseAddVehicleModal" />
+    
+    <GNotification :show-notif="showNotif" :message="'Successfully verified'"/>
     <div class="w-full bg-gray-500">
         <div class="mx-auto max-w-2xl  py-4 px-4 lg:max-w-7xl lg:px-0">
             <h1 class="text-2xl font-bold tracking-tight text-white sm:text-3xl">Manage Users</h1>
@@ -149,9 +175,6 @@ watch(params.value, () => {
                                         class="whitespace-nowrap py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
                                         First Name </th>
                                     <th scope="col"
-                                        class="whitespace-nowrap py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
-                                        Middle Name </th>
-                                    <th scope="col"
                                         class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">
                                         Gender</th>
                                     <th scope="col"
@@ -163,38 +186,36 @@ watch(params.value, () => {
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200 bg-white" v-loading="loading">
-                                <tr v-for="book in bookings" :key="book.id">
+                                <tr v-for="user in users" :key="user.id">
                                     <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">
-                                        <button type="button" :class="[ book.verified == 'Yes' ? 'bg-green-400 focus:ring-green-500 hover:bg-green-700': 'bg-red-400 focus:ring-red-500 hover:bg-red-700', 'inline-flex items-center rounded border border-transparent px-2.5 py-1.5 text-xs font-medium text-white shadow-sm  focus:outline-none focus:ring-2 focus:ring-offset-2']">
-                                            {{book.verified}}
+                                        <button type="button" :class="[ user.verified == 'Yes' ? 'bg-green-400 focus:ring-green-500 hover:bg-green-700': 'bg-red-400 focus:ring-red-500 hover:bg-red-700', 'inline-flex items-center rounded border border-transparent px-2.5 py-1.5 text-xs font-medium text-white shadow-sm  focus:outline-none focus:ring-2 focus:ring-offset-2']">
+                                            {{user.verified}}
                                         </button>
                                     </td>
-                                    <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900">{{ book.email
+                                    <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900">{{ user.email
                                         }}</td>
                                     <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 sm:pl-6">
-                                        {{book.last_name}}
+                                        {{user.last_name}}
                                     </td>
-                                    <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ book.first_name }}</td>
+                                    <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ user.first_name }}</td>
+                                    <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ user.gender }}</td>
                                     <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">
-                                        {{book.middle_name}}
-                                    </td>
-                                    <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ book.gender }}</td>
-                                    <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">
-                                        {{book.contact_number}}
+                                        {{user.contact_number}}
                                     </td>
                                     <td
                                         class="relative whitespace-nowrap py-2 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
 
-                                        <button type="button" @click="handleViewUser(book)"
+                                        <button type="button" @click="handleViewUser(user)"
                                             class="inline-flex items-center rounded-md mr-2 border border-transparent bg-green-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
                                             <CheckCircleIcon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
                                             View
                                         </button>
 
                                         <button type="button"
+                                            @click="handleClickVerifiedUser(user)"
                                             class="inline-flex items-center rounded-md mr-2 border border-transparent bg-cyan-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2">
                                             <XCircleIcon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
-                                            Verified
+                                            {{loadingVerified ? 'Verifying' : 'Verify'}}
                                         </button>
                                     </td>
                                 </tr>
