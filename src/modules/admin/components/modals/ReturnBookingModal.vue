@@ -14,10 +14,10 @@
                         leave-from="opacity-100 translate-y-0 sm:scale-100"
                         leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
                         <DialogPanel
-                            class="relative transform overflow-hidden w-2/4 rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:p-6">
+                            class="relative transform overflow-hidden w-2/3 rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:p-6">
                             <div>
                                 <div
-                                    class="mx-auto mt-8 grid max-w-3xl grid-cols-1 gap-6 sm:px-6 lg:max-w-7xl lg:grid-flow-col-dense lg:grid-cols-3">
+                                    class="mx-auto mt-8 grid max-w-3xl grid-cols-1 gap-6 sm:px-6 lg:max-w-7xl lg:grid-flow-col-dense lg:grid-cols-4">
                                     <div class="space-y-6 lg:col-span-2 lg:col-start-1">
                                         <!-- Description list-->
                                         <section aria-labelledby="applicant-information-title">
@@ -86,9 +86,53 @@
                                                 </div>
                                             </div>
                                         </section>
+
+                                        <section aria-labelledby="applicant-information-title">
+                                            <div class="bg-white shadow sm:rounded-lg border-t border-cyan-300">
+                                                <div class="px-4 py-5 sm:px-6">
+                                                    <p class="mt-1 max-w-2xl text-sm text-gray-500">Payment History</p>
+                                                </div>
+                                                <div class="border-t border-gray-200 py-1 px-2">
+                                                    <table
+                                                        class="min-w-full divide-y border border-gray-300 divide-gray-300">
+                                                        <thead class="bg-gray-50">
+                                                            <tr class="divide-x divide-gray-200">
+                                                                <th scope="col"
+                                                                    class="py-3.5 pl-4 pr-4 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                                                                    Payment Mode</th>
+                                                                <th scope="col"
+                                                                    class="px-4 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                                                    Payment Type</th>
+                                                                <th scope="col"
+                                                                    class="px-4 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                                                    Price</th>
+                                                                <th scope="col"
+                                                                    class="py-3.5 pl-4 pr-4 text-left text-sm font-semibold text-gray-900 sm:pr-6">
+                                                                    Reference Number</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody class="divide-y divide-gray-200 bg-white">
+                                                            <tr v-for="person in histories" :key="person.email"
+                                                                class="divide-x divide-gray-200">
+                                                                <td
+                                                                    class="whitespace-nowrap py-4 pl-4 pr-4 text-sm font-medium text-gray-900 sm:pl-6">
+                                                                    {{ person.payment_mode.name }}</td>
+                                                                <td class="whitespace-nowrap p-4 text-sm text-gray-500">
+                                                                    {{ person.type }}</td>
+                                                                <td class="whitespace-nowrap p-4 text-sm text-gray-500">
+                                                                    {{ person.price }}</td>
+                                                                <td
+                                                                    class="whitespace-nowrap py-4 pl-4 pr-4 text-sm text-gray-500 sm:pr-6">
+                                                                    {{ person.reference_number }}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </section>
                                     </div>
 
-                                    <section aria-labelledby="timeline-title" class="lg:col-span-1 lg:col-start-3">
+                                    <section aria-labelledby="timeline-title" class="lg:col-span-2 lg:col-start-3">
                                         <div
                                             class="bg-white px-4 py-5 shadow sm:rounded-lg sm:px-6  border-t border-cyan-300">
                                             <h2 id="timeline-title" class="text-lg font-medium text-gray-900">Payment
@@ -97,9 +141,9 @@
 
                                             <!-- Activity Feed -->
                                             <div class="mt-6 flow-root">
-                                                <form class="space-y-6">
+                                                <form class="space-y-6" v-if="!isFullyPaid">
                                                     <div>
-                                                        <SelectPayment v-model="payment.type" />
+                                                        <SelectPayment v-model="payment.type" :read-only="true"/>
                                                         <span class="text-sm text-red-400"
                                                             v-if="(errorValue && !loading && errorValue.type)">
                                                             {{ errorValue.type[0] }}
@@ -134,6 +178,7 @@
                                                             class="block text-sm font-medium text-gray-700">Payment</label>
                                                         <div class="mt-1">
                                                             <input id="password" v-model="payment.price" name="password"
+                                                                min="0"
                                                                 type="number" placeholder="Enter your reference number"
                                                                 class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
                                                             <span class="text-sm text-red-400"
@@ -143,6 +188,62 @@
                                                         </div>
                                                     </div>
                                                 </form>
+                                                <div class="w-full" v-else>
+                                                    <GFullyPaid/>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div
+                                            class="bg-white px-4 py-5 mt-2 shadow sm:rounded-lg sm:px-6  border-t border-cyan-300">
+                                            <h2 id="timeline-title"
+                                                class="text-lg font-medium text-gray-900 border-b border-gray-300">
+                                                Overcharges
+                                            </h2>
+
+                                            <!-- Activity Feed -->
+                                            <div class=" flow-root">
+                                                <div class="py-3">
+                                                    <input type="checkbox" @click="handeClickPenalty"
+                                                        v-model="payment.has_penalty"> <span
+                                                        class="text-sm text-gray-500">User has penalty?</span>
+                                                </div>
+                                                <div class="flex" v-for="(t, index) in payment.overcharges"
+                                                    :key="index">
+                                                    <div class="w-full mx-auto mr-1">
+                                                        <SelectOvercharge v-model="t.overcharge_type_id" />
+                                                        <span class="text-sm text-red-400"
+                                                            v-if="errorValue && !loading && errorValue[`overcharges.${index}.overcharge_type_id`]">
+                                                            The overcharge type field is required
+                                                        </span>
+                                                    </div>
+
+                                                    <div class="mx-auto w-full">
+                                                        <label for="location"
+                                                            class="block text-sm font-medium text-gray-700">Charge</label>
+                                                        <input id="password" v-model="t.charge" name="password"
+                                                            type="number" min="0" placeholder="Enter your reference number"
+                                                            class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
+                                                        <span class="text-sm text-red-400"
+                                                            v-if="errorValue && !loading && errorValue[`overcharges.${index}.charge`]">
+                                                            The charge field is required
+                                                        </span>
+                                                    </div>
+                                                    <div class="my-auto">
+                                                        <button v-if="payment.has_penalty" type="button"
+                                                            @click="handleRemoveOvercharge(index)"
+                                                            class="inline-flex ml-2 items-center my-auto justify-center text-white float-right bg-red-500 rounded-md border border-gray-200 px-4 h-6 text-sm font-medium shadow-xl ">
+                                                            <XCircleIcon class="mx-auto h-4 w-4" aria-hidden="true" />
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <button v-if="payment.has_penalty" type="button"
+                                                        @click="handleAddOvercharge()"
+                                                        class="inline-flex items-center mt-1 bg-cyan-600 text-white justify-center float-right mb-2 rounded-md border border-gray-200 px-4 h-6 text-sm font-medium shadow-xl ">
+                                                        Add Overcharge
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     </section>
@@ -151,8 +252,8 @@
                             <div class="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
                                 <button type="button"
                                     class="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:col-start-2 sm:text-sm"
-                                    @click="handleDeployClick()">
-                                    Deploy
+                                    @click="handleClickReturned()">
+                                    Returned
                                 </button>
                                 <button type="button"
                                     class="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:col-start-1 sm:mt-0 sm:text-sm"
@@ -164,15 +265,24 @@
             </div>
         </Dialog>
     </TransitionRoot>
+    <ReturnedConfirmation :open-modal="showConfirmationModal" @closeModal="handleCloseModalConfirmation" @acceptBook="handleAcceptConfirmation"/>
 </template>
   
 <script setup>
-import { ref, defineEmits, defineProps, computed, } from 'vue'
+import { ref, defineEmits, defineProps, computed, onMounted, watch, onUpdated, onBeforeMount, } from 'vue'
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { RocketLaunchIcon } from '@heroicons/vue/24/outline'
 import SelectPayment from '../settings/payment-utilities/SelectPayment.vue';
 import SelectPaymentMethod from '../settings/payment-utilities/SelectPaymentMethod.vue'
-import { deployBooking } from '../composables/booking-composables';
+import SelectOvercharge from '../settings/overcharge-utilities/SelectOvercharge.vue'
+import GFullyPaid from '@/components/GFullyPaid.vue'
+import ReturnedConfirmation from './ReturnedConfirmation.vue'
+import { returnedBooking } from '../composables/booking-composables';
+import { getPaymentHistory } from '../composables/payment-composables';
+import {
+    XCircleIcon,
+} from '@heroicons/vue/24/solid'
+
 const props = defineProps({
     openModal: {
         type: Boolean,
@@ -180,13 +290,17 @@ const props = defineProps({
     },
     selectedBooking: {
         type: Object,
-    }
+    },
+    totalPaidByUser: null
 })
 
-const emit = defineEmits(['closeModal', 'deployedBooking'])
-
+const emit = defineEmits(['closeModal', 'returnedBooking'])
+const showConfirmationModal = ref(false)
 const open = computed(() => props.openModal)
 const selected = computed(() => props.selectedBooking)
+const histories = ref([])
+const loadingHistories = ref(true)
+const totalPaidByUser = computed(() => props.totalPaidByUser)
 
 const countDays = computed({
     get() {
@@ -216,12 +330,22 @@ const totalPrice = computed({
         newValue;
     }
 })
+
+const totalPaid = ref(0)
+const isFullyPaid = ref(false)
 const payment = ref({
-    type: null,
+    is_fully_paid: false,
+    type: 'full',
     payment_method: null,
     reference_number: null,
     booking: selected.value,
-    total_price: 0
+    total_price: 0,
+    has_penalty: false,
+    price: null,
+    total_paid: 0,
+    overcharges: [
+        { overcharge_type_id: null, charge: null }
+    ]
 })
 const loading = ref(false)
 
@@ -230,16 +354,54 @@ const handleCloseModal = () => {
     emit('closeModal')
 }
 
-const handleDeployClick = async () => {
+const handleClickReturned = async () => {
+    showConfirmationModal.value = true
+}
+
+const handleCloseModalConfirmation = () => {
+    showConfirmationModal.value = false
+}
+
+const handleAcceptConfirmation =  async () => {
+    showConfirmationModal.value = false
     loading.value = true;
     payment.value.total_price = totalPrice.value
-    const { data, errorData, post } = deployBooking(selected.value, payment.value);
+    payment.value.is_fully_paid = isFullyPaid.value
+    const { data, errorData, post } = returnedBooking(selected.value, payment.value);
     await post();
     errorValue.value = errorData.value
     loading.value = false
     if (!loading.value && !errorValue.value, !errorData.value) {
-        emit('deployedBooking', data.value)
+        emit('returnedBooking', data.value)
     }
+}
+
+const fetchPaymentHistory = async () => {
+    if (!selected.value && !selected.value.id) {
+        return
+    }
+
+    const { data, load } = getPaymentHistory(selected.value);
+    await load();
+    histories.value = data.value
+    histories.value.forEach(his => {
+        payment.value.total_paid = parseFloat(parseFloat(totalPaid.value) + (parseFloat(his.price)).toFixed(2)).toFixed(2)
+    })
+    loadingHistories.value = false
+}
+
+const handeClickPenalty = () => {
+    payment.value.overcharges.push({ overcharge_type_id: null, charge: null })
+}
+
+const handleAddOvercharge = () => {
+    if(payment.value.has_penalty) {
+        payment.value.overcharges.push({ overcharge_type_id: null, charge: null })
+    }
+}
+
+const handleRemoveOvercharge = (index) => {
+    payment.value.overcharges.splice(index, 1)
 }
 
 const handleUserName = (user) => {
@@ -250,5 +412,32 @@ const handleUserName = (user) => {
 const onHandleChangePaymentMethod = () => {
 
 }
+
+const checkIfPaid = () => {
+    const tp = new Number(totalPaidByUser.value)
+    const totalp = new Number(totalPrice.value)
+    if(tp >= totalp) {
+        isFullyPaid.value = true
+        console.log(totalPaidByUser.value, totalPrice.value)
+    }
+    else {
+        isFullyPaid.value = false
+    }
+    console.log(tp, totalp)
+}
+
+
+watch(payment.value, (val) => {
+    if (!val.has_penalty) {
+        val.overcharges = []
+    }
+})
+
+onMounted(async () => {
+    await fetchPaymentHistory();
+    checkIfPaid()
+})
+
+
 
 </script>

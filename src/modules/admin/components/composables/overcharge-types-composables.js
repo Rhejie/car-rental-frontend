@@ -21,6 +21,22 @@ export const loadOverchargeTypes = (params) => {
     }
 }
 
+export const selectOvercharges = () => {
+    const data = ref([])
+    const load = async () => {
+        await http().get('/overcharge/type/select').then(res => {
+           data.value = res.data 
+        }).catch(error => {
+            console.log('Error in getting overcharges')
+        });
+    }
+
+    return {
+        load,
+        data
+    }
+}
+
 export const storeOverchargeType = (overchargeTypes) => {
     const data = ref(null)
     const errorData = ref(null)

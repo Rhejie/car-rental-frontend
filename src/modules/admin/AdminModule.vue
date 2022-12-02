@@ -145,7 +145,7 @@
     { name: 'Dashboard', routeName: 'Dashboard', icon: HomeIcon, current: true },
     { name: 'Users', routeName: 'Admin Users', icon: UsersIcon, current: false },
     { name: 'Booking Applications', routeName: 'Admin Bookings', icon: CalendarIcon, current: false },
-    { name: 'Deployed Vehicles', routeName: 'Admin Bookings', icon: RocketLaunchIcon, current: false },
+    { name: 'Deployed Vehicles', routeName: 'Deployed Bookings', icon: RocketLaunchIcon, current: false },
     { name: 'Vehicles', routeName: 'Vehicles', icon: TruckIcon, current: false },
     { name: 'Trackers', routeName: 'Trackers', icon: InboxIcon, current: false },
     { name: 'Maintenance', routeName: 'Account', icon: ChartBarIcon, current: false },

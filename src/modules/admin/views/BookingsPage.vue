@@ -140,6 +140,7 @@ const handleDeployedBooking = (book) => {
   let _index = bookings.value.findIndex(b => b.id == book.id);
   bookings.value.splice(_index, 1)
   message.value = "Successfully deployed!"
+  showDeployModal.value = false
   showNotif.value = true
 
   setTimeout(() => {
@@ -160,7 +161,7 @@ watch(params.value, () => {
   
   <GNotification :show-notif="showNotif" :message="message"/>
   <AcceptBookingModal :openModal="openModal" :selected-book="selectedBooking" @closeModal="handleCloseModal" @acceptBook="handleAcceptedBook"/>
-  <DeployBookingModal :openModal="showDeployModal" :selected-booking="selectedBooking" @closeModal="handleCloseModal" @acceptBook="handleDeployedBooking"/>
+  <DeployBookingModal :openModal="showDeployModal" :selected-booking="selectedBooking" @closeModal="handleCloseModal" @deployedBooking="handleDeployedBooking"/>
   <div class="w-full bg-gray-500">
     <div class="mx-auto max-w-2xl  py-4 px-4 lg:max-w-7xl lg:px-0">
       <h1 class="text-2xl font-bold tracking-tight text-white sm:text-3xl">Manage Bookings</h1>

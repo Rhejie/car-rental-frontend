@@ -54,6 +54,22 @@ var auth = createAuth({
         notFoundRedirect: { name: 'user-account' },
     }
 });
+
+import Echo from "laravel-echo"
+
+window.Pusher = require('pusher-js');
+
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: '8cd75a6ea9ab65d8b608',
+    cluster: 'ap1',
+    forceTLS: false,
+    wsHost: window.location.hostname,
+    wsPort: 6001,
+    disableStats: true,
+});
+
+
 const app = createApp(App)
 app.use(VueAxios, instance)
 app.use(auth)
