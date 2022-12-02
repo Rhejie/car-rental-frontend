@@ -65,8 +65,10 @@ const handleClickVerifiedUser = async (user) => {
                 user[key] = data[key]
             }
         }
+
+        return user;
     })
-    
+
     setTimeout(() => {
         showNotif.value = false
     }, 2000)

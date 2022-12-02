@@ -19,6 +19,5 @@ export const registerUser = (user) => {
     return {
         register,
         errorData,
-        messageData
     }
 }
