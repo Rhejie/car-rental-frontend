@@ -17,6 +17,7 @@ import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import { storageUrl } from '@/global-composables/http_service';
+import { removeImage } from '@/global-composables/image-composables';
 
 // Create component
 const FilePond = vueFilePond(
@@ -118,6 +119,23 @@ const handleFilePondInit = () => {
     console.log("FilePond has initialized");
 }
 
+const handleClearImage = async () => {
+    const image = localStorage.getItem('profile_url')
+
+    const remove = await removeImage({data: image});
+    
+}
+
+
+onMounted(() => {
+    // if (localStorage.getItem('profile_url')) {
+    //     console.log(localStorage.getItem('profile_url'))
+    //     let regex = /\//g;
+    //     let result = (localStorage.getItem('profile_url')).replace(regex, " ");
+    //     imageUrl.value = result;
+    // }
+})
+
 
 onMounted(() => {
     if (localStorage.getItem('profile_url')) {
@@ -134,6 +152,13 @@ onMounted(() => {
 
     <div v-else class="w-full">
         <img class="w-40 mx-auto p-2 shadow" :src="url + imageUrl" :alt="`${url} ${imageUrl}`">
-
+        <button type="button" @click="handleClearImage"
+            class="
+                mx-auto bg-red-500 text-white text-white items-center 
+                rounded-md border border-red-300 px-3 py-2 text-sm font-medium 
+                leading-4 shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 
+                focus:ring-red-500 focus:ring-offset-2">
+            Remove Image
+        </button>
     </div>
 </template>

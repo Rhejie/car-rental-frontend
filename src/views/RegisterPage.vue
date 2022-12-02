@@ -175,7 +175,6 @@ const loading = ref(false)
 
 const handleRegister = async () => {
     const imageUrl = localStorage.getItem('profile_url')
-    console.log(imageUrl, 'adasd')
     if(imageUrl)  {
         registerData.value.user_identification = imageUrl
     }
@@ -185,7 +184,7 @@ const handleRegister = async () => {
     errorValue.value = errorData.value
     loading.value = false
     if (!loading.value && !errorValue.value, !errorData.value) {
-        router.push({ name: 'Login' })
+        router.push({name: 'Login'})
     }
 }
 

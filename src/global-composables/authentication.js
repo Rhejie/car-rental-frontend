@@ -8,7 +8,7 @@ export const registerUser = (user) => {
     const errorData = ref(null)
     const register = async () => {
         await http().post('/user/register', user).then(res => {
-            errorData = null
+            errorData.value = null
             router.push('/login')
         }).catch(error => {
             console.log('Error in register user ', error)
