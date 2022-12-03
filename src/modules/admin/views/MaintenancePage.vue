@@ -10,17 +10,17 @@ import GSkeletonLoading from '@/components/GSkeletonLoading.vue'
 import GPagination from "@/components/GPagination.vue";
 import { CheckCircleIcon, EyeIcon, XCircleIcon, XMarkIcon, PlusCircleIcon } from '@heroicons/vue/20/solid'
 import { loadBookings } from '../components/composables/booking-composables';
-import { fectUsersData } from '../components/users/composables/users-composables';
-import { verifiedUser } from './../composables/admin-user-composable'
 import GNotification from '@/components/GNotification.vue';
+import CreateVehicleMaintenanceModal from '../components/modals/CreateVehicleMaintenanceModal.vue';
+import { getAllMaintenance } from '../components/composables/maintenance-composables';
 
 const router = useRouter()
 
 const openModal = ref(false)
 
-const users = ref([])
+const maintenances = ref([])
 const loading = ref(true)
-const total = ref(0)
+const totalMaintenance = ref(0)
 const params = ref({
     page_size: 10,
     page: 1,
@@ -29,10 +29,11 @@ const params = ref({
 
 const loadingVerified = ref(false)
 const showNotif = ref(false)
+const selectedItem = ref(null)
 
 const url = storageUrl();
 
-const handleClickAddVehicle = () => {
+const handleAddMaintenance = () => {
     openModal.value = true
 }
 
@@ -40,78 +41,48 @@ const handleCloseAddVehicleModal = () => {
     openModal.value = false
 }
 
-const fetch = async () => {
-    loading.value = true
-    const { data, load, totalUsers } = fectUsersData(params.value);
-    await load();
-    users.value = data.value
-    total.value = totalUsers.value
-    loading.value = false
-}
-
-const handleViewUser = (user) => {
-    router.push({ name: 'Admin User Profile', params: { id: user.id } })
-}
-
-const handleClickVerifiedUser = async (user) => {
-    loadingVerified.value = true
-    const { data, post } = verifiedUser(user)
-    await post();
+const handleNewMaintenance = (maintenance) => {
+    maintenances.value.unshift(maintenance)
+    openModal.value = false
     showNotif.value = true
-
-    users.value.map(user => {
-        if (user.id == data.id) {
-            for (let key in data) {
-                user[key] = data[key]
-            }
-        }
-
-        return user;
-    })
 
     setTimeout(() => {
         showNotif.value = false
     }, 2000)
-    loadingVerified.value = false
 }
 
-const handleUserName = (user) => {
+const handleUpdateMaintenance = (maintenance) => {
+    maintenances.value.map(id => {
+        if(id.id == maintenance.id){
+            for(let key in maintenance) {
+                id[key] = maintenance[key]
+            }
+        }
 
-    return user.last_name + ', ' + user.first_name
+        return id;
+    })
+    openModal.value = false
+    showNotif.value = true
+
+    setTimeout(() => {
+        showNotif.value = false
+    }, 2000)
 }
 
-const handleVehicleName = (vehicle) => {
-    return vehicle.model + ' - ' + vehicle.vehicle_brand.name
+const fetch = async () => {
+    const {load, data, total} = getAllMaintenance(params.value)
+    await load();
+    maintenances.value = data.value
+    totalMaintenance.value = total.value
+    loading.value = false
 }
 
-const handleVehicleTracker = (vehicle) => {
-    return vehicle.tracker.name
+const handeClickEdit = (maintenance) => {
+    selectedItem.value = maintenance
+    openModal.value = true
+
 }
 
-const handleDestination = (destination) => {
-    return destination.place.name
-}
-
-const handleSetStatus = (vehicleStatus) => {
-    return vehicleStatus ? 'Available' : 'Unavailable'
-}
-
-const handleBookingStatusColor = (status) => {
-    if (status == 'pending') {
-        return 'bg-yellow-600 px-2 rounded-md py-1 shadow'
-    }
-    if (status == 'accept') {
-        return 'bg-green-600 px-2 rounded-md py-1 shadow'
-    }
-
-    if (status == 'decline') {
-        return 'bg-red-600 px-2 rounded-md py-1 shadow'
-    }
-
-    if (status == 'accept') {
-        return 'bg-cyan-600 px-2 rounded-md py-1 shadow'
-    }
-}
 
 const handleChangeSize = (size) => {
     params.value.page_size = size
@@ -131,9 +102,13 @@ watch(params.value, () => {
 
 </script>
 <template>
-    <CreatevehicleModal :openModal="openModal" @closeModal="handleCloseAddVehicleModal" />
+    <CreateVehicleMaintenanceModal :selectedItem="selectedItem" 
+        :openModal="openModal" 
+        @saveMaintenance="handleNewMaintenance"
+        @closeModal="handleCloseAddVehicleModal" 
+        @updateMaintenance="handleUpdateMaintenance"/>
 
-    <GNotification :show-notif="showNotif" :message="'Successfully verified'" />
+    <GNotification :show-notif="showNotif" />
     <div class="w-full bg-gray-500">
         <div class="mx-auto max-w-2xl  py-4 px-4 lg:max-w-7xl lg:px-0">
             <h1 class="text-2xl font-bold tracking-tight text-white sm:text-3xl">Manage Maintenance</h1>
@@ -145,7 +120,7 @@ watch(params.value, () => {
                         <p class="mt-2 text-sm text-gray-700">List of maintenance.</p>
                     </div>
                     <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-                        <button type="button" @click="handleClickAddVehicle"
+                        <button type="button" @click="handleAddMaintenance"
                             class="inline-flex items-center justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:w-auto">
                             <PlusCircleIcon class="-ml-0.5 mr-2 h-4 w-4" />
                             Add Maintenance
@@ -183,34 +158,34 @@ watch(params.value, () => {
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200 bg-white" v-loading="loading">
-                                <tr v-for="user in users" :key="user.id">
-                                    <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900">{{ user.email
-                                    }}</td>
+                                <tr v-for="maintenance in maintenances" :key="maintenance.id">
+                                    <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900">
+                                        {{ maintenance.vehicle.model }} - {{ maintenance.vehicle.vehicle_brand.name }}</td>
                                     <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 sm:pl-6">
-                                        {{ user.last_name }}
+                                        {{ maintenance.Date }}
                                     </td>
-                                    <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ user.first_name }}
+                                    <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ maintenance.type_of_maintenance }}
                                     </td>
-                                    <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ user.gender }}</td>
+                                    <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ maintenance.price }}</td>
                                     <td
                                         class="relative whitespace-nowrap py-2 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
 
-                                        <button type="button" @click="handleViewUser(user)"
+                                        <button type="button" @click="handeClickEdit(maintenance)"
                                             class="inline-flex items-center rounded-md mr-2 border border-transparent bg-green-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
                                             <CheckCircleIcon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
-                                            View
+                                            Edit
                                         </button>
 
-                                        <button type="button" @click="handleClickVerifiedUser(user)"
-                                            class="inline-flex items-center rounded-md mr-2 border border-transparent bg-cyan-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2">
+                                        <button type="button" @click="handleClickVerifiedUser(maintenance)"
+                                            class="inline-flex items-center rounded-md mr-2 border border-transparent bg-red-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
                                             <XCircleIcon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
-                                            {{ loadingVerified ? 'Verifying' : 'Verify' }}
+                                            Delete
                                         </button>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
-                        <g-pagination :page_size="params.page_size" :current_size="total" :current_page="params.page"
+                        <g-pagination :page_size="params.page_size" :current_size="totalMaintenance" :current_page="params.page"
                             @change_size="handleChangeSize" @change_page="handleChangePage" />
                     </div>
                 </div>

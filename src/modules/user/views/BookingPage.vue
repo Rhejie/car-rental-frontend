@@ -91,12 +91,12 @@
                                                                             }}</time>
                                                                         </p>
                                                                         <p
-                                                                            :class="['mt-2 flex items-center text-sm', handleStatus(book.booking_status).color]">
+                                                                            :class="['mt-2 flex items-center text-sm', handleStatus(book).color]">
                                                                             <component
-                                                                                :is="handleStatus(book.booking_status).icon"
-                                                                                :class="['mr-1.5 h-5 w-5 flex-shrink-0', handleStatus(book.booking_status).color]"
+                                                                                :is="handleStatus(book).icon"
+                                                                                :class="['mr-1.5 h-5 w-5 flex-shrink-0', handleStatus(book).color]"
                                                                                 aria-hidden="true" />
-                                                                            {{ handleStatus(book.booking_status).status
+                                                                            {{ handleStatus(book).status
                                                                             }}
                                                                         </p>
                                                                     </div>
@@ -109,7 +109,7 @@
                                                         </div> -->
                                                         <div>
                                                             <button type="button"
-                                                                v-if="handleBookingCancelButton(book.booking_status)"
+                                                                v-if="handleBookingCancelButton(book)"
                                                                 class="inline-flex h-6 items-center rounded border border-transparent bg-red-500 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
                                                                 <XCircleIcon class="h-5 w-5 text-white"
                                                                     aria-hidden="true" />
@@ -146,7 +146,7 @@
                                             <dl>
                                                 <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                                     <dt class="text-sm font-medium text-gray-500">Status</dt>
-                                                    <dd :class="[handleStatus(currentBook.booking_status).color, 'mt-1 text-sm sm:col-span-2 sm:mt-0']">{{ handleStatus(currentBook.booking_status).status
+                                                    <dd :class="[handleStatus(currentBook).color, 'mt-1 text-sm sm:col-span-2 sm:mt-0']">{{ handleStatus(currentBook).status
                                                     }}</dd>
                                                 </div>
                                                 <div
@@ -248,7 +248,8 @@ import {
     ChevronRightIcon,
     ClockIcon,
     MapPinIcon,
-    XMarkIcon
+    XMarkIcon,
+    RocketLaunchIcon
 } from '@heroicons/vue/24/outline'
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
@@ -287,33 +288,46 @@ const fetch = async () => {
     loading.value = false
 }
 
-const handleStatus = (statusbook) => {
+const handleStatus = (book) => {
     let icon = ClockIcon
     let color = 'text-yellow-400'
-    if (statusbook == 'accept') {
+    let status = null
+    if (book.booking_status == 'accept') {
         icon = CheckCircleIcon
         color = 'text-green-400'
+        status = 'accept'
     }
-    if (statusbook == 'cancel') {
+    if (book.booking_status == 'cancel') {
         icon = XCircleIcon
         color = 'text-orange-400'
+        status = 'cancel'
     }
-    if (statusbook == 'decline') {
+    if (book.booking_status == 'decline') {
         icon = XMarkIcon
         color = 'text-red-400'
+        status = 'decline'
     }
+
+    if(book.deployed) {
+        color = 'text-cyan-400'
+        icon = RocketLaunchIcon
+        status = 'deployed'
+    }
+
     return {
-        status: statusbook.toUpperCase(),
+        status: status.toUpperCase(),
         icon,
         color
     }
 }
 
-const handleBookingCancelButton = (statusBook) => {
-    if (statusBook == 'cancel' || statusBook == 'decline') {
+const handleBookingCancelButton = (book) => {
+    if (book.booking_status == 'cancel' || book.booking_status == 'decline') {
         return false
     }
-
+    if(book.deployed || book.returned) {
+        return false
+    }
     return true
 }
 

@@ -8,9 +8,9 @@ import CreateVehicleMaintenanceModal from '../../modals/CreateVehicleMaintenance
 import { loadMaintenances } from '../../composables/maintenance-composables';
 
 const props = defineProps({
-    vehicle_id: {
+    vehicle: {
         default: null
-    }
+    },
 })
 
 const params = ref({
@@ -19,7 +19,7 @@ const params = ref({
   search: null,
 })
 
-const vehicle_id = computed(() => props.vehicle_id)
+const vehicle = computed(() => props.vehicle)
 
 const total = ref(0)
 
@@ -33,6 +33,8 @@ const message = ref(null)
 
 const loading = ref(true)
 
+const isFromShowVehicle = ref(true)
+
 const selectedItem = ref(null)
 const handleClickAddVehicle = () => {
     openModal.value = true
@@ -43,7 +45,7 @@ const handleCloseAddVehiclePlaceModal = () => {
     selectedItem.value = null
 }
 
-const handleNewVehiclePlace = (maintenance) => {
+const handleNewMaintenance = (maintenance) => {
     maintenances.value.unshift(maintenance)
     openModal.value = false
 }
@@ -74,7 +76,7 @@ const handleClickEdit = (item) => {
 }
 
 const fetch = async () => {
-    const {load, data, total} = loadMaintenances(params.value, props.vehicle_id)
+    const {load, data, total} = loadMaintenances(params.value, props.vehicle)
     await load();
     maintenances.value = data.value
     total.value = total.value
@@ -83,7 +85,7 @@ const fetch = async () => {
 
 const handleChangeSize = (size) => {
     loading.value = true
-    params.value.size = size
+    params.value.page_size = size
 }
 
 const handleChangePage = (page) => {
@@ -104,10 +106,11 @@ onMounted(async () => {
     <CreateVehicleMaintenanceModal 
         :openModal="openModal" 
         :selectedItem="selectedItem" 
-        :vehicle_id="vehicle_id"
+        :vehicle="vehicle"
+        :isFromShowVehicle="isFromShowVehicle"
         @closeModal="handleCloseAddVehiclePlaceModal" 
         @updateMaintenance="handleUpdateVehiclePlace"
-        @saveMaintenance="handleNewVehiclePlace"/>
+        @saveMaintenance="handleNewMaintenance"/>
     <GNotification :show-notif="showNotif"/>
     <div class="w-full mt-2">
         <div class="px-4 bg-gray-200 h-screen sm:px-6 sm:py-4 lg:px-8">

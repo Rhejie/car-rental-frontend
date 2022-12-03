@@ -3,6 +3,7 @@ import { ref, defineProps, computed, defineEmits, onMounted, onUpdated, onUnmoun
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { CheckIcon } from '@heroicons/vue/24/outline'
 import { storeMaintenance, updateMaintenance } from '../composables/maintenance-composables'
+import SelectVehicles from '../vehciles/utilities/SelectVehicles.vue';
 
 const props = defineProps({
     openModal: {
@@ -12,21 +13,26 @@ const props = defineProps({
     selectedItem: {
         type: Object,
     },
-    vehicle_id: null
+    vehicle: null,
+    isFromShowVehicle: {
+        type: Boolean,
+        default: false,
+    }
 })
 
 const emit = defineEmits(['closeModal', 'saveMaintenance', 'updateMaintenance'])
 
 const selected = computed(() => props.selectedItem)
 const open = computed(() => props.openModal)
-const vehicleId = computed(() => props.vehicle_id)
+const vehicle = computed(() => props.vehicle)
+const isFromShowVehicle = computed(() => props.isFromShowVehicle)
 
 const maintenance = ref({
     Date: null,
     price: null,
     type_of_maintenance: null,
     estimated_return: null,
-    vehicle_id: null
+    vehicle: null
 })
 
 const errorValue = ref(null)
@@ -43,13 +49,12 @@ const initializeForm = () => {
         price: null,
         type_of_maintenance: null,
         estimated_return: null,
-        vehicle_id: null
+        vehicle: null
     }
 }
 
 const handleUpdateMaintenance = async () => {
     loading.value = true
-    maintenance.value.vehicle_id = vehicleId.value
     const {data, update, errorData} = updateMaintenance(maintenance.value);
     await update();
     errorValue.value = errorData.value
@@ -67,7 +72,7 @@ const handleStoreRole = async () => {
     }
 
     loading.value = true
-    maintenance.value.vehicle_id = vehicleId.value
+    maintenance.value.vehicle = vehicle.value
     const {data, post, errorData} = storeMaintenance(maintenance.value);
     await post();
     errorValue.value = errorData.value
@@ -90,10 +95,6 @@ onUpdated(() => {
     else {
         initializeForm()
     }
-})
-
-(() => {
-    maintenance.value.name = null
 })
 
 </script>
@@ -120,6 +121,9 @@ onUpdated(() => {
                                     <div class="overflow-hidden shadow sm:rounded-md">
                                         <div class="bg-white px-4 py-5 sm:p-6">
                                             <div class="grid grid-cols-6 gap-6">
+                                                <div class="col-span-12" v-if="!isFromShowVehicle">
+                                                    <SelectVehicles v-model="maintenance.vehicle"/>
+                                                </div>
                                                 <div class="col-span-12">
                                                     <label for="first-name"
                                                         class="block text-sm font-medium text-gray-700">

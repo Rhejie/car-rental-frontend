@@ -58,7 +58,7 @@ const moduleRoute = {
             props: true
         },
         {
-            path: '/admin/deployed-bookings',
+            path: '/admin/maintenance',
             name: "Maintenance",
             component: () => import('./views/MaintenancePage.vue'),
         },

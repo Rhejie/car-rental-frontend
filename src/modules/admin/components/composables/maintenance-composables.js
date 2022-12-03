@@ -1,12 +1,31 @@
 import { http } from "@/global-composables/http_service"
 import { ref } from "vue"
 
-export const loadMaintenances = (params, vehicle_id = null) => {
+export const loadMaintenances = (params, vehicle = null) => {
 
     const data = ref([])
     const total = ref(0)
     const load = async () => {
-        await http().get(`/maintenance/list/${vehicle_id}?search=${params.search}&page=${params.page}&size=${params.page_size}`).then(res => {
+        await http().get(`/maintenance/list/${vehicle.id}?search=${params.search}&page=${params.page}&size=${params.page_size}`).then(res => {
+            data.value = res.data.data
+            total.value = res.data.total
+        }).catch(error => {
+            console.log('Error in getting Maintenances: ', error)
+        })
+    }
+
+    return {
+        load,
+        data,
+        total
+    }
+}
+
+export const getAllMaintenance = (params) => {
+    const data = ref([])
+    const total = ref(0)
+    const load = async () => {
+        await http().get(`/maintenance/all?search=${params.search}&page=${params.page}&size=${params.page_size}`).then(res => {
             data.value = res.data.data
             total.value = res.data.total
         }).catch(error => {
