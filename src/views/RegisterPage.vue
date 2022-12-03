@@ -140,6 +140,7 @@
                                     Register
                                 </button>
                                 <button type="button"
+                                    @click="handleClickLogin"
                                     class="mr-2 inline-flex float-right items-center rounded-md border border-cyan-300 bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                                     Login
                                 </button>
@@ -186,6 +187,10 @@ const handleRegister = async () => {
     if (!loading.value && !errorValue.value, !errorData.value) {
         router.push({name: 'Login'})
     }
+}
+
+const handleClickLogin = () => {
+    router.push({name: 'Login'})
 }
 
 const handleUploadedProfile = (imageUrl) => {

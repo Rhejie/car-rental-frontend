@@ -33,6 +33,7 @@ import SelectStatus from './utilities/SelectStatus.vue';
 import VehiclePlaces from './components/VehiclePlaces.vue'
 import VehiclePhotos from './components/VehiclePhotos.vue';
 import VehicleBookingHistory from './components/VehicleBookingHistory.vue';
+import VehicleMaintenance from './components/VehicleMaintenance.vue';
 const router = useRouter();
 const props = defineProps({
     id: null
@@ -44,9 +45,9 @@ const url = storageUrl();
 
 const tabs = ref([
     { name: 'Booking History', href: '#', current: true },
-    { name: 'Images', href: '#', current: false },
-    { name: 'Maintenance', href: '#', current: false },
     { name: 'Places', href: '#', current: false },
+    { name: 'Maintenance', href: '#', current: false },
+    { name: 'Images', href: '#', current: false },
 ])
 
 const getVehicleInfo = async () => {
@@ -234,11 +235,10 @@ onMounted(async () => {
                         <VehiclePlaces :vehicle_id="props.id" v-if="!loading && tabs.find(t => t.name == 'Places' && t.current == true)" />
                         <VehiclePhotos :images="vehicle.vehicle_images" v-if="!loading && tabs.find(t => t.name == 'Images' && t.current == true)"/>
                         <VehicleBookingHistory :vehicle_id="props.id" v-if="!loading && tabs.find(t => t.name == 'Booking History' && t.current == true)" />
+                        <VehicleMaintenance :vehicle_id="props.id" v-if="!loading && tabs.find(t => t.name == 'Maintenance' && t.current == true)"  />
                     </div>
                 </div>
             </div>
-
-
         </div>
     </div>
     
