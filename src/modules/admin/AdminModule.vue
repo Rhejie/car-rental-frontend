@@ -148,7 +148,7 @@
     { name: 'Deployed Vehicles', routeName: 'Deployed Bookings', icon: RocketLaunchIcon, current: false },
     { name: 'Vehicles', routeName: 'Vehicles', icon: TruckIcon, current: false },
     { name: 'Trackers', routeName: 'Trackers', icon: InboxIcon, current: false },
-    { name: 'Maintenance', routeName: 'Account', icon: ChartBarIcon, current: false },
+    { name: 'Maintenance', routeName: 'Maintenance', icon: ChartBarIcon, current: false },
     { name: 'Reporting', routeName: 'Account', icon: ClipboardDocumentIcon, current: false },
     { name: 'Settings', routeName: 'Account', icon: AdjustmentsHorizontalIcon, current: false },
 ]

@@ -102,3 +102,21 @@ export const updateVehicle = (vehicle) => {
         errorData
     }
 }
+
+export const selectVehicle = (searchVal) => {
+    
+    const data = ref([]);
+
+    const load = async () => {
+        await http().get(`/vehicle/select-vehicle?search=${searchVal}`)
+            .then(res => {
+                data.value = res.data
+            }).catch(error => {
+                console.log('Error in getting vehicles', error)
+            })
+    }
+
+    return {
+        data, load
+    }
+}
