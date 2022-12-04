@@ -110,6 +110,7 @@
                                                         <div>
                                                             <button type="button"
                                                                 v-if="handleBookingCancelButton(book)"
+                                                                @click="handleClickCancel(book)"
                                                                 class="inline-flex h-6 items-center rounded border border-transparent bg-red-500 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
                                                                 <XCircleIcon class="h-5 w-5 text-white"
                                                                     aria-hidden="true" />
@@ -138,7 +139,7 @@
                                 </div>
                                 <!-- Activity Feed -->
                                 <div class="mt-6 flow-root">
-                                    <div class="overflow-hidden bg-white shadow sm:rounded-lg" v-if="!loadingCurrentBook">
+                                    <div class="overflow-hidden bg-white shadow sm:rounded-lg" v-if="(!loadingCurrentBook && currentBook && currentBook.id)">
                                         <div class="px-4 py-5 sm:px-6">
                                             <h3 class="text-lg font-medium leading-6 text-gray-900">Booking Information</h3>
                                         </div>
@@ -222,6 +223,8 @@
                                             </dl>
                                         </div>
                                     </div>
+
+                                    <GFullyPaid :message="'No available book'" v-else-if="!loadingCurrentBook" />
                                 </div>
                             </div>
                         </section>
@@ -229,6 +232,8 @@
                 </main>
             </div>
         </main>
+        <GNotification :show-notif="showNotif" :message="message" />
+        <CancelBookingModal :openModal="showCancelModal" :selected-book="selectedBook" @closeModal="handleCloseModal" @cancelBook="handleCancelBooking"/>
     </main>
 </template>
 <script setup>
@@ -257,6 +262,9 @@ import { useStore } from 'vuex';
 import GPagination from "@/components/GPagination.vue";
 import { storageUrl } from '@/global-composables/http_service';
 import { getCurrentBook } from '../composables/booking-composables';
+import GFullyPaid from '@/components/GFullyPaid.vue';
+import CancelBookingModal from '@/modules/admin/components/modals/CancelBookingModal.vue';
+import GNotification from '@/components/GNotification.vue';
 
 const url = storageUrl();
 const loading = ref(true)
@@ -267,13 +275,40 @@ const params = ref({
     page: 1,
     search: null,
 })
-
+const showNotif = ref(false)
+const message = ref(null)
 const loadingCurrentBook = ref(true)
 const currentBook = ref(null)
-
+const showCancelModal = ref(false)
+const selectedBook = ref(null)
 
 const handleChangeSize = (size) => {
     params.value.page_size = size
+}
+
+const handleCloseModal = () => {
+    showCancelModal.value = false
+}
+
+const handleCancelBooking = (selected) => {
+    console.log('ad')
+    message.value = "Successfully cancelled!"
+    showNotif.value = true
+    bookings.value.map(book => {
+        if (selected.id == book.id) {
+            for (let key in selected) {
+                book[key] = selected[key]
+            }
+        }
+        return book
+    })
+
+    showCancelModal.value = false
+    setTimeout(() => {
+        showNotif.value = false
+    }, 2000)
+    getCurrentBookData()
+
 }
 
 const handleChangePage = (page) => {
@@ -319,6 +354,11 @@ const handleStatus = (book) => {
         icon,
         color
     }
+}
+
+const handleClickCancel = (book) => {
+    showCancelModal.value = true
+    selectedBook.value = book
 }
 
 const handleBookingCancelButton = (book) => {

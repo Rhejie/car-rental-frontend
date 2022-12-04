@@ -13,11 +13,12 @@ import { loadBookings } from '../components/composables/booking-composables';
 import { fectUsersData } from '../components/users/composables/users-composables';
 import { verifiedUser } from './../composables/admin-user-composable'
 import GNotification from '@/components/GNotification.vue';
+import VerifyUserModal from '../components/modals/VerifyUserModal.vue';
 
 const router = useRouter()
 
 const openModal = ref(false)
-
+const showVerifyModal = ref(false)
 const users = ref([])
 const loading = ref(true)
 const total = ref(0)
@@ -29,6 +30,7 @@ const params = ref({
 
 const loadingVerified = ref(false)
 const showNotif = ref(false)
+const selectedUserData = ref(null)
 
 const url = storageUrl();
 
@@ -38,6 +40,7 @@ const handleClickAddVehicle = () => {
 
 const handleCloseAddVehicleModal = () => {
     openModal.value = false
+    showVerifyModal.value = false
 }
 
 const fetch = async () => {
@@ -54,11 +57,12 @@ const handleViewUser = (user) => {
 }
 
 const handleClickVerifiedUser = async (user) => {
-    loadingVerified.value = true
-    const {data, post} = verifiedUser(user)
-    await post();
-    showNotif.value = true
+    showVerifyModal.value = true
+    selectedUserData.value = user
+}
 
+const handleVerifiedUser = (data) => {
+    showNotif.value = true
     users.value.map(user => {
         if(user.id == data.id) {
             for(let key in data) {
@@ -72,7 +76,7 @@ const handleClickVerifiedUser = async (user) => {
     setTimeout(() => {
         showNotif.value = false
     }, 2000)
-    loadingVerified.value = false
+    showVerifyModal.value = false
 }
 
 const handleUserName = (user) => {
@@ -132,7 +136,8 @@ watch(params.value, () => {
 </script>
 <template>
     <CreatevehicleModal :openModal="openModal" @closeModal="handleCloseAddVehicleModal" />
-    
+    <VerifyUserModal :open-modal="showVerifyModal" :selected-book="selectedUserData" @closeModal="handleCloseAddVehicleModal"
+        @verifiedUser="handleVerifiedUser"/>
     <GNotification :show-notif="showNotif" :message="'Successfully verified'"/>
     <div class="w-full bg-gray-500">
         <div class="mx-auto max-w-2xl  py-4 px-4 lg:max-w-7xl lg:px-0">
@@ -195,7 +200,7 @@ watch(params.value, () => {
                                         </button>
                                     </td>
                                     <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900">{{ user.email
-                                        }}</td>
+                                    }}</td>
                                     <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 sm:pl-6">
                                         {{user.last_name}}
                                     </td>

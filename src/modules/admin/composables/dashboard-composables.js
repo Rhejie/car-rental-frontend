@@ -4,7 +4,7 @@ import { ref } from "vue"
 export const countUsers = () => {
     const data = ref(null)
     const load = async () => {
-        await http().get('/user/data').then(res => {
+        await http().get('/admin/users-count').then(res => {
             data.value = res.data
         }).catch(error => {
             console.log('Error in getting users count', error)

@@ -168,7 +168,7 @@ onMounted(async () => {
                                             {{ book.vehicle_place.place.name }}
                                         </td>
                                         <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">
-                                            <span :class="['text-white text-sm', handleBookingStatusColor(book.booking_status)]">{{ book.booking_status }}</span>
+                                            <span :class="['text-white text-sm', handleBookingStatusColor(book.booking_status)]">{{ book.booking_status }} {{ book.deployed ? '- deployed' : null}}</span>
                                         </td>
                                     </tr>
                                 </tbody>

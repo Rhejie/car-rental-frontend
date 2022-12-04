@@ -14,6 +14,7 @@ import AcceptBookingModal from '../components/modals/AcceptBookingModal.vue';
 import DeclineBookingModal from '../components/modals/DeclineBookingModal.vue'
 import GNotification from '@/components/GNotification.vue';
 import DeployBookingModal from '../components/modals/DeployBookingModal.vue';
+import CancelBookingModal from '../components/modals/CancelBookingModal.vue';
 
 const router = useRouter()
 
@@ -33,6 +34,7 @@ const message = ref('')
 const selectedBooking = ref(null)
 const showDeployModal = ref(false)
 const showDeclineModal = ref(false)
+const showCancelBookingModal = ref(false)
 
 const url = storageUrl();
 
@@ -80,6 +82,7 @@ const handleCloseModal = () => {
   openModal.value = false
   showDeployModal.value = false
   showDeclineModal.value = false
+  showCancelBookingModal.value = false
 }
 
 const fetch = async () => {
@@ -140,6 +143,9 @@ const handleBookingStatusColor = (status) => {
   if(status == 'accept') {
     return 'bg-orange-600 px-2 rounded-md py-1 shadow'
   }
+  if (status == 'cancel') {
+    return 'bg-yellow-600 px-2 rounded-md py-1 shadow'
+  }
 }
 
 const handleChangeSize = (size) => {
@@ -153,6 +159,12 @@ const handleChangePage = (page) => {
 const handleDeployeButton = (book, index) => {
   showDeployModal.value = true
   selectedBooking.value = book
+}
+
+const handleCancelButton = (book, index) => {
+  showCancelBookingModal.value = true
+  selectedBooking.value = book
+  console.log(selectedBooking.value);
 }
 
 const handleCLickDecline = (book, index) => {
@@ -172,6 +184,25 @@ const handleDeployedBooking = (book) => {
     }, 2000)
 }
 
+const handleCancelBooking = (selected) => {
+  message.value = "Successfully cancelled!"
+  showNotif.value = true
+  bookings.value.map(book => {
+    if (selected.id == book.id) {
+      for (let key in selected) {
+        book[key] = selected[key]
+      }
+    }
+    return book
+  })
+
+  openModal.value = false
+  setTimeout(() => {
+    showNotif.value = false
+  }, 2000)
+
+}
+
 onMounted(async () => {
   fetch();
 })
@@ -185,6 +216,7 @@ watch(params.value, () => {
   
   <GNotification :show-notif="showNotif" :message="message"/>
   <AcceptBookingModal :openModal="openModal" :selected-book="selectedBooking" @closeModal="handleCloseModal" @acceptBook="handleAcceptedBook"/>
+  <CancelBookingModal :openModal="showCancelBookingModal" :selected-book="selectedBooking" @closeModal="handleCloseModal" @acceptBook="handleCancelBooking"/>
   <DeclineBookingModal :openModal="showDeclineModal" :selected-book="selectedBooking" @closeModal="handleCloseModal" @declineBook="handleDeclinedBook"/>
   <DeployBookingModal :openModal="showDeployModal" :selected-booking="selectedBooking" @closeModal="handleCloseModal" @deployedBooking="handleDeployedBooking"/>
   <div class="w-full bg-gray-500">
@@ -278,13 +310,15 @@ watch(params.value, () => {
                     </button>
 
                     <!-- Accepted Booking -->
-                    <button type="button" @click="handleDeployeButton(book, index)"  v-if="book.booking_status != 'pending' && book.booking_status != 'decline'"
+                    <button type="button" @click="handleDeployeButton(book, index)"  
+                    v-if="book.booking_status != 'pending' && book.booking_status != 'decline' && book.booking_status != 'cancel'"
                       class="inline-flex items-center rounded-md mr-2 border border-transparent bg-cyan-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2">
                       <RocketLaunchIcon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
                       Deploy
                     </button>
 
-                    <button type="button" @click="handleDeployeButton(book, index)"  v-if="book.booking_status != 'pending' && book.booking_status != 'decline'"
+                    <button type="button" @click="handleCancelButton(book, index)"  
+                    v-if="book.booking_status != 'pending' && book.booking_status != 'decline' && book.booking_status != 'cancel'"
                       class="inline-flex items-center rounded-md mr-2 border border-transparent bg-orange-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
                       <XCircleIcon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
                       Cancel

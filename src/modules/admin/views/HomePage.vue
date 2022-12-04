@@ -5,27 +5,45 @@ import {
     BanknotesIcon,
     BuildingOfficeIcon,
     CheckCircleIcon,
-    UserCircleIcon
+    UserCircleIcon,
+    UserPlusIcon,
+    UserMinusIcon,
+    BookOpenIcon
 } from '@heroicons/vue/24/outline'
-import { countUsers, countVerifiedAccounts } from '../composables/dashboard-composables';
+import { countTotalBookings, countUnVerifiedAccounts, countUsers, countVerifiedAccounts } from '../composables/dashboard-composables';
 import { onMounted, ref } from 'vue'
 const users = ref(0)
 const usersVerified = ref(0)
+const usersUnVerified = ref(0)
+const totalBookings = ref(0)
 const totalUser = async () => {
-    const {data, load} = countUsers();
+    const { data, load } = countUsers();
     await load();
     users.value = data.value
 }
 
 const totalVerified = async () => {
-    const {data, load} = countVerifiedAccounts();
+    const { data, load } = countVerifiedAccounts();
     await load()
     usersVerified.value = data.value
 }
 
+const totalUnVerified = async () => {
+    const { data, load } = countUnVerifiedAccounts();
+    await load()
+    usersUnVerified.value = data.value
+}
+
+const totalBookingData = async () => {
+    const { data, load } = countTotalBookings();
+    await load()
+    totalBookings.value = data.value
+}
 onMounted(async () => {
     await totalUser();
     await totalVerified();
+    await totalUnVerified();
+    await totalBookingData();
 })
 const transactions = [
     {
@@ -57,10 +75,10 @@ const statusStyles = {
                     <div class="min-w-0 flex-1">
                         <!-- Profile -->
                         <div class="flex items-center">
-                            <UserCircleIcon class="hidden h-16 w-16 text-gray-600 rounded-full sm:block"/>
+                            <UserCircleIcon class="hidden h-16 w-16 text-gray-600 rounded-full sm:block" />
                             <div>
                                 <div class="flex items-center">
-                                    <UserCircleIcon class="h-16 w-16 text-gray-600 rounded-full sm:hidden"/>
+                                    <UserCircleIcon class="h-16 w-16 text-gray-600 rounded-full sm:hidden" />
                                     <h1
                                         class="ml-3 text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:leading-9">
                                         Welcome Admin!</h1>
@@ -95,7 +113,7 @@ const statusStyles = {
                                     <dl>
                                         <dt class="truncate text-sm font-medium">Total Users</dt>
                                         <dd>
-                                            <div class="text-lg font-medium">{{users}}</div>
+                                            <div class="text-lg font-medium">{{ users }}</div>
                                         </dd>
                                     </dl>
                                 </div>
@@ -103,7 +121,185 @@ const statusStyles = {
                         </div>
                         <div class="bg-cyan-50 px-5 py-3">
                             <div class="text-sm">
-                                <a href="#" class="font-medium text-cyan-700 hover:text-cyan-900">View all</a>
+                                <router-link to="/admin/users" href="#"
+                                    class="font-medium text-cyan-700 hover:text-cyan-900">View all</router-link>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- verified -->
+                    <div class="overflow-hidden rounded-lg bg-white shadow">
+                        <div class="p-5 bg-green-500 text-white">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <UserPlusIcon class="h-6 w-6 " aria-hidden="true" />
+                                </div>
+                                <div class="ml-5 w-0 flex-1">
+                                    <dl>
+                                        <dt class="truncate text-sm font-medium">Verified Users</dt>
+                                        <dd>
+                                            <div class="text-lg font-medium">{{ usersVerified }}</div>
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-green-50 px-5 py-3">
+                            <div class="text-sm">
+                                <router-link to="/admin/users" href="#"
+                                    class="font-medium text-cyan-700 hover:text-cyan-900">View all</router-link>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- unverified -->
+                    <div class="overflow-hidden rounded-lg bg-white shadow">
+                        <div class="p-5 bg-yellow-500 text-white">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <UserMinusIcon class="h-6 w-6 " aria-hidden="true" />
+                                </div>
+                                <div class="ml-5 w-0 flex-1">
+                                    <dl>
+                                        <dt class="truncate text-sm font-medium">Unverified Users</dt>
+                                        <dd>
+                                            <div class="text-lg font-medium">{{ usersUnVerified }}</div>
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 px-5 py-3">
+                            <div class="text-sm">
+                                <router-link to="/admin/users" href="#"
+                                    class="font-medium text-yellow-700 hover:text-yellow-900">View
+                                    all</router-link>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-2 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                    <!-- Card -->
+                    <div class="overflow-hidden rounded-lg bg-white shadow">
+                        <div class="p-5 bg-lime-500 text-white">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <BookOpenIcon class="h-6 w-6 " aria-hidden="true" />
+                                </div>
+                                <div class="ml-5 w-0 flex-1">
+                                    <dl>
+                                        <dt class="truncate text-sm font-medium">Total Bookings</dt>
+                                        <dd>
+                                            <div class="text-lg font-medium">{{ totalBookings }}</div>
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-lime-50 px-5 py-3">
+                            <div class="text-sm">
+                                <router-link to="/admin/bookings" href="#"
+                                    class="font-medium text-lime-700 hover:text-lime-900">View
+                                    all</router-link>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- verified -->
+                    <div class="overflow-hidden rounded-lg bg-white shadow">
+                        <div class="p-5 bg-orange-500 text-white">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <UserPlusIcon class="h-6 w-6 " aria-hidden="true" />
+                                </div>
+                                <div class="ml-5 w-0 flex-1">
+                                    <dl>
+                                        <dt class="truncate text-sm font-medium">Total Pendings</dt>
+                                        <dd>
+                                            <div class="text-lg font-medium">{{ usersVerified }}</div>
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-orange-50 px-5 py-3">
+                            <div class="text-sm">
+                                <router-link to="/admin/bookings" href="#"
+                                    class="font-medium text-orange-700 hover:text-orange-900">View
+                                    all</router-link>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- unverified -->
+                    <div class="overflow-hidden rounded-lg bg-white shadow">
+                        <div class="p-5 bg-emerald-500 text-white">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <UserMinusIcon class="h-6 w-6 " aria-hidden="true" />
+                                </div>
+                                <div class="ml-5 w-0 flex-1">
+                                    <dl>
+                                        <dt class="truncate text-sm font-medium">Total Accepted Bookings</dt>
+                                        <dd>
+                                            <div class="text-lg font-medium">{{ usersUnVerified }}</div>
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-emerald-50 px-5 py-3">
+                            <div class="text-sm">
+                                <router-link to="/admin/bookings" href="#"
+                                    class="font-medium text-emerald-700 hover:text-emerald-900">View
+                                    all</router-link>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="overflow-hidden rounded-lg bg-white shadow">
+                        <div class="p-5 bg-rose-400 text-white">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <UserMinusIcon class="h-6 w-6 " aria-hidden="true" />
+                                </div>
+                                <div class="ml-5 w-0 flex-1">
+                                    <dl>
+                                        <dt class="truncate text-sm font-medium">Total Cancelled Bookings</dt>
+                                        <dd>
+                                            <div class="text-lg font-medium">{{ usersUnVerified }}</div>
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-rose-50 px-5 py-3">
+                            <div class="text-sm">
+                                <router-link to="/admin/users" href="#"
+                                    class="font-medium text-rose-700 hover:text-rose-900">View
+                                    all</router-link>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="overflow-hidden rounded-lg bg-white shadow">
+                        <div class="p-5 bg-red-500 text-white">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <UserMinusIcon class="h-6 w-6 " aria-hidden="true" />
+                                </div>
+                                <div class="ml-5 w-0 flex-1">
+                                    <dl>
+                                        <dt class="truncate text-sm font-medium">Total Declined Bookings</dt>
+                                        <dd>
+                                            <div class="text-lg font-medium">{{ usersUnVerified }}</div>
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-red-50 px-5 py-3">
+                            <div class="text-sm">
+                                <router-link to="/admin/users" href="#"
+                                    class="font-medium text-red-700 hover:text-red-900">View
+                                    all</router-link>
                             </div>
                         </div>
                     </div>
@@ -124,7 +320,8 @@ const statusStyles = {
                                     <span class="flex flex-col truncate text-sm text-gray-500">
                                         <span class="truncate">{{ transaction.name }}</span>
                                         <span><span class="font-medium text-gray-900">{{ transaction.amount }}</span> {{
-                                            transaction.currency }}</span>
+                                                transaction.currency
+                                        }}</span>
                                         <time :datetime="transaction.datetime">{{ transaction.date }}</time>
                                     </span>
                                 </span>
@@ -173,7 +370,8 @@ const statusStyles = {
                                                         class="h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
                                                         aria-hidden="true" />
                                                     <p class="truncate text-gray-500 group-hover:text-gray-900">{{
-                                                        transaction.name }}</p>
+                                                            transaction.name
+                                                    }}</p>
                                                 </a>
                                             </div>
                                         </td>
@@ -184,7 +382,8 @@ const statusStyles = {
                                         <td class="hidden whitespace-nowrap px-6 py-4 text-sm text-gray-500 md:block">
                                             <span
                                                 :class="[statusStyles[transaction.status], 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize']">{{
-                                                transaction.status }}</span>
+                                                        transaction.status
+                                                }}</span>
                                         </td>
                                         <td class="whitespace-nowrap px-6 py-4 text-right text-sm text-gray-500">
                                             <time :datetime="transaction.datetime">{{ transaction.date }}</time>

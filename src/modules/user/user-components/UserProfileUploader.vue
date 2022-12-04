@@ -121,9 +121,9 @@ const handleFilePondInit = () => {
 
 const handleClearImage = async () => {
     const image = localStorage.getItem('profile_url')
+    localStorage.removeItem('profile_url');
 
     const remove = await removeImage({data: image});
-    
 }
 
 
