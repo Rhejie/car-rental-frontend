@@ -58,6 +58,23 @@ export const acceptBooking = (book) => {
     }
 }
 
+export const declineBooking = (book) => {
+    const data = ref(null)
+
+    const post = async () => {
+        await http().post('/booking/decline', book).then(res => {
+            data.value = res.data
+        }).catch(error => {
+            console.log('Error in accepting Booking: ', error)
+        })
+    }
+
+    return {
+        data,
+        post
+    }
+}
+
 export const deployBooking = (book, payment) => {
     const data = ref(null)
     const errorData = ref(null)

@@ -291,7 +291,7 @@ const fetch = async () => {
 const handleStatus = (book) => {
     let icon = ClockIcon
     let color = 'text-yellow-400'
-    let status = null
+    let status = 'pending'
     if (book.booking_status == 'accept') {
         icon = CheckCircleIcon
         color = 'text-green-400'

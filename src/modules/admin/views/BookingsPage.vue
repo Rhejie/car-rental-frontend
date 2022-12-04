@@ -11,6 +11,7 @@ import GPagination from "@/components/GPagination.vue";
 import { CheckCircleIcon, EyeIcon, XCircleIcon, XMarkIcon, PlusCircleIcon, RocketLaunchIcon } from '@heroicons/vue/20/solid'
 import { loadBookings } from '../components/composables/booking-composables';
 import AcceptBookingModal from '../components/modals/AcceptBookingModal.vue';
+import DeclineBookingModal from '../components/modals/DeclineBookingModal.vue'
 import GNotification from '@/components/GNotification.vue';
 import DeployBookingModal from '../components/modals/DeployBookingModal.vue';
 
@@ -31,7 +32,7 @@ const showNotif = ref(false)
 const message = ref('')
 const selectedBooking = ref(null)
 const showDeployModal = ref(false)
-
+const showDeclineModal = ref(false)
 
 const url = storageUrl();
 
@@ -57,10 +58,28 @@ const handleAcceptedBook = (selected) => {
     }, 2000)
 }
 
+const handleDeclinedBook = (selected) => {
+  message.value = "Successfully declined!"
+  showNotif.value = true
+  bookings.value.map(book => {
+    if(selected.id == book.id) {
+      for(let key in selected) {
+        book[key] = selected[key]
+      }
+    }
+    return book
+  })
+
+  showDeclineModal.value = false
+  setTimeout(() => {
+        showNotif.value = false
+    }, 2000)
+}
 
 const handleCloseModal = () => {
   openModal.value = false
   showDeployModal.value = false
+  showDeclineModal.value = false
 }
 
 const fetch = async () => {
@@ -136,6 +155,11 @@ const handleDeployeButton = (book, index) => {
   selectedBooking.value = book
 }
 
+const handleCLickDecline = (book, index) => {
+  showDeclineModal.value = true
+  selectedBooking.value = book
+}
+
 const handleDeployedBooking = (book) => {
   let _index = bookings.value.findIndex(b => b.id == book.id);
   bookings.value.splice(_index, 1)
@@ -161,6 +185,7 @@ watch(params.value, () => {
   
   <GNotification :show-notif="showNotif" :message="message"/>
   <AcceptBookingModal :openModal="openModal" :selected-book="selectedBooking" @closeModal="handleCloseModal" @acceptBook="handleAcceptedBook"/>
+  <DeclineBookingModal :openModal="showDeclineModal" :selected-book="selectedBooking" @closeModal="handleCloseModal" @declineBook="handleDeclinedBook"/>
   <DeployBookingModal :openModal="showDeployModal" :selected-booking="selectedBooking" @closeModal="handleCloseModal" @deployedBooking="handleDeployedBooking"/>
   <div class="w-full bg-gray-500">
     <div class="mx-auto max-w-2xl  py-4 px-4 lg:max-w-7xl lg:px-0">
@@ -245,6 +270,7 @@ watch(params.value, () => {
                     </button>
                     
                     <button type="button"
+                      @click="handleCLickDecline(book, index)"
                     v-if="book.booking_status != 'accept' && book.booking_status != 'decline' && book.booking_status != 'cancel'"
                       class="inline-flex items-center rounded-md mr-2 border border-transparent bg-red-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
                       <XMarkIcon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
