@@ -8,10 +8,16 @@ import {
     UserCircleIcon,
     UserPlusIcon,
     UserMinusIcon,
-    BookOpenIcon
+    BookOpenIcon,
+    UserGroupIcon,
+    ClipboardDocumentCheckIcon,
+    BookmarkSlashIcon,
+    XCircleIcon,
+    ClockIcon
 } from '@heroicons/vue/24/outline'
 import { countTotalBookings, countUnVerifiedAccounts, countUsers, countVerifiedAccounts } from '../composables/dashboard-composables';
 import { onMounted, ref } from 'vue'
+import DashboardMap from '../components/dashboard/DashboardMap.vue';
 const users = ref(0)
 const usersVerified = ref(0)
 const usersUnVerified = ref(0)
@@ -39,6 +45,13 @@ const totalBookingData = async () => {
     await load()
     totalBookings.value = data.value
 }
+
+const totalPendings = ref(0) 
+
+const getTotalPendings = async () => {
+    
+}
+
 onMounted(async () => {
     await totalUser();
     await totalVerified();
@@ -210,13 +223,13 @@ const statusStyles = {
                         <div class="p-5 bg-orange-500 text-white">
                             <div class="flex items-center">
                                 <div class="flex-shrink-0">
-                                    <UserPlusIcon class="h-6 w-6 " aria-hidden="true" />
+                                    <ClockIcon class="h-6 w-6 " aria-hidden="true" />
                                 </div>
                                 <div class="ml-5 w-0 flex-1">
                                     <dl>
                                         <dt class="truncate text-sm font-medium">Total Pendings</dt>
                                         <dd>
-                                            <div class="text-lg font-medium">{{ usersVerified }}</div>
+                                            <div class="text-lg font-medium">{{ totalPendings }}</div>
                                         </dd>
                                     </dl>
                                 </div>
@@ -235,13 +248,13 @@ const statusStyles = {
                         <div class="p-5 bg-emerald-500 text-white">
                             <div class="flex items-center">
                                 <div class="flex-shrink-0">
-                                    <UserMinusIcon class="h-6 w-6 " aria-hidden="true" />
+                                    <ClipboardDocumentCheckIcon class="h-6 w-6 " aria-hidden="true" />
                                 </div>
                                 <div class="ml-5 w-0 flex-1">
                                     <dl>
                                         <dt class="truncate text-sm font-medium">Total Accepted Bookings</dt>
                                         <dd>
-                                            <div class="text-lg font-medium">{{ usersUnVerified }}</div>
+                                            <div class="text-lg font-medium">{{ totalPendings }}</div>
                                         </dd>
                                     </dl>
                                 </div>
@@ -259,13 +272,13 @@ const statusStyles = {
                         <div class="p-5 bg-rose-400 text-white">
                             <div class="flex items-center">
                                 <div class="flex-shrink-0">
-                                    <UserMinusIcon class="h-6 w-6 " aria-hidden="true" />
+                                    <BookmarkSlashIcon class="h-6 w-6 " aria-hidden="true" />
                                 </div>
                                 <div class="ml-5 w-0 flex-1">
                                     <dl>
                                         <dt class="truncate text-sm font-medium">Total Cancelled Bookings</dt>
                                         <dd>
-                                            <div class="text-lg font-medium">{{ usersUnVerified }}</div>
+                                            <div class="text-lg font-medium">{{ totalPendings }}</div>
                                         </dd>
                                     </dl>
                                 </div>
@@ -273,7 +286,7 @@ const statusStyles = {
                         </div>
                         <div class="bg-rose-50 px-5 py-3">
                             <div class="text-sm">
-                                <router-link to="/admin/users" href="#"
+                                <router-link to="/admin/bookings" href="#"
                                     class="font-medium text-rose-700 hover:text-rose-900">View
                                     all</router-link>
                             </div>
@@ -283,13 +296,13 @@ const statusStyles = {
                         <div class="p-5 bg-red-500 text-white">
                             <div class="flex items-center">
                                 <div class="flex-shrink-0">
-                                    <UserMinusIcon class="h-6 w-6 " aria-hidden="true" />
+                                    <XCircleIcon class="h-6 w-6 " aria-hidden="true" />
                                 </div>
                                 <div class="ml-5 w-0 flex-1">
                                     <dl>
                                         <dt class="truncate text-sm font-medium">Total Declined Bookings</dt>
                                         <dd>
-                                            <div class="text-lg font-medium">{{ usersUnVerified }}</div>
+                                            <div class="text-lg font-medium">{{ totalPendings }}</div>
                                         </dd>
                                     </dl>
                                 </div>
@@ -297,7 +310,7 @@ const statusStyles = {
                         </div>
                         <div class="bg-red-50 px-5 py-3">
                             <div class="text-sm">
-                                <router-link to="/admin/users" href="#"
+                                <router-link to="/admin/bookings" href="#"
                                     class="font-medium text-red-700 hover:text-red-900">View
                                     all</router-link>
                             </div>
@@ -306,11 +319,11 @@ const statusStyles = {
                 </div>
             </div>
 
-            <h2 class="mx-auto mt-8 max-w-6xl px-4 text-lg font-medium leading-6 text-gray-900 sm:px-6 lg:px-8">Recent
-                activity</h2>
-
-            <!-- Activity list (smallest breakpoint only) -->
-            <div class="shadow sm:hidden">
+            <h2 class="mx-auto mt-8 max-w-6xl px-4 text-lg font-medium leading-6 text-gray-900 sm:px-6 lg:px-8">
+                Tracker
+                </h2>
+                <DashboardMap/>
+            <!-- <div class="shadow sm:hidden">
                 <ul role="list" class="mt-2 divide-y divide-gray-200 overflow-hidden shadow sm:hidden">
                     <li v-for="transaction in transactions" :key="transaction.id">
                         <a :href="transaction.href" class="block bg-white px-4 py-4 hover:bg-gray-50">
@@ -342,7 +355,6 @@ const statusStyles = {
                 </nav>
             </div>
 
-            <!-- Activity table (small breakpoint and up) -->
             <div class="hidden sm:block">
                 <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
                     <div class="mt-2 flex flex-col">
@@ -391,7 +403,6 @@ const statusStyles = {
                                     </tr>
                                 </tbody>
                             </table>
-                            <!-- Pagination -->
                             <nav class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6"
                                 aria-label="Pagination">
                                 <div class="hidden sm:block">
@@ -421,7 +432,7 @@ const statusStyles = {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </main>
 </template>
