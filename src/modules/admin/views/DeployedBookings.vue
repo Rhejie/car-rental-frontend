@@ -198,12 +198,12 @@ watch(params.value, () => {
                     }}
                   </td>
                   <td class="relative whitespace-nowrap py-2 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                    <button type="button" @click="handleReturnVehicle(book, index)"
+                    <!-- <button type="button" @click="handleReturnVehicle(book, index)"
                       v-if="book.booking_status != 'pending' && book.booking_status != 'decline'"
                       class="inline-flex items-center rounded-md mr-2 border border-transparent bg-orange-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
                       <ExclamationCircleIcon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
                       Notify User
-                    </button>
+                    </button> -->
                     <!-- Accepted Booking -->
                     <button type="button" @click="handleReturnVehicle(book, index)"
                       v-if="book.booking_status != 'pending' && book.booking_status != 'decline'"

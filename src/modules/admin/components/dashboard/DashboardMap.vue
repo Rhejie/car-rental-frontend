@@ -86,59 +86,67 @@ onMounted(async () => {
     const map = new mapboxgl.Map({
         container: 'map', // container ID
         // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
-        style: 'mapbox://styles/mapbox/streets-v11?optimize=true', // style URL
+        style: 'mapbox://styles/mapbox/streets-v11?optimize=true',
+        // style: 'mapbox://styles/mapbox/satellite-streets-v12',
         center: [125.6678903, 7.3003923], // starting position [lng, lat]
         zoom: 11 // starting zoom
     });
 
     map.on('load', () => {
         setTimeout(() => {
+            map.addSource('mapbox-dem', {
+                'type': 'raster-dem',
+                'url': 'mapbox://mapbox.mapbox-terrain-dem-v1',
+                'tileSize': 512,
+                'maxzoom': 14
+            });
+            map.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1.5 });
             if(routes.value.length > 0) {
-                // routes.value.forEach((route, index) => {
-                //     const colors = ['gray', 'red', 'skyblue', 'yellowgreen', 'lightgreen', 'white']
-                //     const color = colors[Math.floor(Math.random() * colors.length)]
+                routes.value.forEach((route, index) => {
+                    const colors = ['gray', 'red', 'skyblue', 'yellowgreen', 'lightgreen', 'white']
+                    const color = colors[Math.floor(Math.random() * colors.length)]
 
-                //     map.addSource('route', {
-                //         'type': 'geojson',
-                //         'data': {
-                //             'type': 'Feature',
-                //             'properties': {},
-                //             'geometry': {
-                //                 'type': 'LineString',
-                //                 'coordinates': route
-                //             }
-                //         }
-                //     })
+                    map.addSource('route', {
+                        'type': 'geojson',
+                        'data': {
+                            'type': 'Feature',
+                            'properties': {},
+                            'geometry': {
+                                'type': 'LineString',
+                                'coordinates': route
+                            }
+                        }
+                    })
 
-                //     const startingPointMarker = new mapboxgl.Marker()
-                //         .setLngLat(route[0])
-                //         .addTo(map);
+                    const startingPointMarker = new mapboxgl.Marker()
+                        .setLngLat(route[0])
+                        .addTo(map);
 
 
 
-                //     const currentPointMarker = new mapboxgl.Marker({ color: 'black', rotation: 45 })
-                //         .setLngLat(route[route.length - 1])
-                //         .addTo(map);
+                    const currentPointMarker = new mapboxgl.Marker({ color: 'black', rotation: 45 })
+                        .setLngLat(route[route.length - 1])
+                        .addTo(map);
 
-                //     const startingPopup = new mapboxgl.Popup({ closeOnClick: false })
-                //         .setLngLat(route[route.length - 1])
-                //         .setHTML(handleGetBookingInfo(route.length - 1))
-                //         .addTo(map);
+                    const startingPopup = new mapboxgl.Popup({ closeOnClick: false })
+                        .setLngLat(route[route.length - 1])
+                        .setHTML(handleGetBookingInfo(route.length - 1))
+                        .addTo(map);
 
-                //     map.addLayer({
-                //         'id': 'route_' + index,
-                //         'type': 'line',
-                //         'source': 'route',
-                //         'layout': {
-                //             'line-join': 'round',
-                //             'line-cap': 'round'
-                //         },
-                //         'paint': {
-                //             'line-color': color,
-                //             'line-width': 8
-                //         }
-                //     });
-                // })
+                    map.addLayer({
+                        'id': 'route_' + index,
+                        'type': 'line',
+                        'source': 'route',
+                        'layout': {
+                            'line-join': 'round',
+                            'line-cap': 'round'
+                        },
+                        'paint': {
+                            'line-color': color,
+                            'line-width': 5
+                        }
+                    });
+                })
             }
             
 
@@ -191,6 +199,13 @@ onMounted(async () => {
         accessToken: mapboxgl.accessToken,
         mapboxgl: mapboxgl
     })
+
+    map.addControl(
+        new MapboxDirections({
+            accessToken: mapboxgl.accessToken
+        }),
+        'top-left'
+    );
 
     map.addControl(geocoder);
 

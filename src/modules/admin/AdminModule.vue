@@ -77,9 +77,9 @@
                 <label for="search-field" class="sr-only">Search</label>
                 <div class="relative w-full text-gray-400 focus-within:text-gray-600">
                   <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center" aria-hidden="true">
-                    <MagnifyingGlassIcon class="h-5 w-5" aria-hidden="true" />
+                    <!-- <MagnifyingGlassIcon class="h-5 w-5" aria-hidden="true" /> -->
                   </div>
-                  <input id="search-field" name="search-field" class="block h-full w-full border-transparent py-2 pl-8 pr-3 text-gray-900 placeholder-gray-500 focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm" placeholder="Search transactions" type="search" />
+                  <!-- <input id="search-field" name="search-field" class="block h-full w-full border-transparent py-2 pl-8 pr-3 text-gray-900 placeholder-gray-500 focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm" placeholder="Search transactions" type="search" /> -->
                 </div>
               </form>
             </div>
@@ -149,7 +149,7 @@
     { name: 'Vehicles', routeName: 'Vehicles', icon: TruckIcon, current: false },
     { name: 'Trackers', routeName: 'Trackers', icon: InboxIcon, current: false },
     { name: 'Maintenance', routeName: 'Maintenance', icon: ChartBarIcon, current: false },
-    { name: 'Reporting', routeName: 'Account', icon: ClipboardDocumentIcon, current: false },
+    { name: 'Reporting', routeName: 'Reports', icon: ClipboardDocumentIcon, current: false },
     { name: 'Settings', routeName: 'Account', icon: AdjustmentsHorizontalIcon, current: false },
 ]
   const secondaryNavigation = [

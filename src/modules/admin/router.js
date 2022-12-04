@@ -63,6 +63,26 @@ const moduleRoute = {
             component: () => import('./views/MaintenancePage.vue'),
         },
         {
+            path: '/admin/reports',
+            name: "Reports",
+            component: () => import('./views/ReportingPage.vue')
+        },
+        {
+            path: '/admin/reports/daily-reports',
+            name: 'Daily Reports',
+            component: () => import('../admin/reporting/DailyReports.vue')
+        },
+        {
+            path: '/admin/reports/income-reports',
+            name: 'Income Reports',
+            component: () => import('../admin/reporting/IncomeReports.vue')
+        },
+        {
+            path: '/admin/reports/expenses-reports',
+            name: 'Expenses Reports',
+            component: () => import('../admin/reporting/ExpensesReport.vue')
+        },
+        {
             path: '/admin/settings',
             component: () => import('./views/SettingsPage.vue'),
             children: [
@@ -87,8 +107,8 @@ const moduleRoute = {
                     component: () => import('./components/settings/PaymentMethods.vue')
                 },
                 {
-                    path: '/admin/settings/companies',
-                    name: 'Company',
+                    path: '/admin/settings/forms',
+                    name: 'Form',
                     component: () => import('./components/settings/CompanySettings.vue')
                 },
                 {

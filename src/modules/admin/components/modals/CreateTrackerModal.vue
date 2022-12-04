@@ -135,20 +135,6 @@ onUpdated(() => {
                                                         {{ errorValue.name[0] }}
                                                     </span>
                                                 </div>
-                                                <div class="col-span-12">
-                                                    <label for="first-name"
-                                                        class="block text-sm font-medium text-gray-700">
-                                                        Company
-                                                    </label>
-                                                    <select id="location" v-model="tracker.company_id" name="location" v-loading="loadingCompanies"
-                                                        class="mt-1 block w-full rounded-md border h-8 border-gray-100 focus:border-indigo-100 focus:ring-indigo-100 pl-2 sm:text-sm" placeholder="Select Company">
-                                                        <option v-for="company in companies" :key="company.id" :value="company.id">{{company.name}}</option>
-                                                    </select>
-                                                    <span class="text-sm text-red-400"
-                                                        v-if="errorValue && !loading && errorValue.name">
-                                                        {{ errorValue.company_id[0] ? 'The company field is required' : '' }}
-                                                    </span>
-                                                </div>
                                             </div>
                                         </div>
                                         <div class="bg-gray-50 px-4 py-3 text-right sm:px-6">

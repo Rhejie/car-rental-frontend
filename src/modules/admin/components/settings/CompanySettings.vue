@@ -8,6 +8,7 @@ import GPagination from "@/components/GPagination.vue";
 import CreateCompanyModal from '../modals/CreateCompanyModal.vue'
 import GNotification from '@/components/GNotification.vue';
 import { loadCompanies } from '../composables/company-composables';
+import { loadForms } from '../composables/form-composables';
 const companies = ref([])
 
 const params = ref({
@@ -26,7 +27,7 @@ const selectedItem = ref(null)
 
 const fetchCompanies = async () => {
     loading.value = true
-    const { load, data, total } = loadCompanies(params.value)
+    const { load, data, total } = loadForms(params.value)
     await load();
 
     companies.value = data.value
@@ -81,6 +82,10 @@ const handleUpdateCompany = (company) => {
     }, 2000)
 }
 
+const handleClickFileUrl = (url) => {
+    window.open(url, '_blank')
+}
+
 const handleClickEdit = (company) => {
     openModal.value = true
     selectedItem.value = company
@@ -105,7 +110,7 @@ watch(params.value, async () => {
     <GNotification :show-notif="showNotif"/>
     <div class="mx-auto max-w-4xl py-10">
         <div class="bg-white p-2 shadow-md rounded-lg">
-            <h1 class="text-3xl font-bold tracking-tight text-gray-700">Trackers Company</h1>
+            <h1 class="text-3xl font-bold tracking-tight text-gray-700">Downloadable Forms</h1>
             <div class="px-4 sm:px-6 lg:px-8">
                 <div class="sm:flex sm:items-center">
                     <div class="sm:flex-auto">
@@ -137,6 +142,9 @@ watch(params.value, async () => {
                                             <th scope="col"
                                                 class="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6">
                                                 Name</th>
+                                            <th scope="col"
+                                                class="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6">
+                                                Google Drive Link</th>
                                             <th scope="col" class="relative py-3 pl-3 pr-4 sm:pr-6">
                                                 <span class="sr-only">Edit</span>
                                             </th>
@@ -147,6 +155,11 @@ watch(params.value, async () => {
                                             <td
                                                 class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                                                 {{ company.name }}
+                                            </td>
+                                            <td
+                                                @click="handleClickFileUrl(company.file_url)"
+                                                class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-blue-900 cursor-pointer sm:pl-6">
+                                                {{ company.file_url }}
                                             </td>
                                             <td
                                                 class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">

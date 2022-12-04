@@ -3,6 +3,7 @@ import { ref, defineProps, computed, defineEmits, onMounted, onUpdated, onUnmoun
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { CheckIcon } from '@heroicons/vue/24/outline'
 import { storeCompany, updateCompany } from '../composables/company-composables'
+import { storeForm, updateForm } from '../composables/form-composables';
 const props = defineProps({
     openModal: {
         type: Boolean,
@@ -38,7 +39,7 @@ const initializeForm = () => {
 
 const handleUpdateCompany = async () => {
     loading.value = true
-    const {data, update, errorData} = updateCompany(company.value);
+    const {data, update, errorData} = updateForm(company.value);
     await update();
     errorValue.value = errorData.value
     loading.value = false
@@ -55,7 +56,7 @@ const handleStoreCompany = async () => {
     }
 
     loading.value = true
-    const {data, post, errorData} = storeCompany(company.value);
+    const {data, post, errorData} = storeForm(company.value);
     await post();
     errorValue.value = errorData.value
     loading.value = false
@@ -101,7 +102,7 @@ onUpdated(() => {
                         leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
                         <DialogPanel
                             class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all  sm:w-full sm:max-w-sm">
-                            <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-700 p-2">{{ company && company.id ? 'Update' : 'Create'}} Company</DialogTitle>
+                            <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-700 p-2">{{ company && company.id ? 'Update' : 'Create'}} Form</DialogTitle>
                             <div class="mt-5 md:col-span-2 md:mt-0">
                                 <form>
                                     <div class="overflow-hidden shadow sm:rounded-md">
@@ -113,7 +114,20 @@ onUpdated(() => {
                                                         Name    
                                                     </label>
                                                     <input type="text" name="first-name" v-model="company.name"
-                                                        class="mt-1 block w-full rounded-md border h-8 border-gray-100 focus:border-indigo-100 focus:ring-indigo-100 pl-2 sm:text-sm" placeholder="Company Name" />
+                                                        class="mt-1 block w-full rounded-md border h-8 border-gray-100 focus:border-indigo-100 focus:ring-indigo-100 pl-2 sm:text-sm" placeholder="Name" />
+                                                    <span 
+                                                        class="text-sm text-red-400"
+                                                        v-if="errorValue && !loading && errorValue.name">
+                                                            {{errorValue.name[0]}}
+                                                    </span>
+                                                </div>
+                                                <div class="col-span-12">
+                                                    <label for="first-name"
+                                                        class="block text-sm font-medium text-gray-700">
+                                                        Google Drive Link    
+                                                    </label>
+                                                    <input type="text" name="first-name" v-model="company.file_url"
+                                                        class="mt-1 block w-full rounded-md border h-8 border-gray-100 focus:border-indigo-100 focus:ring-indigo-100 pl-2 sm:text-sm" placeholder="Google Drive Link" />
                                                     <span 
                                                         class="text-sm text-red-400"
                                                         v-if="errorValue && !loading && errorValue.name">

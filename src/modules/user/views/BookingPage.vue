@@ -189,31 +189,18 @@
                                                     <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
                                                         <ul role="list"
                                                             class="divide-y divide-gray-200 rounded-md border border-gray-200">
-                                                            <li
+                                                            <li v-for="form in forms" :key="form.id"
                                                                 class="flex items-center justify-between py-3 pl-3 pr-4 text-sm">
                                                                 <div class="flex w-0 flex-1 items-center">
                                                                     <PaperClipIcon
                                                                         class="h-5 w-5 flex-shrink-0 text-gray-400"
                                                                         aria-hidden="true" />
                                                                     <span
-                                                                        class="ml-2 w-0 flex-1 truncate">resume_back_end_developer.pdf</span>
+                                                                        class="ml-2 w-0 flex-1 truncate">{{form.name}}</span>
                                                                 </div>
                                                                 <div class="ml-4 flex-shrink-0">
-                                                                    <a href="#"
-                                                                        class="font-medium text-indigo-600 hover:text-indigo-500">Download</a>
-                                                                </div>
-                                                            </li>
-                                                            <li
-                                                                class="flex items-center justify-between py-3 pl-3 pr-4 text-sm">
-                                                                <div class="flex w-0 flex-1 items-center">
-                                                                    <PaperClipIcon
-                                                                        class="h-5 w-5 flex-shrink-0 text-gray-400"
-                                                                        aria-hidden="true" />
-                                                                    <span
-                                                                        class="ml-2 w-0 flex-1 truncate">coverletter_back_end_developer.pdf</span>
-                                                                </div>
-                                                                <div class="ml-4 flex-shrink-0">
-                                                                    <a href="#"
+                                                                    <a :href="form.file_url"
+                                                                        target="_blank"
                                                                         class="font-medium text-indigo-600 hover:text-indigo-500">Download</a>
                                                                 </div>
                                                             </li>
@@ -265,6 +252,7 @@ import { getCurrentBook } from '../composables/booking-composables';
 import GFullyPaid from '@/components/GFullyPaid.vue';
 import CancelBookingModal from '@/modules/admin/components/modals/CancelBookingModal.vue';
 import GNotification from '@/components/GNotification.vue';
+import { showFormSelect } from '@/modules/admin/components/composables/form-composables';
 
 const url = storageUrl();
 const loading = ref(true)
@@ -281,6 +269,7 @@ const loadingCurrentBook = ref(true)
 const currentBook = ref(null)
 const showCancelModal = ref(false)
 const selectedBook = ref(null)
+const forms = ref([])
 
 const handleChangeSize = (size) => {
     params.value.page_size = size
@@ -313,6 +302,12 @@ const handleCancelBooking = (selected) => {
 
 const handleChangePage = (page) => {
     params.value.page = page
+}
+
+const fetchDownloadableForms = async () => {
+    const { data, loadSelectCompanies} = showFormSelect();
+    await loadSelectCompanies();
+    forms.value = data.value
 }
 
 const fetch = async () => {
@@ -390,6 +385,7 @@ const handleGetImage = (images) => {
 onMounted(async () => {
     await fetch();
     getCurrentBookData();
+    fetchDownloadableForms();
 })
 
 watch(params.value, async () => {

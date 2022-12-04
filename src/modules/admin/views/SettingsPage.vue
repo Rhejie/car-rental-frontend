@@ -11,84 +11,85 @@ import {
   DeviceTabletIcon,
   SwatchIcon,
   FireIcon,
-  CpuChipIcon
+  CpuChipIcon,
+  DocumentCheckIcon
 } from '@heroicons/vue/24/solid'
 import { ChevronLeftIcon } from '@heroicons/vue/20/solid'
 
 const subNavigation = ref([
   {
     name: 'Account',
-    // description: 'Ullamcorper id at suspendisse nec id volutpat vestibulum enim. Interdum blandit.',
+    description: 'Controls admin account.',
     routerName: 'Account',
     icon: CogIcon,
     current: true,
   },
   {
     name: 'Tracker Devices',
-    // description: 'Enim, nullam mi vel et libero urna lectus enim. Et sed in maecenas tellus.',
+    description: 'List of all tracking devince.',
     routerName: 'Tracker Devices',
     icon: DeviceTabletIcon,
     current: false,
   },
   {
-    name: 'Trackers Company',
-    // description: 'Enim, nullam mi vel et libero urna lectus enim. Et sed in maecenas tellus.',
-    routerName: 'Company',
-    icon: MapPinIcon,
+    name: 'Downloadable Forms',
+    description: 'All aggreement forms.',
+    routerName: 'Form',
+    icon: DocumentCheckIcon,
     current: false,
   },
   {
     name: 'Places',
-    // description: 'Enim, nullam mi vel et libero urna lectus enim. Et sed in maecenas tellus.',
+    description: 'List of places and geo-fense.',
     routerName: 'Places',
     icon: MapPinIcon,
     current: false,
   },
   {
     name: 'Overcharge Types',
-    // description: 'Enim, nullam mi vel et libero urna lectus enim. Et sed in maecenas tellus.',
+    description: 'List of all charges.',
     routerName: 'Overcharge types',
     icon: ListBulletIcon,
     current: false,
   },
   {
     name: 'Payment Methods',
-    // description: 'Enim, nullam mi vel et libero urna lectus enim. Et sed in maecenas tellus.',
+    description: 'List of payments method.',
     routerName: 'Payment Method',
     icon: CurrencyDollarIcon,
     current: false,
   },
-  {
-    name: 'Identifications',
-    // description: 'Enim, nullam mi vel et libero urna lectus enim. Et sed in maecenas tellus.',
-    routerName: 'Identifications',
-    icon: IdentificationIcon,
-    current: false,
-  },
+  // {
+  //   name: 'Identifications',
+  //   description: 'Enim, nullam mi vel et libero urna lectus enim. Et sed in maecenas tellus.',
+  //   routerName: 'Identifications',
+  //   icon: IdentificationIcon,
+  //   current: false,
+  // },
   {
     name: 'Vehicle Brands',
-    // description: 'Enim, nullam mi vel et libero urna lectus enim. Et sed in maecenas tellus.',
+    description: 'List of all vehicle brands.',
     routerName: 'Vehicle Brands',
     icon: CpuChipIcon,
     current: false,
   },
   {
     name: 'Fuel Types',
-    // description: 'Enim, nullam mi vel et libero urna lectus enim. Et sed in maecenas tellus.',
+    description: 'List of all fuel types.',
     routerName: 'Fuel Types',
     icon: FireIcon,
     current: false,
   },
   {
     name: 'Colors',
-    // description: 'Enim, nullam mi vel et libero urna lectus enim. Et sed in maecenas tellus.',
+    description: 'List of colors of the vehicle.',
     routerName: 'Colors',
     icon: SwatchIcon,
     current: false,
   },
   {
     name: 'Roles',
-    // description: 'Enim, nullam mi vel et libero urna lectus enim. Et sed in maecenas tellus.',
+    description: 'Users role.',
     routerName: 'Roles',
     icon: UserIcon,
     current: false,
@@ -132,7 +133,7 @@ const handleClickSelect = (item) => {
                   <component :is="item.icon" class="-mt-0.5 h-6 w-6 flex-shrink-0 text-gray-500" aria-hidden="true" />
                   <div class="ml-3 text-sm">
                     <p class="font-bold text-gray-700">{{ item.name }}</p>
-                    <!-- <p class="mt-1 text-gray-500">{{ item.description }}</p> -->
+                    <p class="mt-1 text-gray-500">{{ item.description }}</p>
                   </div>
                 </router-link>
               </div>
