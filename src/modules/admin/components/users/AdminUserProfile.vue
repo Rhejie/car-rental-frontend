@@ -7,14 +7,13 @@
             <div class="min-w-0 flex-1">
               <!-- Profile -->
               <div class="flex items-center">
-                <img class="hidden h-16 w-16 rounded-full sm:block"
+                <UserCircleIcon class="hidden h-16 text-gray-700 w-16 rounded-full sm:block"
                   src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.6&w=256&h=256&q=80"
                   alt="" />
                 <div v-loading="loading">
                   <div class="flex items-center">
-                    <img class="h-16 w-16 rounded-full sm:hidden"
-                      src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.6&w=256&h=256&q=80"
-                      alt="" />
+                    <UserCircleIcon class="h-16 w-16 text-gray-700 rounded-full sm:hidden"
+                      />
                     <h1 class="ml-3 text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:leading-9">
                       {{ name }}</h1>
                   </div>
@@ -30,10 +29,6 @@
               </div>
             </div>
             <div class="mt-6 flex space-x-3 md:mt-0 md:ml-4" v-if="userProfile">
-              <button type="button"
-                class="inline-flex items-center rounded-md border border-transparent bg-gray-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
-                Notify user to verified account
-              </button>
               <button type="button"
                 class="inline-flex items-center rounded-md border border-transparent bg-cyan-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2">
                 Verify User
@@ -242,7 +237,8 @@
     BuildingOfficeIcon,
     CheckCircleIcon,
     XCircleIcon,
-    InformationCircleIcon
+    InformationCircleIcon,
+    UserCircleIcon
   } from '@heroicons/vue/24/outline'
   import { computed, onMounted, ref, defineProps } from 'vue';
   import { useRouter } from 'vue-router';

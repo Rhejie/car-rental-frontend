@@ -1,11 +1,32 @@
 <script setup>
 
 import {
-    ScaleIcon,
+    UsersIcon,
     BanknotesIcon,
     BuildingOfficeIcon,
     CheckCircleIcon,
+    UserCircleIcon
 } from '@heroicons/vue/24/outline'
+import { countUsers, countVerifiedAccounts } from '../composables/dashboard-composables';
+import { onMounted, ref } from 'vue'
+const users = ref(0)
+const usersVerified = ref(0)
+const totalUser = async () => {
+    const {data, load} = countUsers();
+    await load();
+    users.value = data.value
+}
+
+const totalVerified = async () => {
+    const {data, load} = countVerifiedAccounts();
+    await load()
+    usersVerified.value = data.value
+}
+
+onMounted(async () => {
+    await totalUser();
+    await totalVerified();
+})
 const transactions = [
     {
         id: 1,
@@ -21,10 +42,6 @@ const transactions = [
 ]
 
 
-const cards = [
-    { name: 'Account balance', href: '#', icon: ScaleIcon, amount: '$30,659.45' },
-    // More items...
-]
 const statusStyles = {
     success: 'bg-green-100 text-green-800',
     processing: 'bg-yellow-100 text-yellow-800',
@@ -40,14 +57,10 @@ const statusStyles = {
                     <div class="min-w-0 flex-1">
                         <!-- Profile -->
                         <div class="flex items-center">
-                            <img class="hidden h-16 w-16 rounded-full sm:block"
-                                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.6&w=256&h=256&q=80"
-                                alt="" />
+                            <UserCircleIcon class="hidden h-16 w-16 text-gray-600 rounded-full sm:block"/>
                             <div>
                                 <div class="flex items-center">
-                                    <img class="h-16 w-16 rounded-full sm:hidden"
-                                        src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.6&w=256&h=256&q=80"
-                                        alt="" />
+                                    <UserCircleIcon class="h-16 w-16 text-gray-600 rounded-full sm:hidden"/>
                                     <h1
                                         class="ml-3 text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:leading-9">
                                         Welcome Admin!</h1>
@@ -72,25 +85,25 @@ const statusStyles = {
                 <h2 class="text-lg font-medium leading-6 text-gray-900">Overview</h2>
                 <div class="mt-2 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                     <!-- Card -->
-                    <div v-for="card in cards" :key="card.name" class="overflow-hidden rounded-lg bg-white shadow">
-                        <div class="p-5">
+                    <div class="overflow-hidden rounded-lg bg-white shadow">
+                        <div class="p-5 bg-cyan-500 text-white">
                             <div class="flex items-center">
                                 <div class="flex-shrink-0">
-                                    <component :is="card.icon" class="h-6 w-6 text-gray-400" aria-hidden="true" />
+                                    <UsersIcon class="h-6 w-6 " aria-hidden="true" />
                                 </div>
                                 <div class="ml-5 w-0 flex-1">
                                     <dl>
-                                        <dt class="truncate text-sm font-medium text-gray-500">{{ card.name }}</dt>
+                                        <dt class="truncate text-sm font-medium">Total Users</dt>
                                         <dd>
-                                            <div class="text-lg font-medium text-gray-900">{{ card.amount }}</div>
+                                            <div class="text-lg font-medium">{{users}}</div>
                                         </dd>
                                     </dl>
                                 </div>
                             </div>
                         </div>
-                        <div class="bg-gray-50 px-5 py-3">
+                        <div class="bg-cyan-50 px-5 py-3">
                             <div class="text-sm">
-                                <a :href="card.href" class="font-medium text-cyan-700 hover:text-cyan-900">View all</a>
+                                <a href="#" class="font-medium text-cyan-700 hover:text-cyan-900">View all</a>
                             </div>
                         </div>
                     </div>

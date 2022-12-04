@@ -2,6 +2,7 @@
 import { ref, defineProps, computed, defineEmits, onMounted, onUpdated, onUnmounted } from 'vue'
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { CheckIcon } from '@heroicons/vue/24/outline'
+import CreateAreaPlaceMap from '../map/CreateAreaPlaceMap.vue'
 import { storePlace, updatePlace } from '../composables/place-composables'
 
 const props = defineProps({
@@ -20,7 +21,9 @@ const selected = computed(() => props.selectedItem)
 const open = computed(() => props.openModal)
 
 const place = ref({
-    name: null
+    name: null,
+    area: null,
+    id: null,
 })
 
 const errorValue = ref(null)
@@ -33,7 +36,8 @@ const handleCloseModal = () => {
 
 const initializeForm = () => {
     place.value = {
-        name: null
+        name: null,
+        area: null
     }
 }
 
@@ -73,7 +77,9 @@ onMounted(() => {
 onUpdated(() => {
     if(selected.value && selected.value.id) {
         errorValue.value = null
-        place.value = {...selected.value}
+        place.value.name = selected.value.name
+        place.value.id = selected.value.id
+        place.value.area = JSON.parse(selected.value.area)
     }
     else {
         initializeForm()
@@ -101,7 +107,7 @@ onUpdated(() => {
                         leave-from="opacity-100 translate-y-0 sm:scale-100"
                         leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
                         <DialogPanel
-                            class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all  sm:w-full sm:max-w-sm">
+                            class="relative transform w-2/5 overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all ">
                             <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-700 p-2">{{ place && place.id ? 'Update' : 'Create'}}  Place</DialogTitle>
                             <div class="mt-5 md:col-span-2 md:mt-0">
                                 <form>
@@ -120,6 +126,9 @@ onUpdated(() => {
                                                         v-if="errorValue && !loading && errorValue.name">
                                                             {{errorValue.name[0]}}
                                                     </span>
+                                                </div>
+                                                <div class="col-span-12">
+                                                    <CreateAreaPlaceMap v-model="place.area"/>
                                                 </div>
                                             </div>
                                         </div>

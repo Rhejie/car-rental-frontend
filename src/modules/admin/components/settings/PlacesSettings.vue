@@ -143,7 +143,7 @@ watch(params.value, async () => {
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-gray-200 bg-white" v-loading="loading">
-                                        <tr v-for="place in places" :key="place.email">
+                                        <tr v-for="place in places" :key="place.id">
                                             <td
                                                 class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                                                 {{ place.name }}

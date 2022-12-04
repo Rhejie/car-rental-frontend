@@ -3,6 +3,13 @@ const webpack = require('webpack');
 const path = require('path');
 
 module.exports = {
+  configureWebpack: {
+    plugins: [
+      new webpack.ProvidePlugin({
+        mapboxgl: 'mapbox-gl',
+      }),
+    ],
+  },
   // proxy API requests to Valet during development
   transpileDependencies: true,
   outputDir: (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging' )
