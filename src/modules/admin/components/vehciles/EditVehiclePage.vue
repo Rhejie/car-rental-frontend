@@ -70,6 +70,10 @@ const updateVehicleInfo = async () => {
     }
 }
 
+const handleClickCancel = () => {
+    router.back();
+}
+
 onMounted(async () => {
     await getVehicleInfo();
 })
@@ -287,10 +291,11 @@ onMounted(async () => {
                 </div>
                 <div class="mt-10 border-t border-gray-200 pt-10">
                     <button type="button" @click="updateVehicleInfo"
-                        class="inline-flex float-right bg-gray-700 hover:text-gray-700 text-white items-center rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                        class="inline-flex float-right bg-gray-700 hover:text-gray-700 items-center rounded-md border border-gray-300 bg-cyan-400 px-3 py-2 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                         Save
                     </button>
                     <button type="button"
+                        @click="handleClickCancel"
                         class="mr-2 inline-flex float-right items-center rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                         Cancel
                     </button>

@@ -105,10 +105,12 @@ onMounted(async () => {
         setTimeout(() => {
 
             map.addSource('mapbox-dem', {
-                'type': 'raster-dem',
-                'url': 'mapbox://mapbox.mapbox-terrain-dem-v1',
-                'tileSize': 512,
-                'maxzoom': 14
+                type: 'raster-dem',
+                url: 'mapbox://mapbox.mapbox-terrain-dem-v12',
+                tileSize: 300,
+                maxzoom: 14,
+                pitch: 60, // pitch in degrees
+                bearing: -60, // bearing in degrees
             });
             map.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1.5 });
             routes.value.forEach((route, index) => {

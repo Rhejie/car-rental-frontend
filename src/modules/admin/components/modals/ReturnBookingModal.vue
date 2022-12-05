@@ -81,8 +81,45 @@
                                                 <div>
                                                     <span
                                                         class="block bg-gray-50 px-4 py-4 font-bold text-center text-sm font-medium text-gray-500 hover:text-gray-700 sm:rounded-b-lg">
-                                                        Total Price {{ totalPrice }} Php
+                                                        Total Price {{ totalPriceData }} Php
                                                     </span>
+                                                </div>
+                                            </div>
+                                        </section>
+
+                                        <section aria-labelledby="applicant-information-title" v-if="selected.driver">
+                                            <div class="bg-white shadow sm:rounded-lg border-t border-cyan-300">
+                                                <div class="px-4 py-5 sm:px-6">
+                                                    <h2 id="applicant-information-title"
+                                                        class="text-lg font-medium leading-6 text-gray-900">Driver
+                                                        Information</h2>
+                                                    <p class="mt-1 max-w-2xl text-sm text-gray-500">Driver details</p>
+                                                </div>
+                                                <div class="border-t border-gray-200 px-4 py-5 sm:px-6">
+                                                    <dl class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
+                                                        <div class="sm:col-span-1">
+                                                            <dt class="text-sm font-medium text-gray-500">
+                                                                Name
+                                                            </dt>
+                                                            <dd class="mt-1 text-sm text-gray-900">
+                                                                {{ selected.driver.name }} 
+                                                            </dd>
+                                                        </div>
+                                                        <div class="sm:col-span-1">
+                                                            <dt class="text-sm font-medium text-gray-500">Availability
+                                                            </dt>
+                                                            <dd class="mt-1 text-sm text-gray-900">
+                                                                {{ selected.driver.availability }} days
+                                                            </dd>
+                                                        </div>
+                                                        <div class="sm:col-span-1">
+                                                            <dt class="text-sm font-medium text-gray-500">Price per day
+                                                            </dt>
+                                                            <dd class="mt-1 text-sm text-gray-900">
+                                                                {{ selected.driver.price }}
+                                                            </dd>
+                                                        </div>
+                                                    </dl>
                                                 </div>
                                             </div>
                                         </section>
@@ -134,68 +171,7 @@
 
                                     <section aria-labelledby="timeline-title" class="lg:col-span-2 lg:col-start-3">
                                         <div
-                                            class="bg-white px-4 py-5 shadow sm:rounded-lg sm:px-6  border-t border-cyan-300">
-                                            <h2 id="timeline-title" class="text-lg font-medium text-gray-900">Payment
-                                                Details
-                                            </h2>
-
-                                            <!-- Activity Feed -->
-                                            <div class="mt-6 flow-root">
-                                                <form class="space-y-6" v-if="!isFullyPaid">
-                                                    <div>
-                                                        <SelectPayment v-model="payment.type" :read-only="true"/>
-                                                        <span class="text-sm text-red-400"
-                                                            v-if="(errorValue && !loading && errorValue.type)">
-                                                            {{ errorValue.type[0] }}
-                                                        </span>
-                                                    </div>
-                                                    <div>
-                                                        <SelectPaymentMethod v-model="payment.payment_method"
-                                                            :onHandleChangePaymentMethod="onHandleChangePaymentMethod" />
-                                                        <span class="text-sm text-red-400"
-                                                            v-if="(errorValue && !loading && errorValue.payment_method)">
-                                                            {{ errorValue.payment_method[0] }}
-                                                        </span>
-                                                    </div>
-                                                    <div class="space-y-1"
-                                                        v-if="(payment.payment_method && payment.payment_method.name.toLowerCase() != 'cash')">
-                                                        <label for="password"
-                                                            class="block text-sm font-medium text-gray-700">Reference
-                                                            No.</label>
-                                                        <div class="mt-1">
-                                                            <input id="password" v-model="payment.reference_number"
-                                                                name="password" type="text"
-                                                                placeholder="Enter your reference number"
-                                                                class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
-                                                            <span class="text-sm text-red-400"
-                                                                v-if="errorValue && !loading && errorValue.reference_number">
-                                                                {{ errorValue.reference_number[0] }}
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="space-y-1">
-                                                        <label for="password"
-                                                            class="block text-sm font-medium text-gray-700">Payment</label>
-                                                        <div class="mt-1">
-                                                            <input id="password" v-model="payment.price" name="password"
-                                                                min="0"
-                                                                type="number" placeholder="Enter your reference number"
-                                                                class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
-                                                            <span class="text-sm text-red-400"
-                                                                v-if="errorValue && !loading && errorValue.price">
-                                                                {{ errorValue.price[0] }}
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                                <div class="w-full" v-else>
-                                                    <GFullyPaid/>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div
-                                            class="bg-white px-4 py-5 mt-2 shadow sm:rounded-lg sm:px-6  border-t border-cyan-300">
+                                            class="bg-white px-4 py-5 mb-2 shadow sm:rounded-lg sm:px-6  border-t border-cyan-300">
                                             <h2 id="timeline-title"
                                                 class="text-lg font-medium text-gray-900 border-b border-gray-300">
                                                 Overcharges
@@ -246,6 +222,102 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <section aria-labelledby="applicant-information-title">
+                                            <div class="bg-white shadow sm:rounded-lg border-t mb-2 border-cyan-300">
+                                                <div class="px-4 py-5 sm:px-6">
+                                                    <h2 id="applicant-information-title"
+                                                        class="text-lg font-medium leading-6 text-gray-900">Payment Summary</h2>
+                                                </div>
+                                                <div class="border-t border-gray-200 px-4 py-5 sm:px-6">
+                                                    <dl class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
+                                                        <div class="sm:col-span-1">
+                                                            <dt class="text-sm font-medium text-gray-500">
+                                                                Previous Payment
+                                                            </dt>
+                                                            <dd class="mt-1 text-sm text-gray-900">
+                                                                Php {{ payment.total_paid }} 
+                                                            </dd>
+                                                        </div>
+                                                        <div class="sm:col-span-1">
+                                                            <dt class="text-sm font-medium text-gray-500">Total Overcharges
+                                                            </dt>
+                                                            <dd class="mt-1 text-sm text-gray-900">
+                                                                Php {{ geTotalOvercharge }}
+                                                            </dd>
+                                                        </div>
+                                                        <div class="sm:col-span-1">
+                                                            <dt class="text-sm font-medium text-gray-500">Total payment
+                                                            </dt>
+                                                            <dd class="mt-1 text-sm text-white bg-emerald-600 px-2">
+                                                                Php {{ (totalPriceData - payment.total_paid) + geTotalOvercharge }}
+                                                            </dd>
+                                                        </div>
+                                                    </dl>
+                                                </div>
+                                            </div>
+                                        </section>
+                                        <div
+                                            class="bg-white px-4 py-5 shadow sm:rounded-lg sm:px-6  border-t border-cyan-300">
+                                            <h2 id="timeline-title" class="text-lg font-medium text-gray-900">Payment
+                                                Details
+                                            </h2>
+
+                                            <!-- Activity Feed -->
+                                            <div class="mt-6 flow-root">
+                                                <form class="space-y-6">
+                                                    <div>
+                                                        <SelectPayment v-model="payment.type" :read-only="true"/>
+                                                        <span class="text-sm text-red-400"
+                                                            v-if="(errorValue && !loading && errorValue.type)">
+                                                            {{ errorValue.type[0] }}
+                                                        </span>
+                                                    </div>
+                                                    <div>
+                                                        <SelectPaymentMethod v-model="payment.payment_method"
+                                                            :onHandleChangePaymentMethod="onHandleChangePaymentMethod" />
+                                                        <span class="text-sm text-red-400"
+                                                            v-if="(errorValue && !loading && errorValue.payment_method)">
+                                                            {{ errorValue.payment_method[0] }}
+                                                        </span>
+                                                    </div>
+                                                    <div class="space-y-1"
+                                                        v-if="(payment.payment_method && payment.payment_method.name.toLowerCase() != 'cash')">
+                                                        <label for="password"
+                                                            class="block text-sm font-medium text-gray-700">Reference
+                                                            No.</label>
+                                                        <div class="mt-1">
+                                                            <input id="password" v-model="payment.reference_number"
+                                                                name="password" type="text"
+                                                                placeholder="Enter your reference number"
+                                                                class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
+                                                            <span class="text-sm text-red-400"
+                                                                v-if="errorValue && !loading && errorValue.reference_number">
+                                                                {{ errorValue.reference_number[0] }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="space-y-1">
+                                                        <label for="password"
+                                                            class="block text-sm font-medium text-gray-700">Payment</label>
+                                                        <div class="mt-1">
+                                                            <input id="password" v-model="payment.price" name="password"
+                                                                min="0"
+                                                                type="number" placeholder="Enter your reference number"
+                                                                class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
+                                                            <span class="text-sm text-red-400"
+                                                                v-if="errorValue && !loading && errorValue.price">
+                                                                {{ errorValue.price[0] }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                                <!-- <div class="w-full" v-else>
+                                                    <GFullyPaid/>
+                                                </div> -->
+                                            </div>
+                                        </div>
+
+                                        
                                     </section>
                                 </div>
                             </div>
@@ -332,6 +404,16 @@ const totalPrice = computed({
 })
 
 const totalPaid = ref(0)
+const totalPriceData = computed({
+    get() {
+        if(selected.value.driver) {
+            return parseFloat(totalPrice.value) + (countDays.value * parseFloat(selected.value.driver.price) )
+        }
+        return parseFloat(totalPrice.value)
+    }
+})
+
+const totalGross = computed(() => (totalPriceData.value - payment.value.total_paid) + geTotalOvercharge.value)
 const isFullyPaid = ref(false)
 const payment = ref({
     is_fully_paid: false,
@@ -341,7 +423,7 @@ const payment = ref({
     booking: selected.value,
     total_price: 0,
     has_penalty: false,
-    price: null,
+    price: 0,
     total_paid: 0,
     overcharges: [
         { overcharge_type_id: null, charge: null }
@@ -362,10 +444,30 @@ const handleCloseModalConfirmation = () => {
     showConfirmationModal.value = false
 }
 
+const geTotalOvercharge = computed({
+    get() {
+        if(payment.value.overcharges.length > 0) {
+            let total = 0
+            payment.value.overcharges.forEach(over => {
+                if(over.charge) {
+                    total = parseFloat(total) + parseFloat(over.charge)
+                }
+            })
+
+            return total
+        }
+
+        return 0
+    },
+    set(newValue) {
+        newValue
+    }
+})
+
 const handleAcceptConfirmation =  async () => {
     showConfirmationModal.value = false
     loading.value = true;
-    payment.value.total_price = totalPrice.value
+    payment.value.total_price = totalGross.value
     payment.value.is_fully_paid = isFullyPaid.value
     const { data, errorData, post } = returnedBooking(selected.value, payment.value);
     await post();
@@ -385,7 +487,7 @@ const fetchPaymentHistory = async () => {
     await load();
     histories.value = data.value
     histories.value.forEach(his => {
-        payment.value.total_paid = parseFloat(parseFloat(totalPaid.value) + (parseFloat(his.price)).toFixed(2)).toFixed(2)
+        payment.value.total_paid = parseFloat(parseFloat(totalPaid.value) + (parseFloat(his.price)).toFixed(2))
     })
     loadingHistories.value = false
 }

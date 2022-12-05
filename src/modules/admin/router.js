@@ -140,6 +140,11 @@ const moduleRoute = {
                     path: '/admin/settings/places',
                     name: 'Places',
                     component: () => import('./components/settings/PlacesSettings.vue')
+                },
+                {
+                    path: '/admin/settings/drivers',
+                    name: 'Drivers',
+                    component: () => import('./components/settings/DriverSettings.vue')
                 }
             ]
         }

@@ -8,6 +8,7 @@ import {
   MapPinIcon,
   ListBulletIcon,
   IdentificationIcon,
+  UserGroupIcon,
   DeviceTabletIcon,
   SwatchIcon,
   FireIcon,
@@ -59,13 +60,13 @@ const subNavigation = ref([
     icon: CurrencyDollarIcon,
     current: false,
   },
-  // {
-  //   name: 'Identifications',
-  //   description: 'Enim, nullam mi vel et libero urna lectus enim. Et sed in maecenas tellus.',
-  //   routerName: 'Identifications',
-  //   icon: IdentificationIcon,
-  //   current: false,
-  // },
+  {
+    name: 'Drivers',
+    description: 'List of all drivers.',
+    routerName: 'Drivers',
+    icon: UserGroupIcon,
+    current: false,
+  },
   {
     name: 'Vehicle Brands',
     description: 'List of all vehicle brands.',

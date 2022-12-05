@@ -170,6 +170,8 @@ watch(params.value, () => {
                   <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">
                     Unit</th>
                   <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    Driver</th>
+                  <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">
                     Date Start</th>
                   <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">
                     Date End</th>
@@ -190,6 +192,9 @@ watch(params.value, () => {
                   </td>
                   <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">
                     {{handleVehicleName(book.vehicle)}}
+                  </td>
+                  <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">
+                    {{book.driver.name}}
                   </td>
                   <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900">{{ book.booking_start }}</td>
                   <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ book.booking_end }}
