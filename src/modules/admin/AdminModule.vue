@@ -84,7 +84,7 @@
               </form>
             </div>
             <div class="ml-4 flex items-center md:ml-6">
-              <button type="button" class="rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2">
+              <button type="button" @click="handleCLickLogout" class="rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2">
                 <span class="sr-only">View notifications</span>
                 <PowerIcon class="h-6 w-6" aria-hidden="true" />
               </button>
@@ -152,6 +152,10 @@
     { name: 'Reporting', routeName: 'Reports', icon: ClipboardDocumentIcon, current: false },
     { name: 'Settings', routeName: 'Account', icon: AdjustmentsHorizontalIcon, current: false },
 ]
+
+const handleCLickLogout = () => {
+  
+}
   const secondaryNavigation = [
     { name: 'Settings', href: '#', icon: CogIcon },
     { name: 'Help', href: '#', icon: QuestionMarkCircleIcon },

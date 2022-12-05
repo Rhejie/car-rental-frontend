@@ -18,7 +18,7 @@ import {
     RocketLaunchIcon,
     BackspaceIcon
 } from '@heroicons/vue/24/outline'
-import { countTotalAcceptBookings, countTotalBookings, countTotalCancelBookings, countTotalDeclineBookings, countTotalDeployedBookings, countTotalPendingBookings, countTotalVehicles, countUnVerifiedAccounts, countUsers, countVerifiedAccounts } from '../composables/dashboard-composables';
+import { countTotalAcceptBookings, countTotalBookings, countTotalCancelBookings, countTotalDeclineBookings, countTotalDeployedBookings, countTotalPendingBookings, countTotalReturnedBookings, countTotalVehicles, countUnVerifiedAccounts, countUsers, countVerifiedAccounts } from '../composables/dashboard-composables';
 import { onMounted, ref } from 'vue'
 import DashboardMap from '../components/dashboard/DashboardMap.vue';
 const users = ref(0)
@@ -93,6 +93,14 @@ const getTotalDeployedBooking = async () => {
     totalDeployedBooking.value = data.value
 }
 
+const totalReturnedBooking = ref(0)
+const getTotalReturnedBooking = async() => {
+    const {data, load} = countTotalReturnedBookings()
+    await load();
+    totalReturnedBooking.value = data.value
+}
+
+
 onMounted(async () => {
     await totalUser();
     await totalVerified();
@@ -103,6 +111,7 @@ onMounted(async () => {
     await getCancelBooking();
     await getTotalVehicle();
     await getTotalDeployedBooking();
+    await getTotalReturnedBooking();
 })
 const transactions = [
     {
@@ -387,7 +396,7 @@ const statusStyles = {
                                     <dl>
                                         <dt class="truncate text-sm font-medium">Total Returned Booking</dt>
                                         <dd>
-                                            <div class="text-lg font-medium">{{ totalDeployedBooking }}</div>
+                                            <div class="text-lg font-medium">{{ totalReturnedBooking }}</div>
                                         </dd>
                                     </dl>
                                 </div>

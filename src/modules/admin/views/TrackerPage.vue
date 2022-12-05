@@ -6,6 +6,24 @@
         </div>
     </div>
     <div class="px-4 bg-gray-200 h-screen sm:px-6 sm:py-4 lg:px-8">
+        <div class="bg-white shadow">
+            <div class="px-4 sm:px-6 lg:mx-auto lg:px-8">
+                <div class=" md:flex md:items-center md:justify-between lg:border-t lg:border-gray-200">
+                    <div class="min-w-0 flex-1">
+                        <!-- Profile -->
+                        <div class="flex items-center">
+                            <div class="py-2">
+                                <div class="flex items-center">
+                                    <div class="text-sm text-gray-600">
+                                        <input type="checkbox" name="" id="" v-model="showArea"> Show Areas
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="h-screen">
             <div id="map" class="h-full"></div>
             <!-- <div class="calculation-box">
@@ -26,6 +44,7 @@ const areas = ref(null)
 const loadingAreas = ref(true)
 const trackers = ref(null)
 const loadingTracker = ref(true)
+const showArea = ref(false)
 
 const fetchAreas = async (searchVal = null) => {
 
@@ -78,7 +97,8 @@ const handleGetBookingInfo = (index) => {
         track = tracker.tracker_coordinates[index]
     })
 
-    let template = `<div class="shadowa">
+    if(track) {
+        let template = `<div class="shadowa">
             <h1 class="text-sm text-gray-600">Tracker ID: <span class="text-sm font-bold">${track.booking.vehicle.tracker.name}</span> </h1>
             <h1 class="text-sm text-gray-600">Model: <span class="text-sm font-bold">${track.booking.vehicle.model}</span> </h1>
             <h1 class="text-sm text-gray-600">Brand: <span class="text-sm font-bold">${track.booking.vehicle.vehicle_brand.name}</span> </h1>
@@ -86,7 +106,11 @@ const handleGetBookingInfo = (index) => {
 
         </div>`
 
-    return template;
+        return template;
+    }
+
+    return 
+    
 }
 
 onMounted(async () => {
@@ -98,66 +122,68 @@ onMounted(async () => {
         // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
         style: 'mapbox://styles/mapbox/streets-v11?optimize=true', // style URL
         center: [125.6678903, 7.3003923], // starting position [lng, lat]
-        zoom: 11 // starting zoom
+        zoom: 11, // starting zoom
+        pitch: 60, // pitch in degrees
+        bearing: -60, 
     });
 
     map.on('load', () => {
         setTimeout(() => {
-
             map.addSource('mapbox-dem', {
-                type: 'raster-dem',
-                url: 'mapbox://mapbox.mapbox-terrain-dem-v12',
-                tileSize: 300,
-                maxzoom: 14,
-                pitch: 60, // pitch in degrees
-                bearing: -60, // bearing in degrees
+                'type': 'raster-dem',
+                'url': 'mapbox://mapbox.mapbox-terrain-dem-v1',
+                'tileSize': 512,
+                'maxzoom': 14
             });
             map.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1.5 });
-            routes.value.forEach((route, index) => {
-                const colors = ['gray', 'red', 'skyblue', 'yellowgreen', 'lightgreen', 'white']
-                const color = colors[Math.floor(Math.random() * colors.length)]
+            if(routes.value.length > 0) {
+                routes.value.forEach((route, index) => {
+                    const colors = ['gray', 'red', 'skyblue', 'yellowgreen', 'lightgreen', 'white']
+                    const color = colors[Math.floor(Math.random() * colors.length)]
 
-                map.addSource('route', {
-                    'type': 'geojson',
-                    'data': {
-                        'type': 'Feature',
-                        'properties': {},
-                        'geometry': {
-                            'type': 'LineString',
-                            'coordinates': route
+                    map.addSource('route', {
+                        'type': 'geojson',
+                        'data': {
+                            'type': 'Feature',
+                            'properties': {},
+                            'geometry': {
+                                'type': 'LineString',
+                                'coordinates': route
+                            }
                         }
-                    }
+                    })
+
+                    const startingPointMarker = new mapboxgl.Marker()
+                        .setLngLat(route[0])
+                        .addTo(map);
+
+
+
+                    const currentPointMarker = new mapboxgl.Marker({ color: 'black', rotation: 45 })
+                        .setLngLat(route[route.length - 1])
+                        .addTo(map);
+
+                    const startingPopup = new mapboxgl.Popup({ closeOnClick: false })
+                        .setLngLat(route[route.length - 1])
+                        .setHTML(handleGetBookingInfo(route.length - 1))
+                        .addTo(map);
+
+                    map.addLayer({
+                        'id': 'route_' + index,
+                        'type': 'line',
+                        'source': 'route',
+                        'layout': {
+                            'line-join': 'round',
+                            'line-cap': 'round'
+                        },
+                        'paint': {
+                            'line-color': color,
+                            'line-width': 5
+                        }
+                    });
                 })
-                
-                const startingPointMarker = new mapboxgl.Marker()
-                    .setLngLat(route[0])
-                    .addTo(map);
-
-                
-
-                const currentPointMarker = new mapboxgl.Marker({ color: 'black', rotation: 45 })
-                    .setLngLat(route[route.length - 1])
-                    .addTo(map);
-                
-                const startingPopup = new mapboxgl.Popup({ closeOnClick: false })
-                    .setLngLat(route[route.length - 1])
-                    .setHTML(handleGetBookingInfo(route.length - 1))
-                    .addTo(map);
-
-                map.addLayer({
-                    'id': 'route_' + index,
-                    'type': 'line',
-                    'source': 'route',
-                    'layout': {
-                        'line-join': 'round',
-                        'line-cap': 'round'
-                    },
-                    'paint': {
-                        'line-color': color,
-                        'line-width': 8
-                    }
-                });
-            })
+            }
+            
 
         }, 2000)
     })
@@ -196,7 +222,7 @@ onMounted(async () => {
                 findCenter((JSON.parse(area.area)).features[0].geometry.coordinates)
                 const areaPopup = new mapboxgl.Popup({ closeOnClick: false })
                     .setLngLat(findCenter((JSON.parse(area.area)).features[0].geometry.coordinates))
-                    .setHTML('<h1 class="text-gray-600 text-md ">'+ area.name +' Area </h1>')
+                    .setHTML('<h1 class="text-gray-600 text-md ">' + area.name + ' Area </h1>')
                     .addTo(map);
 
             })
@@ -208,6 +234,13 @@ onMounted(async () => {
         accessToken: mapboxgl.accessToken,
         mapboxgl: mapboxgl
     })
+
+    map.addControl(
+        new MapboxDirections({
+            accessToken: mapboxgl.accessToken
+        }),
+        'top-left'
+    );
 
     map.addControl(geocoder);
 

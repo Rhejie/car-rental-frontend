@@ -98,12 +98,12 @@
                                                 </div>
                                                 <div class="border-t border-gray-200 px-4 py-5 sm:px-6">
                                                     <dl class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-3" v-loading="loadingDriver">
-                                                        <div class="sm:col-span-1 bg-white p-2 rounded-lg text-gray-600 border border-gray-300 shadow" v-for="driver in drivers" :key="driver.id">
+                                                        <div  class="sm:col-span-1 bg-white p-2 rounded-lg text-gray-600 border border-gray-300 shadow" v-for="driver in drivers" :key="driver.id" :class="[payment.driver && payment.driver.id == driver.id ? 'border-cyan-600 border-2': '']">
                                                             <dt class="text-sm font-medium ">
                                                                 {{driver.name}}
                                                             </dt>
                                                             <dd class="mt-1 text-sm ">
-                                                                Available |
+                                                                Availability |
                                                                 {{ driver.availability }} days
                                                             </dd>
                                                             <dd class="mt-1 text-sm ">
@@ -112,7 +112,7 @@
                                                             </dd>
                                                             <dd class="mt-1 text-sm " v-if="!payment.driver">
                                                                 <button type="button"
-                                                                    class="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 sm:col-start-1 sm:mt-0 sm:text-sm"
+                                                                    class="mt-3 inline-flex w-full justify-center text-white rounded-md border border-gray-300 bg-emerald-600  text-base font-medium hover:text-gray-700  shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 sm:col-start-1 sm:mt-0 sm:text-sm"
                                                                     @click="handleClickAddDriver(driver)" ref="cancelButtonRef">Add</button>
                                                             </dd>
                                                         </div>
