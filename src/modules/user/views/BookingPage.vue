@@ -117,7 +117,7 @@
                                                                 Cancel
                                                             </button>
                                                             <button type="button"
-                                                                @click="handlePrintInvoice"
+                                                                @click="handlePrintInvoice(book)"
                                                                 class="inline-flex h-6 items-center rounded border border-transparent bg-cyan-500 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2">
                                                                 <DocumentCheckIcon class="h-5 w-5 text-white"
                                                                     aria-hidden="true" />
@@ -161,7 +161,7 @@
                                                     class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                                     <dt class="text-sm font-medium text-gray-500">Destination</dt>
                                                     <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{
-                                                            currentBook.vehicle_place.place.name
+                                                            currentBook.destination
                                                     }}</dd>
                                                 </div>
                                                 <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -256,7 +256,7 @@ import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import GPagination from "@/components/GPagination.vue";
 import { storageUrl } from '@/global-composables/http_service';
-import { getCurrentBook } from '../composables/booking-composables';
+import { downloadInvoice, getCurrentBook } from '../composables/booking-composables';
 import GFullyPaid from '@/components/GFullyPaid.vue';
 import CancelBookingModal from '@/modules/admin/components/modals/CancelBookingModal.vue';
 import GNotification from '@/components/GNotification.vue';
@@ -326,8 +326,16 @@ const fetch = async () => {
     loading.value = false
 }
 
-const handlePrintInvoice = () => {
-    
+const handlePrintInvoice = async (book) => {
+    await downloadInvoice(book.id).then(res => {
+        console.log(res, 'asda');
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `${book.user.first_name} - ${book.user.last_name}.pdf`);
+        document.body.appendChild(link);
+        link.click();
+      })
 }
 
 const handleStatus = (book) => {
