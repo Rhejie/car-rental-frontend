@@ -194,7 +194,7 @@ watch(params.value, () => {
                     {{handleVehicleName(book.vehicle)}}
                   </td>
                   <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">
-                    {{book.driver.name}}
+                    {{book.driver ? book.driver.name : null}}
                   </td>
                   <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900">{{ book.booking_start }}</td>
                   <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ book.booking_end }}

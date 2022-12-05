@@ -184,6 +184,7 @@ const handleVerifiedUser = (user) => {
 const getUserProfile = async () => {
   const {load, data, hasError} = loadUserProfile(props.id);
   await load();
+  console.log('User', data.value)
 
   if (hasError.value) {
     router.push('/login')

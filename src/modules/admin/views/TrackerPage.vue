@@ -153,23 +153,8 @@ onMounted(async () => {
                         }
                     })
 
-                    const startingPointMarker = new mapboxgl.Marker()
-                        .setLngLat(route[0])
-                        .addTo(map);
-
-
-
-                    const currentPointMarker = new mapboxgl.Marker({ color: 'black', rotation: 45 })
-                        .setLngLat(route[route.length - 1])
-                        .addTo(map);
-
-                    const startingPopup = new mapboxgl.Popup({ closeOnClick: false })
-                        .setLngLat(route[route.length - 1])
-                        .setHTML(handleGetBookingInfo(route.length - 1))
-                        .addTo(map);
-
                     map.addLayer({
-                        'id': 'route_' + index,
+                        'id': `route_${index}`,
                         'type': 'line',
                         'source': 'route',
                         'layout': {
@@ -181,6 +166,23 @@ onMounted(async () => {
                             'line-width': 5
                         }
                     });
+
+                    const startingPointMarker = new mapboxgl.Marker()
+                        .setLngLat(route[0])
+                        .addTo(map);
+
+
+
+                    const currentPointMarker = new mapboxgl.Marker({ color: 'black', rotation: 45 })
+                        .setLngLat(route[index])
+                        .addTo(map);
+
+                    const startingPopup = new mapboxgl.Popup({ closeOnClick: false })
+                        .setLngLat(route[index])
+                        .setHTML(handleGetBookingInfo(index))
+                        .addTo(map);
+
+                    
                 })
             }
             
@@ -219,7 +221,7 @@ onMounted(async () => {
                         'line-width': 2
                     }
                 });
-                findCenter((JSON.parse(area.area)).features[0].geometry.coordinates)
+
                 const areaPopup = new mapboxgl.Popup({ closeOnClick: false })
                     .setLngLat(findCenter((JSON.parse(area.area)).features[0].geometry.coordinates))
                     .setHTML('<h1 class="text-gray-600 text-md ">' + area.name + ' Area </h1>')
