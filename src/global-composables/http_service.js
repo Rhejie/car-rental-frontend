@@ -20,6 +20,15 @@ export function httpServer() {
     });
 }
 
+export function httpFile() {
+    return axios.create({
+        baseURL: '/api',
+        headers: {
+            'Authorization': 'Bearer ' + accessToken()
+        },
+        responseType: 'blob'
+    })
+}
 
 export const storageUrl = () => {
     return process.env.VUE_APP_API_URL + '/storage/'

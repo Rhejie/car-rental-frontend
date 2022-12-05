@@ -199,7 +199,7 @@ watch(params.value, () => {
                   <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900">{{ book.booking_start }}</td>
                   <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ book.booking_end }}
                   </td>
-                  <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ handleDestination(book.vehicle_place)
+                  <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ book.destination
                     }}
                   </td>
                   <td class="relative whitespace-nowrap py-2 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">

@@ -32,9 +32,14 @@ const props = defineProps({
     },
     vehicle: {
         type: Object,
+    },
+    message: {
+        type: String,
+        default: 'Image of any valid Id...'
     }
 })
 
+const message = computed(() => props.message)
 
 const url = storageUrl();
 
@@ -138,19 +143,19 @@ onMounted(() => {
 
 
 onMounted(() => {
-    if (localStorage.getItem('profile_url')) {
-        console.log(localStorage.getItem('profile_url'))
-        imageUrl.value = localStorage.getItem('profile_url');
-    }
+    // if (localStorage.getItem('profile_url')) {
+    //     console.log(localStorage.getItem('profile_url'))
+    //     imageUrl.value = localStorage.getItem('profile_url');
+    // }
 })
 
 </script>
 <template>
-    <file-pond v-if="!showUploader" name="file" ref="pond" label-idle="Upload User Identification..." v-bind:allow-multiple="false"
+    <file-pond v-if="!showUploader" name="file" ref="pond" :label-idle="message" v-bind:allow-multiple="false"
         accepted-file-types="image/jpeg, image/png" :server="option" v-bind:files="myFiles"
         v-on:init="handleFilePondInit" />
 
-    <div v-else class="w-full">
+    <!-- <div v-else class="w-full">
         <img class="w-40 mx-auto p-2 shadow" :src="url + imageUrl" :alt="`${url} ${imageUrl}`">
         <button type="button" @click="handleClearImage"
             class="
@@ -160,5 +165,5 @@ onMounted(() => {
                 focus:ring-red-500 focus:ring-offset-2">
             Remove Image
         </button>
-    </div>
+    </div> -->
 </template>

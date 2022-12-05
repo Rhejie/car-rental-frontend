@@ -33,20 +33,6 @@ const subNavigation = ref([
     current: false,
   },
   {
-    name: 'Downloadable Forms',
-    description: 'All aggreement forms.',
-    routerName: 'Form',
-    icon: DocumentCheckIcon,
-    current: false,
-  },
-  {
-    name: 'Places',
-    description: 'List of places and geo-fense.',
-    routerName: 'Places',
-    icon: MapPinIcon,
-    current: false,
-  },
-  {
     name: 'Overcharge Types',
     description: 'List of all charges.',
     routerName: 'Overcharge types',

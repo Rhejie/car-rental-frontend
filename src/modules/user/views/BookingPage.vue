@@ -66,7 +66,7 @@
                                                                             class="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
                                                                             aria-hidden="true" />
                                                                         <span class="truncate">
-                                                                            {{ book.vehicle_place.place.name }}
+                                                                            {{ book.destination }}
                                                                         </span>
                                                                     </p>
                                                                     <p
@@ -111,10 +111,17 @@
                                                             <button type="button"
                                                                 v-if="handleBookingCancelButton(book)"
                                                                 @click="handleClickCancel(book)"
-                                                                class="inline-flex h-6 items-center rounded border border-transparent bg-red-500 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                                                                class="inline-flex h-6 items-center mr-1 rounded border border-transparent bg-red-500 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
                                                                 <XCircleIcon class="h-5 w-5 text-white"
                                                                     aria-hidden="true" />
                                                                 Cancel
+                                                            </button>
+                                                            <button type="button"
+                                                                @click="handlePrintInvoice"
+                                                                class="inline-flex h-6 items-center rounded border border-transparent bg-cyan-500 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2">
+                                                                <DocumentCheckIcon class="h-5 w-5 text-white"
+                                                                    aria-hidden="true" />
+                                                                Print Invoice
                                                             </button>
                                                         </div>
                                                     </div>
@@ -237,6 +244,7 @@ import {
     CheckCircleIcon,
     InformationCircleIcon,
     XCircleIcon,
+    DocumentCheckIcon,
     ChevronRightIcon,
     ClockIcon,
     MapPinIcon,
@@ -316,6 +324,10 @@ const fetch = async () => {
     bookings.value = data.value
     total.value = totalBookings.value
     loading.value = false
+}
+
+const handlePrintInvoice = () => {
+    
 }
 
 const handleStatus = (book) => {

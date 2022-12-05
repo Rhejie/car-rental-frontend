@@ -150,6 +150,17 @@ onMounted(async () => {
                                 </div>
                             </div>
                             <div>
+                                <label for="company" class="block text-sm font-medium text-gray-700">Make</label>
+                                <div class="mt-2">
+                                    <input type="string" min="1" v-model="vehicle.make" placeholder="Make"
+                                        class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-2 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500 sm:text-sm" />
+                                    <span class="text-sm text-red-400"
+                                        v-if="(errorValue && !loadingUpdate && errorValue.make)">
+                                        {{ errorValue.make[0] }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div>
                                 <label for="company" class="block text-sm font-medium text-gray-700">Seating Capacity</label>
                                 <div class="mt-2">
                                     <input type="number" min="1" v-model="vehicle.capacity"
@@ -193,13 +204,13 @@ onMounted(async () => {
                                     <input type="number" min="1" v-model="vehicle.odometer" placeholder="Odemeter"
                                         class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-2 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500 sm:text-sm" />
                                     <span class="text-sm text-red-400"
-                                        v-if="errorValue && !loadingUpdate && errorValue.odemeter">
-                                        {{ errorValue.odemeter[0] }}
+                                        v-if="errorValue && !loadingUpdate && errorValue.odometer">
+                                        {{ errorValue.odometer[0] }}
                                     </span>
                                 </div>
                             </div>
 
-                            <div class="sm:col-span-2">
+                            <div>
                                 <label for="company" class="block text-sm font-medium text-gray-700">Plate
                                     Number</label>
                                 <div class="mt-1">
@@ -208,6 +219,58 @@ onMounted(async () => {
                                     <span class="text-sm text-red-400"
                                         v-if="errorValue && !loadingUpdate && errorValue.plate_number">
                                         {{ errorValue.plate_number[0] }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="company" class="block text-sm font-medium text-gray-700">
+                                    Battery Lifespan
+                                </label>
+                                <div class="mt-1">
+                                    <input type="number" v-model="vehicle.battery_lifespan" placeholder="Battery lifespan"
+                                        class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-2 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500 sm:text-sm" />
+                                    <span class="text-sm text-red-400"
+                                        v-if="errorValue && !loadingUpdate && errorValue.battery_lifespan">
+                                        {{ errorValue.battery_lifespan[0] }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="company" class="block text-sm font-medium text-gray-700">
+                                    Battery Date Used
+                                </label>
+                                <div class="mt-1">
+                                    <input type="date" v-model="vehicle.battery_date_used" placeholder="Battery lifespan"
+                                        class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-2 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500 sm:text-sm" />
+                                    <span class="text-sm text-red-400"
+                                        v-if="errorValue && !loadingUpdate && errorValue.battery_date_used">
+                                        {{ errorValue.battery_date_used[0] }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="company" class="block text-sm font-medium text-gray-700">
+                                    Tires Lifespan
+                                </label>
+                                <div class="mt-1">
+                                    <input type="number" v-model="vehicle.tires_lifespan" placeholder="Battery lifespan"
+                                        class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-2 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500 sm:text-sm" />
+                                    <span class="text-sm text-red-400"
+                                        v-if="errorValue && !loadingUpdate && errorValue.tires_lifespan">
+                                        {{ errorValue.tires_lifespan[0] }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="company" class="block text-sm font-medium text-gray-700">
+                                    Tire Date Used
+                                </label>
+                                <div class="mt-1">
+                                    <input type="date" v-model="vehicle.tires_date_used" placeholder="Battery lifespan"
+                                        class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-2 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500 sm:text-sm" />
+                                    <span class="text-sm text-red-400"
+                                        v-if="errorValue && !loadingUpdate && errorValue.tires_date_used">
+                                        {{ errorValue.tires_date_used[0] }}
                                     </span>
                                 </div>
                             </div>
@@ -247,6 +310,30 @@ onMounted(async () => {
                                     <span class="text-sm text-red-400"
                                         v-if="errorValue && !loadingUpdate && errorValue.chassis_no">
                                         {{ errorValue.chassis_no[0] }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="company" class="block text-sm font-medium text-gray-700">OR No.</label>
+                                <div class="mt-2">
+                                    <input type="text" min="1" v-model="vehicle.or_no" placeholder="Chassis Number"
+                                        class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-2 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500 sm:text-sm" />
+                                    <span class="text-sm text-red-400"
+                                        v-if="errorValue && !loadingUpdate && errorValue.chassis_no">
+                                        {{ errorValue.chassis_no[0] }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="company" class="block text-sm font-medium text-gray-700">Price per day
+                                    Date</label>
+                                <div class="mt-2">
+                                    <input type="number" min="1" v-model="vehicle.price"
+                                        placeholder="Price per day"
+                                        class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-2 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500 sm:text-sm" />
+                                    <span class="text-sm text-red-400"
+                                        v-if="errorValue && !loadingUpdate && errorValue.price">
+                                        {{ errorValue.price[0] }}
                                     </span>
                                 </div>
                             </div>

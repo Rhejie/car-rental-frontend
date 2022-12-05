@@ -139,10 +139,10 @@ watch(params.value, async () => {
                                                 Name</th>
                                             <th scope="col"
                                                 class="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6">
-                                                Availability</th>
+                                                License No</th>
                                             <th scope="col"
                                                 class="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6">
-                                                Price per day</th>
+                                                License Expiration Date</th>
                                             <th scope="col" class="relative py-3 pl-3 pr-4 sm:pr-6">
                                                 <span class="sr-only">Edit</span>
                                             </th>
@@ -156,11 +156,11 @@ watch(params.value, async () => {
                                             </td>
                                             <td
                                                 class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                                {{ driver.availability }}
+                                                {{ driver.license_no }}
                                             </td>
                                             <td
                                                 class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                                {{ driver.price }}
+                                                {{ driver.license_expiration_date }}
                                             </td>
                                             <td
                                                 class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">

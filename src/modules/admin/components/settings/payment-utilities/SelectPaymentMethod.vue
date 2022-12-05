@@ -20,9 +20,10 @@ const props = defineProps({
     }
 })
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'emitPaymentMethods'])
 
 const query = ref('')
+const loading = ref(true)
 
 const selectedPaymentMethod = computed({
     get() {
@@ -39,6 +40,7 @@ const selectPaymentMethod = async (searchVal = null) => {
     const { search, data } = selectPaymentMethods(searchVal);
     await search();
     paymentMethods.value = data.value
+    loading.value = false
 }
 
 watch(query, (val) => {
@@ -49,13 +51,26 @@ watch(query, (val) => {
     selectPaymentMethod()
 })
 
+watch(selectedPaymentMethod, (val) => {
+    let paymentMethod = paymentMethods.value.find(p => p.id == val)
+    emit('emitPaymentMethods', paymentMethod)
+})
+
 onMounted(async () => {
     await selectPaymentMethod();
 })
 </script>
 
 <template>
-    <Combobox as="div" v-model="selectedPaymentMethod">
+    <label for="location" class="block text-sm font-medium text-gray-700">Select Type</label>
+    <select id="location" name="location" :disabled="readOnly"
+        v-model="selectedPaymentMethod"
+        :placeholder="'asdasd'"
+        v-loading="loading"
+        class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
+        <option v-for="p in paymentMethods" :key="p.id" :value="p.id">{{p.name}}</option>
+    </select>
+    <!-- <Combobox as="div" v-model="selectedPaymentMethod">
         <ComboboxLabel class="block text-sm font-medium text-gray-700">Payment Method</ComboboxLabel>
         <div class="relative mt-1">
             <ComboboxInput
@@ -83,5 +98,5 @@ onMounted(async () => {
                 </ComboboxOption>
             </ComboboxOptions>
         </div>
-    </Combobox>
+    </Combobox> -->
 </template>

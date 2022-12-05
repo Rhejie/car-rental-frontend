@@ -66,7 +66,7 @@
                                                             <dt class="text-sm font-medium text-gray-500">Price per day
                                                             </dt>
                                                             <dd class="mt-1 text-sm text-gray-900">
-                                                                {{ selected.vehicle_place.price }} Php
+                                                                {{ selected.vehicle.price }} Php
                                                             </dd>
                                                         </div>
                                                         <div class="sm:col-span-1">
@@ -106,17 +106,10 @@
                                                             </dd>
                                                         </div>
                                                         <div class="sm:col-span-1">
-                                                            <dt class="text-sm font-medium text-gray-500">Availability
+                                                            <dt class="text-sm font-medium text-gray-500">License Expiration Date
                                                             </dt>
                                                             <dd class="mt-1 text-sm text-gray-900">
-                                                                {{ selected.driver.availability }} days
-                                                            </dd>
-                                                        </div>
-                                                        <div class="sm:col-span-1">
-                                                            <dt class="text-sm font-medium text-gray-500">Price per day
-                                                            </dt>
-                                                            <dd class="mt-1 text-sm text-gray-900">
-                                                                {{ selected.driver.price }}
+                                                                {{ selected.driver.license_expiration_date }} days
                                                             </dd>
                                                         </div>
                                                     </dl>
@@ -273,7 +266,8 @@
                                                         </span>
                                                     </div>
                                                     <div>
-                                                        <SelectPaymentMethod v-model="payment.payment_method"
+                                                        <SelectPaymentMethod v-model="payment.payment_method_id"
+                                                        @emitPaymentMethods="handleGetPaymentMethods"
                                                             :onHandleChangePaymentMethod="onHandleChangePaymentMethod" />
                                                         <span class="text-sm text-red-400"
                                                             v-if="(errorValue && !loading && errorValue.payment_method)">
@@ -391,9 +385,9 @@ const countDays = computed({
 
 const totalPrice = computed({
     get() {
-        if (selected.value.vehicle_place.price && countDays.value) {
+        if (selected.value.vehicle.price && countDays.value) {
 
-            return (selected.value.vehicle_place.price * countDays.value).toFixed(2)
+            return (selected.value.vehicle.price * countDays.value).toFixed(2)
         }
 
         return 0
@@ -407,7 +401,7 @@ const totalPaid = ref(0)
 const totalPriceData = computed({
     get() {
         if(selected.value.driver) {
-            return parseFloat(totalPrice.value) + (countDays.value * parseFloat(selected.value.driver.price) )
+            return parseFloat(totalPrice.value) 
         }
         return parseFloat(totalPrice.value)
     }
@@ -419,6 +413,7 @@ const payment = ref({
     is_fully_paid: false,
     type: 'full',
     payment_method: null,
+    payment_method_id: null,
     reference_number: null,
     booking: selected.value,
     total_price: 0,
@@ -487,7 +482,7 @@ const fetchPaymentHistory = async () => {
     await load();
     histories.value = data.value
     histories.value.forEach(his => {
-        payment.value.total_paid = parseFloat(parseFloat(totalPaid.value) + (parseFloat(his.price)).toFixed(2))
+        payment.value.total_paid = parseFloat(parseFloat(totalPaid.value) + (parseFloat(his.price)))
     })
     loadingHistories.value = false
 }
@@ -513,6 +508,11 @@ const handleUserName = (user) => {
 
 const onHandleChangePaymentMethod = () => {
 
+}
+
+
+const handleGetPaymentMethods = (method) => {
+    payment.value.payment_method = method
 }
 
 const checkIfPaid = () => {

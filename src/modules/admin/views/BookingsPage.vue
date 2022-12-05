@@ -215,10 +215,10 @@ watch(params.value, () => {
 <template>
   
   <GNotification :show-notif="showNotif" :message="message"/>
-  <AcceptBookingModal :openModal="openModal" :selected-book="selectedBooking" @closeModal="handleCloseModal" @acceptBook="handleAcceptedBook"/>
+  <AcceptBookingModal  v-if="selectedBooking" :openModal="openModal" :selected-book="selectedBooking" @closeModal="handleCloseModal" @acceptBook="handleAcceptedBook"/>
   <CancelBookingModal :openModal="showCancelBookingModal" :selected-book="selectedBooking" @closeModal="handleCloseModal" @acceptBook="handleCancelBooking"/>
   <DeclineBookingModal :openModal="showDeclineModal" :selected-book="selectedBooking" @closeModal="handleCloseModal" @declineBook="handleDeclinedBook"/>
-  <DeployBookingModal v-if="selectedBooking" :openModal="showDeployModal" :selected-booking="selectedBooking" @closeModal="handleCloseModal" @deployedBooking="handleDeployedBooking"/>
+  <DeployBookingModal v-if="(selectedBooking && showDeployModal)" :openModal="showDeployModal" :selected-booking="selectedBooking" @closeModal="handleCloseModal" @deployedBooking="handleDeployedBooking"/>
   <div class="w-full bg-gray-500">
     <div class="mx-auto max-w-2xl  py-4 px-4 lg:max-w-7xl lg:px-0">
       <h1 class="text-2xl font-bold tracking-tight text-white sm:text-3xl">Manage Bookings</h1>
@@ -284,8 +284,7 @@ watch(params.value, () => {
                   <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900">{{ book.booking_start }}</td>
                   <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ book.booking_end }}
                   </td>
-                  <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ handleDestination(book.vehicle_place) }}
-                  </td>
+                  <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{book.destination}}</td>
                   <td class="relative whitespace-nowrap py-2 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                     
 

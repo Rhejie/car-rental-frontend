@@ -62,7 +62,7 @@ export const updatePaymentMethod = (paymentMethod) => {
     }
 }
 
-export const selectPaymentMethods = (searchVal) => {
+export const selectPaymentMethods = (searchVal = null) => {
     const data = ref(null)
 
     const search = async () => {

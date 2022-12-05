@@ -1,4 +1,4 @@
-import { http } from "@/global-composables/http_service"
+import { http, httpFile } from "@/global-composables/http_service"
 import { ref } from "vue"
 
 export const storeBook = (book) => {
@@ -33,4 +33,8 @@ export const getCurrentBook = () => {
         load,
         data
     }
+}
+
+export const downloadInvoice = (id) => {
+    return httpFile().get(`/booking/download/${id}`)
 }

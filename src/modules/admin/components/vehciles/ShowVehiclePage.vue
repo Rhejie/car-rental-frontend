@@ -45,7 +45,6 @@ const url = storageUrl();
 
 const tabs = ref([
     { name: 'Booking History', href: '#', current: true },
-    { name: 'Places', href: '#', current: false },
     { name: 'Maintenance', href: '#', current: false },
     { name: 'Images', href: '#', current: false },
 ])
@@ -121,7 +120,7 @@ onMounted(async () => {
             </button>
         </div>
         <div class="flex">
-            <div class="w-2/5 mr-2">
+            <div class="w-2/4 mr-2">
                 <div class="overflow-hidden w-full bg-white shadow sm:rounded-lg mb-2" v-if="!loading">
                     <div class="px-4 py-5 sm:px-6">
                         <h3 class="text-lg font-medium leading-6 text-gray-900">Model Information</h3>
@@ -179,6 +178,33 @@ onMounted(async () => {
                                 <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ vehicle.plate_number }}
                                 </dd>
                             </div>
+                            <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                <dt class="text-sm font-medium text-gray-500">Make</dt>
+                                <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ vehicle.make }}</dd>
+                            </div>
+                            <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                <dt class="text-sm font-medium text-gray-500">Price</dt>
+                                <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ vehicle.price }}
+                                </dd>
+                            </div>
+                            <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                <dt class="text-sm font-medium text-gray-500">Battery Lifespan</dt>
+                                <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ vehicle.battery_lifespan }} Years</dd>
+                            </div>
+                            <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                <dt class="text-sm font-medium text-gray-500">Battery Date Used</dt>
+                                <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ vehicle.battery_date_used }}
+                                </dd>
+                            </div>
+                            <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                <dt class="text-sm font-medium text-gray-500">Tires Lifespan</dt>
+                                <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ vehicle.tires_lifespan }} Years</dd>
+                            </div>
+                            <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                <dt class="text-sm font-medium text-gray-500">Tires Date Used</dt>
+                                <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ vehicle.tires_date_used }}
+                                </dd>
+                            </div>
                         </dl>
                     </div>
                 </div>
@@ -193,6 +219,12 @@ onMounted(async () => {
                                 <dt class="text-sm font-medium text-gray-500">CR Number</dt>
                                 <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{
                                         vehicle.cr_no
+                                }}</dd>
+                            </div>
+                            <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                <dt class="text-sm font-medium text-gray-500">OR Number</dt>
+                                <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{
+                                        vehicle.or_no
                                 }}</dd>
                             </div>
                             <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -232,7 +264,6 @@ onMounted(async () => {
                                     :class="[tab.current ? 'bg-indigo-500' : 'bg-transparent', 'absolute inset-x-0 bottom-0 h-0.5']" />
                             </span>
                         </nav>
-                        <VehiclePlaces :vehicle_id="props.id" v-if="!loading && tabs.find(t => t.name == 'Places' && t.current == true)" />
                         <VehiclePhotos :images="vehicle.vehicle_images" v-if="!loading && tabs.find(t => t.name == 'Images' && t.current == true)"/>
                         <VehicleBookingHistory :vehicle_id="props.id" v-if="!loading && tabs.find(t => t.name == 'Booking History' && t.current == true)" />
                         <VehicleMaintenance  :vehicle="vehicle" v-if="!loading && tabs.find(t => t.name == 'Maintenance' && t.current == true)"  />

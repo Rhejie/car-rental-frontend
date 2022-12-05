@@ -55,6 +55,30 @@
                         <div class="p-5 bg-cyan-500 text-white">
                             <div class="flex items-center">
                                 <div class="flex-shrink-0">
+                                    <DocumentCheckIcon class="w-10 " aria-hidden="true" />
+                                </div>
+                                <div class="ml-5 w-0 flex-1">
+                                    <dl>
+                                        <dt class="truncate text-lg font-medium">Monthly Report</dt>
+                                        <dd>
+                                            <div class="text-sm font-medium">list of monthly transactions</div>
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-cyan-50 px-5 py-3">
+                            <div class="text-sm">
+                                <router-link :to="{name: 'Income Reports'}" href="#" class="font-medium text-cyan-700 hover:text-cyan-900">View
+                                    all</router-link>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="overflow-hidden rounded-lg bg-white shadow">
+                        <div class="p-5 bg-cyan-500 text-white">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
                                     <CurrencyDollarIcon class="w-10 " aria-hidden="true" />
                                 </div>
                                 <div class="ml-5 w-0 flex-1">

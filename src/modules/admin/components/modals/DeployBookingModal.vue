@@ -67,7 +67,7 @@
                                                             <dt class="text-sm font-medium text-gray-500">Price per day
                                                             </dt>
                                                             <dd class="mt-1 text-sm text-gray-900">
-                                                                {{ selected.vehicle_place.price }} Php
+                                                                {{ selected.vehicle.price }} Php
                                                             </dd>
                                                         </div>
                                                         <div class="sm:col-span-1">
@@ -94,26 +94,26 @@
                                                 <div class="px-4 py-5 sm:px-6">
                                                     <h2 id="applicant-information-title"
                                                         class="text-lg font-medium leading-6 text-gray-900">Drivers</h2>
-                                                    <p class="mt-1 max-w-2xl text-sm text-gray-500">Available drivers for {{countDays}} days.</p>
                                                 </div>
                                                 <div class="border-t border-gray-200 px-4 py-5 sm:px-6">
                                                     <dl class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-3" v-loading="loadingDriver">
                                                         <div  class="sm:col-span-1 bg-white p-2 rounded-lg text-gray-600 border border-gray-300 shadow" v-for="driver in drivers" :key="driver.id" :class="[payment.driver && payment.driver.id == driver.id ? 'border-cyan-600 border-2': '']">
-                                                            <dt class="text-sm font-medium ">
+                                                            <dt class="text-sm font-bold ">
                                                                 {{driver.name}}
                                                             </dt>
                                                             <dd class="mt-1 text-sm ">
-                                                                Availability |
-                                                                {{ driver.availability }} days
-                                                            </dd>
-                                                            <dd class="mt-1 text-sm ">
-                                                                Price per day |
-                                                                {{ driver.price }}
+                                                                License Expiration Date:
+                                                                {{ driver.license_expiration_date }}
                                                             </dd>
                                                             <dd class="mt-1 text-sm " v-if="!payment.driver">
                                                                 <button type="button"
-                                                                    class="mt-3 inline-flex w-full justify-center text-white rounded-md border border-gray-300 bg-emerald-600  text-base font-medium hover:text-gray-700  shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 sm:col-start-1 sm:mt-0 sm:text-sm"
+                                                                    class="mt-3 inline-flex w-full justify-center text-white rounded-md border border-gray-300 bg-cyan-600  text-base font-medium hover:text-gray-700  shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 sm:col-start-1 sm:mt-0 sm:text-sm"
                                                                     @click="handleClickAddDriver(driver)" ref="cancelButtonRef">Add</button>
+                                                            </dd>
+                                                            <dd class="mt-1 text-sm " v-if="(payment.driver && payment.driver.id == driver.id)">
+                                                                <button type="button"
+                                                                    class="mt-3 inline-flex w-full justify-center text-white rounded-md border border-gray-300 bg-red-600  text-base font-medium hover:text-gray-700  shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 sm:col-start-1 sm:mt-0 sm:text-sm"
+                                                                    @click="handleRemoveDriver(driver)" ref="cancelButtonRef">Remove</button>
                                                             </dd>
                                                         </div>
                                                     </dl>
@@ -140,7 +140,7 @@
                                                         </span>
                                                     </div>
                                                     <div>
-                                                        <SelectPaymentMethod v-model="payment.payment_method"
+                                                        <SelectPaymentMethod v-model="payment.payment_method_id" @emitPaymentMethods="handleGetPaymentMethods"
                                                             :onHandleChangePaymentMethod="onHandleChangePaymentMethod" />
                                                         <span class="text-sm text-red-400"
                                                             v-if="(errorValue && !loading && errorValue.payment_method)">
@@ -253,9 +253,9 @@ const countDays = computed({
 
 const totalPrice = computed({
     get() {
-        if (selected.value.vehicle_place.price && countDays.value) {
+        if (selected.value.vehicle.price && countDays.value) {
 
-            return (selected.value.vehicle_place.price * countDays.value).toFixed(2)
+            return (selected.value.vehicle.price * countDays.value).toFixed(2)
         }
 
         return 0
@@ -267,6 +267,7 @@ const totalPrice = computed({
 const payment = ref({
     type: null,
     payment_method: null,
+    payment_method_id: null,
     reference_number: null,
     booking: selected.value,
     total_price: 0,
@@ -307,17 +308,26 @@ const handleClickAddDriver = (driver) => {
     }
 }
 
+const handleRemoveDriver = () => {
+    payment.value.driver = null
+}
+
 const onHandleChangePaymentMethod = () => {
 
 }
 
+const handleGetPaymentMethods = (method) => {
+    payment.value.payment_method = method
+}
+
 const handleGetAllAvailableDirver = async () => {
     loadingDriver.value = true
-    const {data, load} = getAvailableDrivers(countDays.value);
+    const {data, load} = getAvailableDrivers();
     await load();
     drivers.value = data.value
     loadingDriver.value = false
 }
+
 
 watch(payment.value, (val) => {
     if(val.add_driver) {
@@ -328,9 +338,20 @@ watch(payment.value, (val) => {
     }
 })
 
+watch(selected.value, (val) => {
+    if(val && val.add_driver == 1) {
+        payment.value.add_driver = true
+    }
+})
+
 onUpdated(async () => {
+    if(selected.value.add_driver == 1) {
+        payment.value.add_driver = true
+    }
     if(countDays.value && selected.value) {
+        
         await handleGetAllAvailableDirver();
     }
+    
 })
 </script>

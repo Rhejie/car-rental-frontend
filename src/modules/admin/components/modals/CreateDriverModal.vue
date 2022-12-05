@@ -126,27 +126,27 @@ onUpdated(() => {
                                                 <div class="col-span-12">
                                                     <label for="first-name"
                                                         class="block text-sm font-medium text-gray-700">
-                                                        Availability (Number of days)
+                                                        License No.
                                                     </label>
-                                                    <input type="number" name="first-name" v-model="driver.availability"
-                                                        class="mt-1 block w-full rounded-md border h-8 border-gray-100 focus:border-indigo-100 focus:ring-indigo-100 pl-2 sm:text-sm" placeholder="Days of availability" />
+                                                    <input type="string" name="first-name" v-model="driver.license_no"
+                                                        class="mt-1 block w-full rounded-md border h-8 border-gray-100 focus:border-indigo-100 focus:ring-indigo-100 pl-2 sm:text-sm" placeholder="License No." />
                                                     <span 
                                                         class="text-sm text-red-400"
-                                                        v-if="(errorValue && !loading && errorValue.availability)">
-                                                            {{errorValue.availability[0]}}
+                                                        v-if="(errorValue && !loading && errorValue.license_no)">
+                                                            {{errorValue.license_no[0]}}
                                                     </span>
                                                 </div>
                                                 <div class="col-span-12">
                                                     <label for="first-name"
                                                         class="block text-sm font-medium text-gray-700">
-                                                        Price (per day)
+                                                        License Expiration Date
                                                     </label>
-                                                    <input type="number" name="first-name" v-model="driver.price"
-                                                        class="mt-1 block w-full rounded-md border h-8 border-gray-100 focus:border-indigo-100 focus:ring-indigo-100 pl-2 sm:text-sm" placeholder="Price per day" />
+                                                    <input type="date" name="first-name" v-model="driver.license_expiration_date"
+                                                        class="mt-1 block w-full rounded-md border h-8 border-gray-100 focus:border-indigo-100 focus:ring-indigo-100 pl-2 sm:text-sm" placeholder="License Expiration Date" />
                                                     <span 
                                                         class="text-sm text-red-400"
-                                                        v-if="(errorValue && !loading && errorValue.price)">
-                                                            {{errorValue.price[0]}}
+                                                        v-if="(errorValue && !loading && errorValue.license_expiration_date)">
+                                                            {{errorValue.license_expiration_date[0]}}
                                                     </span>
                                                 </div>
                                             </div>

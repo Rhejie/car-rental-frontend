@@ -14,6 +14,13 @@
                         <form class="space-y-6">
                             <div>
                                 <div class="mt-1">
+                                    <UserProfileUploader @newImage="handleUploadedSelfi" :message="'Image of person holding the valid id'"/>
+                                    <span class="text-sm text-red-400"
+                                        v-if="(errorValue && !loading && errorValue.user_selfi)">
+                                        {{ errorValue.user_selfi[0] }}
+                                    </span>
+                                </div>
+                                <div class="mt-1">
                                     <UserProfileUploader @newImage="handleUploadedProfile"/>
                                     <span class="text-sm text-red-400"
                                         v-if="(errorValue && !loading && errorValue.user_identification)">
@@ -168,7 +175,8 @@ const registerData = ref({
     last_name: '',
     email: '',
     password: '',
-    user_identification: ''
+    user_identification: '',
+    user_selfi: ''
 })
 
 const errorValue = ref(null)
@@ -195,5 +203,9 @@ const handleClickLogin = () => {
 
 const handleUploadedProfile = (imageUrl) => {
     registerData.value.user_identification = imageUrl
+}
+
+const handleUploadedSelfi = (imageUrl) => {
+    registerData.value.user_selfi = imageUrl
 }
 </script>

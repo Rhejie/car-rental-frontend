@@ -28,13 +28,14 @@ const book = ref({
     booking_start: null,
     booking_end: null,
     vehicle_place_id: null,
-    vehicle_id: vehicle.value.id
+    vehicle_id: vehicle.value.id,
+    add_driver: false
 })
 
 const price = computed({
     get() {
-        if(book.value.vehicle_place_id != null && book.value.vehicle_place_id != '') {
-            const place = vehicle.value.vehicle_place.find(place => book.value.vehicle_place_id == place.id)
+        if(vehicle.value) {
+            const place = vehicle.value.price
             return place
         }
 
@@ -67,7 +68,7 @@ const totalPrice = computed({
     get() {
         if(price.value && countDays.value) {
             
-            return price.value.price * countDays.value
+            return parseFloat(price.value) * countDays.value
         }
 
         return 0
@@ -87,7 +88,7 @@ const initialize = () => {
         booking_start: null,
         booking_end: null,
         vehicle_place_id: null,
-        vehicle_id: props.vehicle.id
+        vehicle_id: props.vehicle.id,
     }
 
 }
@@ -181,6 +182,16 @@ onUpdated(() => {
                                                                             {{
                                                                                     vehicle.tracker.name
                                                                             }}</dd>
+                                                                    </div>
+                                                                    <div
+                                                                        class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                                                        <dt class="text-sm font-medium text-gray-500">
+                                                                            Price</dt>
+                                                                        <dd
+                                                                            class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                                                                            {{
+                                                                                    vehicle.price
+                                                                            }} per day</dd>
                                                                     </div>
                                                                     <div
                                                                         class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -316,19 +327,105 @@ onUpdated(() => {
                                                                         </div>
                                                                     </div>
                                                                 </div>
-
+                                                                <div class="space-y-1">
+                                                                    <div class="mt-1">
+                                                                        <input type="checkbox" class="mr-2" name="" v-model="book.add_driver" id="">
+                                                                        <span class="text-sm text-gray-700">Add driver? (optional)</span>
+                                                                        <span class="text-sm text-red-400"
+                                                                                v-if="(errorValue && !loading && errorValue.add_driver)">
+                                                                                {{ errorValue.add_driver[0] ? 'Destination is required' : '' }}
+                                                                            </span>
+                                                                    </div>
+                                                                </div>
 
                                                                 <div class="space-y-1">
                                                                     <label for="password"
                                                                         class="block text-sm font-medium text-gray-700">Destination</label>
                                                                     <div class="mt-1">
-                                                                        <select id="location" v-model="book.vehicle_place_id" name="location" class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
-                                                                            <option v-for="place in vehicle.vehicle_place" :key="place.id" :value="place.id">{{place.place.name}}</option>
-                                                                        </select>
+                                                                        <textarea v-model="book.destination" name="" id="" cols="10" rows="2" class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" ></textarea>
                                                                         <span class="text-sm text-red-400"
-                                                                                v-if="errorValue && !loading && errorValue.vehicle_place_id">
-                                                                                {{ errorValue.vehicle_place_id[0] ? 'Destination is required' : '' }}
+                                                                                v-if="(errorValue && !loading && errorValue.destination)">
+                                                                                {{ errorValue.destination[0] ? 'Destination is required' : '' }}
                                                                             </span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="space-y-1">
+                                                                    <label for="password"
+                                                                        class="block text-sm font-medium text-gray-700">Purpose</label>
+                                                                    <div class="mt-1">
+                                                                        <textarea v-model="book.booking_purpose" name="" id="" cols="10" rows="2" class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" ></textarea>
+                                                                        <span class="text-sm text-red-400"
+                                                                                v-if="(errorValue && !loading && errorValue.booking_purpose)">
+                                                                                {{ errorValue.booking_purpose[0] ? 'Destination is required' : '' }}
+                                                                            </span>
+                                                                    </div>
+                                                                </div>
+                                                                <div
+                                                                    class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
+                                                                    <div>
+                                                                        <label for="email"
+                                                                            class="block text-sm font-medium text-gray-700">
+                                                                            Primary Operator Name
+                                                                        </label>
+                                                                        <div class="mt-1">
+                                                                            <input id="email" type="text"
+                                                                                placeholder="Primary Operator name"
+                                                                                v-model="book.primary_operator_name"
+                                                                                class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
+                                                                            <span class="text-sm text-red-400"
+                                                                                v-if="errorValue && !loading && errorValue.primary_operator_name">
+                                                                                {{ errorValue.primary_operator_name[0] }}
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div>
+                                                                        <label for="email"
+                                                                            class="block text-sm font-medium text-gray-700">Primary Operator License Number
+                                                                            </label>
+                                                                        <div class="mt-1">
+                                                                            <input id="email" type="text"
+                                                                                v-model="book.primary_operator_license_no"
+                                                                                placeholder="Primary Operator License Number"
+                                                                                class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
+                                                                            <span class="text-sm text-red-400"
+                                                                                v-if="errorValue && !loading && errorValue.primary_operator_license_no">
+                                                                                {{ errorValue.primary_operator_license_no[0] }}
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div
+                                                                    class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
+                                                                    <div>
+                                                                        <label for="email"
+                                                                            class="block text-sm font-medium text-gray-700">
+                                                                            Secondary Operator Name (Optional)
+                                                                        </label>
+                                                                        <div class="mt-1">
+                                                                            <input id="email" type="text"
+                                                                                placeholder="Secondary Operator name"
+                                                                                v-model="book.secondary_operator_name"
+                                                                                class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
+                                                                            <span class="text-sm text-red-400"
+                                                                                v-if="errorValue && !loading && errorValue.secondary_operator_name">
+                                                                                {{ errorValue.secondary_operator_name[0] }}
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div>
+                                                                        <label for="email"
+                                                                            class="block text-sm font-medium text-gray-700">Secondary Operator License Number (Optional)
+                                                                            </label>
+                                                                        <div class="mt-1">
+                                                                            <input id="email" type="text"
+                                                                                v-model="book.secondary_operator_license_no"
+                                                                                placeholder="Secondary Operator License Number"
+                                                                                class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
+                                                                            <span class="text-sm text-red-400"
+                                                                                v-if="errorValue && !loading && errorValue.secondary_operator_license_no">
+                                                                                {{ errorValue.secondary_operator_license_no[0] }}
+                                                                            </span>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="space-y-1 flex flex-col">

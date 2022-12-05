@@ -81,7 +81,7 @@ export const showDriverSelect = () => {
 export const getAvailableDrivers = (day) => {
     const data = ref([])
     const load = async () => {
-        await http().get(`/driver/select-driver?day=${day}`).then(res => {
+        await http().get(`/driver/select-driver`).then(res => {
             data.value = res.data
         })
     }
