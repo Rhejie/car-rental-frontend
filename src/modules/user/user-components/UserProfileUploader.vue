@@ -36,10 +36,16 @@ const props = defineProps({
     message: {
         type: String,
         default: 'Image of any valid Id...'
+    }, 
+    storageName: {
+        type: String,
+        default: 'id'
     }
 })
 
 const message = computed(() => props.message)
+
+const storageName = computed(() => props.storageName)
 
 const url = storageUrl();
 
@@ -58,7 +64,7 @@ const option = ref({
         url: '/user/profile/upload',
         method: 'POST',
         onload: (response) => {
-            localStorage.setItem('profile_url', JSON.parse(response))
+            localStorage.setItem(storageName.value, JSON.parse(response))
             emit('newImage', JSON.parse(response))
             return response
         },

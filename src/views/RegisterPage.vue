@@ -14,14 +14,14 @@
                         <form class="space-y-6">
                             <div>
                                 <div class="mt-1">
-                                    <UserProfileUploader @newImage="handleUploadedSelfi" :message="'Image of person holding the valid id'"/>
+                                    <UserProfileUploader @newImage="handleUploadedSelfi" :storage-name="'selfi'" :message="'Image of person holding the valid id'"/>
                                     <span class="text-sm text-red-400"
                                         v-if="(errorValue && !loading && errorValue.user_selfi)">
                                         {{ errorValue.user_selfi[0] }}
                                     </span>
                                 </div>
                                 <div class="mt-1">
-                                    <UserProfileUploader @newImage="handleUploadedProfile"/>
+                                    <UserProfileUploader @newImage="handleUploadedProfile" :storage-name="'id'"/>
                                     <span class="text-sm text-red-400"
                                         v-if="(errorValue && !loading && errorValue.user_identification)">
                                         {{ errorValue.user_identification[0] }}
@@ -183,10 +183,13 @@ const errorValue = ref(null)
 const loading = ref(false)
 
 const handleRegister = async () => {
-    const imageUrl = localStorage.getItem('profile_url')
-    if(imageUrl)  {
+    const imageUrl = localStorage.getItem('id')
+    const selfi = localStorage.getItem('selfi')
+    if(imageUrl && selfi)  {
         registerData.value.user_identification = imageUrl
+        registerData.value.user_selfi = selfi
     }
+
     loading.value = true
     const { register, errorData } = registerUser(registerData.value);
     await register();
