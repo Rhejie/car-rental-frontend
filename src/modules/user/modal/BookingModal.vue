@@ -361,7 +361,7 @@ onUpdated(() => {
                                                                     </div>
                                                                 </div>
                                                                 <div
-                                                                    v-if="book.add_driver"
+                                                                    v-if="!book.add_driver"
                                                                     class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
                                                                     <div>
                                                                         <label for="email"
@@ -396,7 +396,7 @@ onUpdated(() => {
                                                                     </div>
                                                                 </div>
                                                                 <div
-                                                                    v-if="book.add_driver"
+                                                                    v-if="!book.add_driver"
                                                                     class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
                                                                     <div>
                                                                         <label for="email"

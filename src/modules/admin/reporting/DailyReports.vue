@@ -76,10 +76,12 @@
 </template>
 <script setup>
 import { DocumentCheckIcon, CurrencyDollarIcon } from '@heroicons/vue/24/solid';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
+
+import { getDailyReportsData } from '../composables/admin-report-composables'
 
 const route = useRoute();
 const store = useStore();
@@ -87,8 +89,17 @@ const router = useRouter();
 
 const date = ref(null);
 
-const people = [
-    { name: 'Lindsay Walton', title: 'Front-end Developer', email: 'lindsay.walton@example.com', role: 'Member' },
-    // More people...
-]
+const people = []
+const loading = ref(true)
+const getDailyTransactions = async (date) => {
+    const {data, load} = getDailyReportsData(date);
+    await load();
+    loading.value = false
+}
+
+watch(date.value, (val) => {
+    if(val){
+        getDailyTransactions(val);
+    }
+})
 </script>
