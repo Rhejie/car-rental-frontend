@@ -75,7 +75,16 @@
                                                                             class="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
                                                                             aria-hidden="true" />
                                                                         <span class="truncate">
-                                                                            Start: {{ book.booking_start }} End: {{
+                                                                            Start: {{ book.booking_start }}
+                                                                        </span>
+                                                                    </p>
+                                                                    <p
+                                                                        class="mt-2 flex items-center text-sm text-gray-500">
+                                                                        <ClockIcon
+                                                                            class="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
+                                                                            aria-hidden="true" />
+                                                                        <span class="truncate">
+                                                                            End: {{
                                                                                     book.booking_end
                                                                             }}
                                                                         </span>
@@ -83,12 +92,23 @@
                                                                 </div>
                                                                 <div class="hidden md:block">
                                                                     <div>
-                                                                        <p class="text-sm text-gray-900">
-                                                                            Applied on
-                                                                            {{ ' ' }}
-                                                                            <time :datetime="book.created_at">{{
-                                                                                    book.created_at
-                                                                            }}</time>
+                                                                        <p
+                                                                            class="mt-2 flex items-center text-sm text-gray-500">
+                                                                            <TruckIcon
+                                                                                class="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
+                                                                                aria-hidden="true" />
+                                                                            <span class="truncate">
+                                                                                Model: {{book.vehicle.model}} | {{book.vehicle.vehicle_brand.name}} | {{book.vehicle.make}}
+                                                                            </span>
+                                                                        </p>
+                                                                        <p
+                                                                            class="mt-2 flex items-center text-sm text-gray-500">
+                                                                            <CalendarIcon
+                                                                                class="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
+                                                                                aria-hidden="true" />
+                                                                            <span class="truncate">
+                                                                                Applied on: {{book.created_at}}
+                                                                            </span>
                                                                         </p>
                                                                         <p
                                                                             :class="['mt-2 flex items-center text-sm', handleStatus(book).color]">
@@ -256,6 +276,8 @@ import {
     DocumentTextIcon,
     ChevronRightIcon,
     ClockIcon,
+    TruckIcon,
+    CalendarIcon,
     MapPinIcon,
     XMarkIcon,
     RocketLaunchIcon
