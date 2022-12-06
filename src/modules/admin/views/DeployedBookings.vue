@@ -8,11 +8,12 @@ import SelectStatusFilter from '@/components/SelectStatusFilter.vue'
 import GSkeletonLoading from '@/components/GSkeletonLoading.vue'
 
 import GPagination from "@/components/GPagination.vue";
-import { CheckCircleIcon, EyeIcon, XCircleIcon, XMarkIcon, PlusCircleIcon, ArrowUturnLeftIcon, ExclamationCircleIcon } from '@heroicons/vue/20/solid'
+import { CheckCircleIcon, EyeIcon, XCircleIcon, XMarkIcon, PlusCircleIcon, ArrowUturnLeftIcon, DocumentTextIcon, ExclamationCircleIcon } from '@heroicons/vue/20/solid'
 import { loadBookings, loadDeployedBookings } from '../components/composables/booking-composables';
 import AcceptBookingModal from '../components/modals/AcceptBookingModal.vue';
 import GNotification from '@/components/GNotification.vue';
 import ReturnBookingModal from '../components/modals/ReturnBookingModal.vue';
+import { downloadTransactionForm } from '../composables/admin-download-composables';
 
 const router = useRouter()
 
@@ -101,11 +102,21 @@ const handleReturnVehicle = (book, index) => {
   });
 
 
-
-  
   showReturnedModal.value = true
   selectedBooking.value = book
 }
+
+const handleClickTransactionForm = async (book, index) => {
+  await downloadTransactionForm(book.id).then(res => {
+        console.log(res, 'asda');
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `${book.user.first_name} - ${book.user.last_name}.pdf`);
+        document.body.appendChild(link);
+        link.click();
+      })
+} 
 
 const handleClickReturned = (book) => {
   let index = bookings.value.findIndex(b => b.id == book.id)
@@ -215,6 +226,12 @@ watch(params.value, () => {
                       class="inline-flex items-center rounded-md mr-2 border border-transparent bg-cyan-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2">
                       <ArrowUturnLeftIcon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
                       Return
+                    </button>
+                    <button type="button" @click="handleClickTransactionForm(book, index)"
+                      v-if="book.booking_status != 'pending' && book.booking_status != 'decline'"
+                      class="inline-flex items-center rounded-md mr-2 border border-transparent bg-emerald-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
+                      <DocumentTextIcon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
+                      Transaction Form
                     </button>
                   </td>
                 </tr>
