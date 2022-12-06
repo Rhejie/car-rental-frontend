@@ -216,7 +216,8 @@ onMounted(async () => {
                             <p class="text-sm text-gray-500">{{ vehicle.vehicle_brand.name }}</p>
                             <div class="flex flex-1 flex-col justify-end">
                                 <p class="text-sm italic text-gray-500">{{ vehicle.capacity }} seating capacity</p>
-                                <p class="text-base font-medium text-gray-900">{{ vehicle.fuel_type.name }} gas</p>
+                                <p class="text-md font-medium text-gray-900">{{ vehicle.fuel_type.name }} gas</p>
+                                <p class="text-md font-bold text-cyan-900">Price: {{ vehicle.price }}</p>
                             </div>
                         </div>
                         <div

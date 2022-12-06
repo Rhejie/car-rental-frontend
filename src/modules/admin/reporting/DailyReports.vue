@@ -37,10 +37,10 @@
                                     <thead class="bg-gray-50">
                                         <tr class="divide-x divide-gray-200">
                                             <th scope="col"
-                                                class="py-3.5 pl-4 pr-4 text-left text-sm font-semibold text-gray-900 sm:pl-6">
-                                                Transaction</th>
+                                                class="py-3.5 pr-4 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                                                Process</th>
                                             <th scope="col"
-                                                class="px-4 py-3.5 text-left text-sm font-semibold text-gray-900">Title
+                                                class="px-4 py-3.5 text-left text-sm font-semibold text-gray-900">Value
                                             </th>
                                             <th scope="col"
                                                 class="px-4 py-3.5 text-left text-sm font-semibold text-gray-900">Email
@@ -50,18 +50,18 @@
                                                 Role</th>
                                         </tr>
                                     </thead>
-                                    <tbody class="divide-y divide-gray-200 bg-white">
-                                        <tr v-for="person in people" :key="person.email"
+                                    <tbody class="divide-y divide-gray-200 bg-white" v-loading = "loading">
+                                        <tr v-for="report in reports" :key="report.id"
                                             class="divide-x divide-gray-200">
                                             <td
                                                 class="whitespace-nowrap py-4 pl-4 pr-4 text-sm font-medium text-gray-900 sm:pl-6">
-                                                {{ person.name }}</td>
-                                            <td class="whitespace-nowrap p-4 text-sm text-gray-500">{{ person.title }}
+                                                {{ report.process }}</td>
+                                            <td class="whitespace-nowrap p-4 text-sm text-gray-500">{{ report.title }}
                                             </td>
-                                            <td class="whitespace-nowrap p-4 text-sm text-gray-500">{{ person.email }}
+                                            <td class="whitespace-nowrap p-4 text-sm text-gray-500">{{ report.email }}
                                             </td>
                                             <td class="whitespace-nowrap py-4 pl-4 pr-4 text-sm text-gray-500 sm:pr-6">
-                                                {{ person.role }}</td>
+                                                {{ report.role }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -89,15 +89,17 @@ const router = useRouter();
 
 const date = ref(null);
 
-const people = []
-const loading = ref(true)
+const reports = ref([])
+const loading = ref(false)
 const getDailyTransactions = async (date) => {
+    loading.value = true
     const {data, load} = getDailyReportsData(date);
     await load();
+    reports.value = data.value
     loading.value = false
 }
 
-watch(date.value, (val) => {
+watch(date, (val) => {
     if(val){
         getDailyTransactions(val);
     }
