@@ -366,7 +366,7 @@ onUpdated(() => {
                                                                     <div>
                                                                         <label for="email"
                                                                             class="block text-sm font-medium text-gray-700">
-                                                                            Primary Operator Name
+                                                                            Primary Operator Name <span class="text-cyan-600">(self or other name)</span>
                                                                         </label>
                                                                         <div class="mt-1">
                                                                             <input id="email" type="text"
@@ -381,7 +381,7 @@ onUpdated(() => {
                                                                     </div>
                                                                     <div>
                                                                         <label for="email"
-                                                                            class="block text-sm font-medium text-gray-700">Primary Operator License Number
+                                                                            class="block text-sm font-medium text-gray-700">Primary Operator License Number <span class="text-cyan-600">(self or other name)</span>
                                                                             </label>
                                                                         <div class="mt-1">
                                                                             <input id="email" type="text"
