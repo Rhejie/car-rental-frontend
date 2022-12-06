@@ -46,7 +46,7 @@
                         <div class="bg-emerald-50 px-5 py-3">
                             <div class="text-sm">
                                 <router-link :to="{ name: 'Daily Reports'}" href="#"
-                                    class="font-medium text-emerald-700 hover:text-emerald-900">View all</router-link>
+                                    class="font-medium text-emerald-700 hover:text-emerald-900">Generate</router-link>
                             </div>
                         </div>
                     </div>
@@ -69,8 +69,7 @@
                         </div>
                         <div class="bg-cyan-50 px-5 py-3">
                             <div class="text-sm">
-                                <router-link :to="{name: 'Income Reports'}" href="#" class="font-medium text-cyan-700 hover:text-cyan-900">View
-                                    all</router-link>
+                                <router-link :to="{name: 'Income Reports'}" href="#" class="font-medium text-cyan-700 hover:text-cyan-900">Generate</router-link>
                             </div>
                         </div>
                     </div>
@@ -93,8 +92,7 @@
                         </div>
                         <div class="bg-cyan-50 px-5 py-3">
                             <div class="text-sm">
-                                <router-link :to="{name: 'Income Reports'}" href="#" class="font-medium text-cyan-700 hover:text-cyan-900">View
-                                    all</router-link>
+                                <router-link :to="{name: 'Income Reports'}" href="#" class="font-medium text-cyan-700 hover:text-cyan-900">Generate</router-link>
                             </div>
                         </div>
                     </div>
@@ -118,8 +116,30 @@
                         </div>
                         <div class="bg-red-50 px-5 py-3">
                             <div class="text-sm">
-                                <router-link :to="{name: 'Expenses Reports'}" href="#" class="font-medium text-red-700 hover:text-red-900">View
-                                    all</router-link>
+                                <router-link :to="{name: 'Expenses Reports'}" href="#" class="font-medium text-red-700 hover:text-red-900">Generate</router-link>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="overflow-hidden rounded-lg bg-white shadow">
+                        <div class="p-5 bg-gray-500 text-white">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <UserGroupIcon class="w-10 " aria-hidden="true" />
+                                </div>
+                                <div class="ml-5 w-0 flex-1">
+                                    <dl>
+                                        <dt class="truncate text-lg font-medium">Driver Report</dt>
+                                        <dd>
+                                            <div class="text-sm font-medium">list of daily transactions</div>
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 px-5 py-3">
+                            <div class="text-sm">
+                                <router-link :to="{name: 'Expenses Reports'}" href="#" class="font-medium text-gray-700 hover:text-gray-900">Generate</router-link>
                             </div>
                         </div>
                     </div>
@@ -129,7 +149,7 @@
     </main>
 </template>
 <script setup>
-import { DocumentCheckIcon, CurrencyDollarIcon } from '@heroicons/vue/24/solid';
+import { DocumentCheckIcon, CurrencyDollarIcon, UserGroupIcon } from '@heroicons/vue/24/solid';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useRoute } from 'vue-router';

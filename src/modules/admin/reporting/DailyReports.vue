@@ -24,11 +24,53 @@
 
         <div class="mt-8">
             <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-                <h2 class="text-lg font-medium leading-6 text-gray-900">Reports</h2>
                 <div class="mt-2 grid grid-cols-1 gap-5 sm:grid-cols-1 lg:grid-cols-1">
                     <!-- Card -->
+                    <input type="date" min="1" v-model="date" placeholder="Expiration Date"
+                        class="w-96 rounded-md border border-gray-300 bg-white py-2 pl-3 pr-2 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500 sm:text-sm" />
+                </div>
+                <div class="mt-8 flex flex-col">
+                    <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                        <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                            <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                                <table class="min-w-full divide-y divide-gray-300">
+                                    <thead class="bg-gray-50">
+                                        <tr class="divide-x divide-gray-200">
+                                            <th scope="col"
+                                                class="py-3.5 pl-4 pr-4 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                                                Transaction</th>
+                                            <th scope="col"
+                                                class="px-4 py-3.5 text-left text-sm font-semibold text-gray-900">Title
+                                            </th>
+                                            <th scope="col"
+                                                class="px-4 py-3.5 text-left text-sm font-semibold text-gray-900">Email
+                                            </th>
+                                            <th scope="col"
+                                                class="py-3.5 pl-4 pr-4 text-left text-sm font-semibold text-gray-900 sm:pr-6">
+                                                Role</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-200 bg-white">
+                                        <tr v-for="person in people" :key="person.email"
+                                            class="divide-x divide-gray-200">
+                                            <td
+                                                class="whitespace-nowrap py-4 pl-4 pr-4 text-sm font-medium text-gray-900 sm:pl-6">
+                                                {{ person.name }}</td>
+                                            <td class="whitespace-nowrap p-4 text-sm text-gray-500">{{ person.title }}
+                                            </td>
+                                            <td class="whitespace-nowrap p-4 text-sm text-gray-500">{{ person.email }}
+                                            </td>
+                                            <td class="whitespace-nowrap py-4 pl-4 pr-4 text-sm text-gray-500 sm:pr-6">
+                                                {{ person.role }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+
         </div>
     </main>
 </template>
@@ -42,4 +84,11 @@ import { useStore } from 'vuex';
 const route = useRoute();
 const store = useStore();
 const router = useRouter();
+
+const date = ref(null);
+
+const people = [
+    { name: 'Lindsay Walton', title: 'Front-end Developer', email: 'lindsay.walton@example.com', role: 'Member' },
+    // More people...
+]
 </script>

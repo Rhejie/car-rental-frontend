@@ -264,6 +264,7 @@ const totalPrice = computed({
         newValue;
     }
 })
+
 const payment = ref({
     type: null,
     payment_method: null,
@@ -272,8 +273,9 @@ const payment = ref({
     booking: selected.value,
     total_price: 0,
     driver: null,
-    add_driver: false
+    add_driver: selected.value.add_driver ? true : false
 })
+
 const loading = ref(false)
 const drivers = ref([])
 const loadingDriver = ref(false)
@@ -338,20 +340,23 @@ watch(payment.value, (val) => {
     }
 })
 
-watch(selected.value, (val) => {
-    if(val && val.add_driver == 1) {
-        payment.value.add_driver = true
-    }
+// watch(selected.value, (val) => {
+//     if(val && val.add_driver == 1) {
+//         payment.value.add_driver = true
+//     }
+// })
+
+onMounted(async () => {
+    await handleGetAllAvailableDirver();
 })
 
 onUpdated(async () => {
-    if(selected.value.add_driver == 1) {
+    if(selected.value.add_driver) {
         payment.value.add_driver = true
     }
-    if(countDays.value && selected.value) {
-        
-        await handleGetAllAvailableDirver();
-    }
     
+    if(payment.value.add_driver) {
+        await handleGetAllAvailableDirver ();
+    }
 })
 </script>
