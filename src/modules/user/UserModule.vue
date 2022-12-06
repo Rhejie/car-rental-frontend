@@ -86,7 +86,9 @@
 
                 <div class="space-y-6 border-t border-gray-200 py-6 px-4">
                   <div v-for="page in navigation.pages" :key="page.name" class="flow-root">
-                    <router-link :to="{ name: page.routeName}" class="-m-2 block p-2 font-medium text-gray-900">{{ page.name }}</router-link>
+                    <router-link :to="{ name: page.routeName }" class="-m-2 block p-2 font-medium text-gray-900">{{
+                        page.name
+                    }}</router-link>
                   </div>
                 </div>
 
@@ -137,12 +139,43 @@
                 <div class="flex h-full space-x-8">
 
 
-                  <router-link v-for="page in navigation.pages" :key="page.name" :to="{name : page.routeName}"
-                    class="flex items-center text-sm font-medium text-gray-700 hover:text-gray-800">{{ page.name }}</router-link>
+                  <router-link v-for="page in navigation.pages" :key="page.name" :to="{ name: page.routeName }"
+                    class="flex items-center text-sm font-medium text-gray-700 hover:text-gray-800">{{ page.name
+                    }}</router-link>
                 </div>
               </PopoverGroup>
 
               <div class="ml-auto flex items-center">
+                <Popover class="relative" v-slot="{ open }">
+                  <PopoverButton
+                    :class="[open ? 'text-gray-900' : 'text-gray-500', 'group inline-flex items-center rounded-md bg-white text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2']">
+                    
+                    <BellIcon
+                      :class="[open ? 'text-gray-600' : 'text-gray-400', 'mx-2 mt-1  w-7 group-hover:text-gray-500']"
+                      aria-hidden="true" />
+                  </PopoverButton>
+
+                  <transition enter-active-class="transition ease-out duration-200"
+                    enter-from-class="opacity-0 translate-y-1" enter-to-class="opacity-100 translate-y-0"
+                    leave-active-class="transition ease-in duration-150" leave-from-class="opacity-100 translate-y-0"
+                    leave-to-class="opacity-0 translate-y-1">
+                    <PopoverPanel
+                      class="absolute left-1/2 z-10 mt-3 w-screen max-w-xs -translate-x-1/2 transform px-2 sm:px-0">
+                      <div class="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5" v-loading="loadingNotification">
+                        <div class="relative grid gap-6 bg-white px-3 py-4 sm:gap-8 sm:p-2">
+                          <router-link v-for="notification in myNotifications" :key="notification.name" :to="`${notification.link}`"
+                            :class="!notification.view && notification.action == 'success' ? 'bg-cyan-50 hover:bg-gray-50 text-white hover:text-gray-700': '', 
+                                !notification.view && notification.action == 'fail' ? 'bg-red-50 hover:bg-gray-50 text-white hover:text-gray-700': '',
+                                !notification.view && notification.action == 'warning' ? 'bg-orange-50 hover:bg-gray-50 text-white hover:text-gray-700': '',
+                              '-m-3 block rounded-md px-2 py-2 p-3 transition duration-150 ease-in-out '">
+                            <p class="text-base font-medium text-gray-900">{{ notification.title }}</p>
+                            <p class="mt-1 text-sm text-gray-500">{{ notification.message }}</p>
+                          </router-link>
+                        </div>
+                      </div>
+                    </PopoverPanel>
+                  </transition>
+                </Popover>
                 <div class="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
                   <span class="h-6 w-px bg-gray-200" aria-hidden="true" />
                   <router-link :to="{ name: 'User Profile' }"
@@ -236,7 +269,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import {
   Dialog,
   DialogPanel,
@@ -256,20 +289,52 @@ import {
   TransitionRoot,
 } from '@headlessui/vue'
 import { Bars3Icon, MagnifyingGlassIcon, PowerIcon, XMarkIcon } from '@heroicons/vue/24/outline'
-import { ChevronDownIcon, PlusIcon } from '@heroicons/vue/20/solid'
+import { ChevronDownIcon, BellIcon, PlusIcon } from '@heroicons/vue/20/solid'
 import FilterColors from '../admin/components/settings/color-utilities/FilterColors.vue';
 import FilterFuelTypes from '../admin/components/settings/fuel-type-utilities/FilterFuelTypes.vue';
 import FilterVehicleBrand from '../admin/components/settings/vehicle-brand-utilities/FilterVehicleBrand.vue';
+import { getMyNotifications } from './composables/user-notification-composables';
 
 const selectedColors = ref([])
 const selectedFuelType = ref([])
 const selectedBrands = ref([])
+const myNotifications = ref([])
+const loadingNotification = ref(true)
 const navigation = {
   pages: [
     { name: 'Home', routeName: 'UserHome' },
     { name: 'Booking', routeName: 'User Bookings' },
   ],
 }
+const solutions = [
+  { name: 'Blog', description: 'Learn about tips, product updates and company culture.', href: '#' },
+  {
+    name: 'Help Center',
+    description: 'Get all of your questions answered in our forums of contact support.',
+    href: '#',
+  },
+  { name: 'Guides', description: 'Learn how to maximize our platform to get the most out of it.', href: '#' },
+  { name: 'Events', description: 'Check out webinars with experts and learn about our annual conference.', href: '#' },
+  { name: 'Security', description: 'Understand how we take your privacy seriously.', href: '#' },
+]
+
+const loadNotifications = async () => {
+  const { data, load } = getMyNotifications(); 
+  await load();
+  myNotifications.value = data.value
+  loadingNotification.value = false
+}
+
+onMounted( async () => {
+  Echo.private('user-notify')
+  .listen('SendUserNotification', (e) => {
+    console.log('notif user', e)
+  })
+
+  await loadNotifications();
+})
+
+
 const breadcrumbs = [{ id: 1, name: 'Home', href: '#' }]
 const filters = [
   {

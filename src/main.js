@@ -55,29 +55,28 @@ var auth = createAuth({
     }
 });
 
-// import Echo from "laravel-echo"
-// import { accessToken } from './global-composables/local-storage'
+import Echo from "laravel-echo"
+import { accessToken } from './global-composables/local-storage'
 
 
-// const Pusher = require('pusher-js');
+const Pusher = require('pusher-js');
 
-// window.Echo = new Echo({
-//     broadcaster: 'pusher',
-//     key: '8cd75a6ea9ab65d8b608',
-//     cluster: 'ap1',
-//     forceTLS: false,
-//     wsHost: window.location.hostname,
-//     authEndpoint: process.env.BASE_URL + '/broadcasting/auth',
-//     wsPort: 6001,
-//     disableStats: true,
-//     encrypted: true,
-//     auth: {
-//       headers: {
-//         ContentType: 'application/json',
-//         Authorization: 'Bearer ' + accessToken()
-//       },
-//     }
-// });
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: '8cd75a6ea9ab65d8b608',
+    cluster: 'ap1',
+    forceTLS: false,
+    wsHost: window.location.hostname,
+    wsPort: 6001,
+    disableStats: true,
+    encrypted: true,
+    auth: {
+      headers: {
+        ContentType: 'application/json',
+        Authorization: 'Bearer ' + accessToken()
+      },
+    }
+});
 
 
 

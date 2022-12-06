@@ -92,8 +92,7 @@
                                                                         </p>
                                                                         <p
                                                                             :class="['mt-2 flex items-center text-sm', handleStatus(book).color]">
-                                                                            <component
-                                                                                :is="handleStatus(book).icon"
+                                                                            <component :is="handleStatus(book).icon"
                                                                                 :class="['mr-1.5 h-5 w-5 flex-shrink-0', handleStatus(book).color]"
                                                                                 aria-hidden="true" />
                                                                             {{ handleStatus(book).status
@@ -108,20 +107,24 @@
                                                                 aria-hidden="true" />
                                                         </div> -->
                                                         <div>
-                                                            <button type="button"
-                                                                v-if="handleBookingCancelButton(book)"
+                                                            <button type="button" v-if="handleBookingCancelButton(book)"
                                                                 @click="handleClickCancel(book)"
                                                                 class="inline-flex h-6 items-center mr-1 rounded border border-transparent bg-red-500 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
                                                                 <XCircleIcon class="h-5 w-5 text-white"
                                                                     aria-hidden="true" />
                                                                 Cancel
                                                             </button>
-                                                            <button type="button"
-                                                                @click="handlePrintInvoice(book)"
-                                                                class="inline-flex h-6 items-center rounded border border-transparent bg-cyan-500 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2">
+                                                            <button type="button" @click="handlePrintInvoice(book)"
+                                                                class="inline-flex h-6 mr-1 items-center rounded border border-transparent bg-cyan-500 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2">
                                                                 <DocumentCheckIcon class="h-5 w-5 text-white"
                                                                     aria-hidden="true" />
                                                                 Print Invoice
+                                                            </button>
+                                                            <button type="button" @click="hnadlePrintForm(book)"
+                                                                class="inline-flex h-6 items-center rounded border border-transparent bg-emerald-500 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
+                                                                <DocumentTextIcon class="h-5 w-5 text-white"
+                                                                    aria-hidden="true" />
+                                                                Form
                                                             </button>
                                                         </div>
                                                     </div>
@@ -146,16 +149,20 @@
                                 </div>
                                 <!-- Activity Feed -->
                                 <div class="mt-6 flow-root">
-                                    <div class="overflow-hidden bg-white shadow sm:rounded-lg" v-if="(!loadingCurrentBook && currentBook && currentBook.id)">
+                                    <div class="overflow-hidden bg-white shadow sm:rounded-lg"
+                                        v-if="(!loadingCurrentBook && currentBook && currentBook.id)">
                                         <div class="px-4 py-5 sm:px-6">
-                                            <h3 class="text-lg font-medium leading-6 text-gray-900">Booking Information</h3>
+                                            <h3 class="text-lg font-medium leading-6 text-gray-900">Booking Information
+                                            </h3>
                                         </div>
                                         <div class="border-t border-gray-200">
                                             <dl>
                                                 <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                                     <dt class="text-sm font-medium text-gray-500">Status</dt>
-                                                    <dd :class="[handleStatus(currentBook).color, 'mt-1 text-sm sm:col-span-2 sm:mt-0']">{{ handleStatus(currentBook).status
-                                                    }}</dd>
+                                                    <dd
+                                                        :class="[handleStatus(currentBook).color, 'mt-1 text-sm sm:col-span-2 sm:mt-0']">
+                                                        {{ handleStatus(currentBook).status
+                                                        }}</dd>
                                                 </div>
                                                 <div
                                                     class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -190,7 +197,7 @@
                                                             currentBook.vehicle.vehicle_brand.name
                                                     }}</dd>
                                                 </div>
-                                                <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                                <!-- <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                                     <dt class="text-sm font-medium text-gray-500">Downloadable Forms
                                                     </dt>
                                                     <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
@@ -213,7 +220,7 @@
                                                             </li>
                                                         </ul>
                                                     </dd>
-                                                </div>
+                                                </div> -->
                                             </dl>
                                         </div>
                                     </div>
@@ -227,7 +234,8 @@
             </div>
         </main>
         <GNotification :show-notif="showNotif" :message="message" />
-        <CancelBookingModal :openModal="showCancelModal" :selected-book="selectedBook" @closeModal="handleCloseModal" @cancelBook="handleCancelBooking"/>
+        <CancelBookingModal :openModal="showCancelModal" :selected-book="selectedBook" @closeModal="handleCloseModal"
+            @cancelBook="handleCancelBooking" />
     </main>
 </template>
 <script setup>
@@ -245,6 +253,7 @@ import {
     InformationCircleIcon,
     XCircleIcon,
     DocumentCheckIcon,
+    DocumentTextIcon,
     ChevronRightIcon,
     ClockIcon,
     MapPinIcon,
@@ -261,6 +270,7 @@ import GFullyPaid from '@/components/GFullyPaid.vue';
 import CancelBookingModal from '@/modules/admin/components/modals/CancelBookingModal.vue';
 import GNotification from '@/components/GNotification.vue';
 import { showFormSelect } from '@/modules/admin/components/composables/form-composables';
+import { downloadTransactionForm } from '@/modules/admin/composables/admin-download-composables';
 
 const url = storageUrl();
 const loading = ref(true)
@@ -313,12 +323,13 @@ const handleChangePage = (page) => {
 }
 
 const fetchDownloadableForms = async () => {
-    const { data, loadSelectCompanies} = showFormSelect();
+    const { data, loadSelectCompanies } = showFormSelect();
     await loadSelectCompanies();
     forms.value = data.value
 }
 
 const fetch = async () => {
+    loading.value = true
     const { load, data, totalBookings } = loadBookings(params.value);
     await load();
     bookings.value = data.value
@@ -335,7 +346,19 @@ const handlePrintInvoice = async (book) => {
         link.setAttribute('download', `${book.user.first_name} - ${book.user.last_name}.pdf`);
         document.body.appendChild(link);
         link.click();
-      })
+    })
+}
+
+const hnadlePrintForm = async (book) => {
+    await downloadTransactionForm(book.id).then(res => {
+        console.log(res, 'asda');
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `${book.user.first_name} - ${book.user.last_name}.pdf`);
+        document.body.appendChild(link);
+        link.click();
+    })
 }
 
 const handleStatus = (book) => {
@@ -358,7 +381,7 @@ const handleStatus = (book) => {
         status = 'decline'
     }
 
-    if(book.deployed) {
+    if (book.deployed) {
         color = 'text-cyan-400'
         icon = RocketLaunchIcon
         status = 'deployed'
@@ -380,7 +403,7 @@ const handleBookingCancelButton = (book) => {
     if (book.booking_status == 'cancel' || book.booking_status == 'decline') {
         return false
     }
-    if(book.deployed || book.returned) {
+    if (book.deployed || book.returned) {
         return false
     }
     return true

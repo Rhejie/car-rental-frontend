@@ -117,7 +117,7 @@ const handleToogleFuelType = (item) => {
 }
 
 const handleClickDetails = (vehicle) => {
-    router.push({name: 'User Vehicle Details', params: {id: vehicle.id }})
+    router.push({ name: 'User Vehicle Details', params: { id: vehicle.id } })
 }
 
 const handleClickBook = (vehicle) => {
@@ -134,12 +134,17 @@ watch(params.value, async () => {
 })
 
 onMounted(async () => {
+    Echo.private('user-notify')
+        .listen('SendUserNotification', (e) => {
+            console.log('notif user', e)
+        })
     await fetch();
 })
 </script>
 <template>
-    
-    <BookingModal v-if="openModalBook" :open-modal="openModalBook" :handleClickCloseModal="handleClickCloseModal" :vehicle="selectedBook"/>
+
+    <BookingModal v-if="openModalBook" :open-modal="openModalBook" :handleClickCloseModal="handleClickCloseModal"
+        :vehicle="selectedBook" />
     <div class="border-b border-gray-200">
         <nav aria-label="Breadcrumb" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <ol role="list" class="flex items-center space-x-4 py-4">
@@ -234,7 +239,7 @@ onMounted(async () => {
                     </div>
                 </div>
                 <div v-if="!loading && vehicles.length == 0">
-                    <GNoVehicles/>
+                    <GNoVehicles />
                 </div>
             </section>
         </div>

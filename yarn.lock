@@ -5871,7 +5871,7 @@
   "resolved" "https://registry.npmmirror.com/punycode/-/punycode-2.1.1.tgz"
   "version" "2.1.1"
 
-"pusher-js@^7.0.6":
+"pusher-js@^7.0.6", "pusher-js@^7.5.0":
   "integrity" "sha512-R8eL3v2hnOC7NY8ufvrcDPdEjit//2pqVmcC7h1sUyoZQ4M+bwlwkszmMVuVbYNKZUS8WRFmSvdeb9LkfLyvZQ=="
   "resolved" "https://registry.npmjs.org/pusher-js/-/pusher-js-7.5.0.tgz"
   "version" "7.5.0"
