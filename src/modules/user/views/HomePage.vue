@@ -183,9 +183,6 @@ onMounted(async () => {
                 </button>
 
                 <div class="hidden lg:block">
-                <div class="pt-4">
-                    <SelectPlace v-model="params.place" :onHandleChangePlace="onHandleChangePlace" :label="`Choose your destination`"/>
-                </div>
                     <FilterColors v-model="selectedColors" :handleToogleColor="handleToogleColor" />
                     <FilterFuelTypes v-model="selectedFuelType" :handleToogleFuelType="handleToogleFuelType" />
                     <FilterVehicleBrand v-model="selectedBrands" :handleToogleBrand="handleToogleBrand" />

@@ -361,6 +361,7 @@ onUpdated(() => {
                                                                     </div>
                                                                 </div>
                                                                 <div
+                                                                    v-if="book.add_driver"
                                                                     class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
                                                                     <div>
                                                                         <label for="email"
@@ -395,6 +396,7 @@ onUpdated(() => {
                                                                     </div>
                                                                 </div>
                                                                 <div
+                                                                    v-if="book.add_driver"
                                                                     class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
                                                                     <div>
                                                                         <label for="email"
@@ -429,7 +431,6 @@ onUpdated(() => {
                                                                     </div>
                                                                 </div>
                                                                 <div class="space-y-1 flex flex-col">
-                                                                    <span class="text-gray-600 text-sm" v-if="price != null && price != ''">Price per day: {{price.price}}</span>
                                                                     <span class="text-gray-600 text-sm" v-if="countDays != null && countDays != ''">Total Days: {{countDays}}</span>
                                                                     <span class="text-gray-600 text-sm" v-if="totalPrice != null && totalPrice != ''">Total Price: {{totalPrice}}</span>
                                                                 </div>
