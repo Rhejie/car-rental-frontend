@@ -73,6 +73,11 @@ const moduleRoute = {
             component: () => import('../admin/reporting/DailyReports.vue')
         },
         {
+            path: '/admin/reports/monthly-reports',
+            name: 'Monthly Reports',
+            component: () => import('../admin/reporting/MonthlyReport.vue')
+        },
+        {
             path: '/admin/reports/income-reports',
             name: 'Income Reports',
             component: () => import('../admin/reporting/IncomeReports.vue')

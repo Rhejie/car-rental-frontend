@@ -21,6 +21,26 @@ export const storeBook = (book) => {
     }
 }
 
+export const updateBook = (book) => {
+    const data = ref(null)
+    const errorData = ref(null)
+    const post = async () => {
+        await http().post(`/booking/update/${book.id}`, book).then(res => {
+            data.value = res.data
+            errorData.value = null
+        }).catch(error => {
+            errorData.value = error.response.data.errors
+            console.log('Error in storing book ->>', error)
+        })
+    }
+
+    return {
+        data,
+        post,
+        errorData
+    }
+}
+
 export const getCurrentBook = () => {
     const data = ref(null)
     const load = async () => {

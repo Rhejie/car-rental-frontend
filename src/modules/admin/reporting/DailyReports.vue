@@ -37,31 +37,34 @@
                                     <thead class="bg-gray-50">
                                         <tr class="divide-x divide-gray-200">
                                             <th scope="col"
-                                                class="py-3.5 pr-4 text-left text-sm font-semibold text-gray-900 sm:pl-6">
-                                                Process</th>
-                                            <th scope="col"
-                                                class="px-4 py-3.5 text-left text-sm font-semibold text-gray-900">Value
-                                            </th>
-                                            <th scope="col"
-                                                class="px-4 py-3.5 text-left text-sm font-semibold text-gray-900">Email
-                                            </th>
-                                            <th scope="col"
                                                 class="py-3.5 pl-4 pr-4 text-left text-sm font-semibold text-gray-900 sm:pr-6">
-                                                Role</th>
+                                                TRANSACTION DATE</th>
+                                            <th scope="col"
+                                                class="py-3.5 pr-4 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                                                TYPE</th>
+                                            <th scope="col"
+                                                class="px-4 py-3.5 text-left text-sm font-semibold text-gray-900">PROCESS
+                                            </th>
+                                            <th scope="col"
+                                                class="px-4 py-3.5 text-left text-sm font-semibold text-gray-900">VALUE
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-gray-200 bg-white" v-loading = "loading">
                                         <tr v-for="report in reports" :key="report.id"
                                             class="divide-x divide-gray-200">
+                                            <td class="whitespace-nowrap py-4 pl-4 pr-4 text-sm text-gray-500 sm:pr-6">
+                                                {{ report.created_at }}</td>
                                             <td
                                                 class="whitespace-nowrap py-4 pl-4 pr-4 text-sm font-medium text-gray-900 sm:pl-6">
-                                                {{ report.process }}</td>
-                                            <td class="whitespace-nowrap p-4 text-sm text-gray-500">{{ report.title }}
+                                                {{ capitalize(report.type) }}</td>
+                                            <td class="whitespace-nowrap p-4 text-sm text-gray-500">{{ capitalize(report.process) }}
                                             </td>
-                                            <td class="whitespace-nowrap p-4 text-sm text-gray-500">{{ report.email }}
+                                            <td class="whitespace-nowrap p-4 text-sm text-gray-500">
+                                                <BookingValue v-if="report.type == 'booking'" :booking="report.transactionable"/>
+                                                <PaymentValue v-if="report.type == 'payment'" :payment="report.transactionable"/>
+                                                <OverchargeValue v-if="report.type == 'overcharge'" :overcharge="report.transactionable"/>
                                             </td>
-                                            <td class="whitespace-nowrap py-4 pl-4 pr-4 text-sm text-gray-500 sm:pr-6">
-                                                {{ report.role }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -82,6 +85,9 @@ import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 
 import { getDailyReportsData } from '../composables/admin-report-composables'
+import BookingValue from './components/BookingValue.vue';
+import PaymentValue from './components/PaymentValue.vue';
+import OverchargeValue from './components/OverchargeValue.vue'
 
 const route = useRoute();
 const store = useStore();
@@ -97,6 +103,10 @@ const getDailyTransactions = async (date) => {
     await load();
     reports.value = data.value
     loading.value = false
+}
+
+const capitalize = (str) => {
+  return str.charAt(0).toUpperCase()+str.slice(1);
 }
 
 watch(date, (val) => {

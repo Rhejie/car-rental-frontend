@@ -1,7 +1,7 @@
 <script setup>
-import { computed, onUpdated, ref, watch } from 'vue'
+import { computed, onMounted, onUpdated, ref, watch, defineEmits } from 'vue'
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
-import { storeBook } from '../composables/booking-composables'
+import { storeBook, updateBook } from '../composables/booking-composables'
 import { BookmarkIcon } from '@heroicons/vue/24/outline'
 import { useRouter } from 'vue-router';
 
@@ -16,13 +16,25 @@ const props = defineProps({
     vehicle: {
         type: Object,
         default: null
+    },
+    mode: {
+        type: Boolean,
+        default: false
+    }, 
+    bookingInfo: {
+        type: Object,
+        default: () => {}
     }
 })
+
+const emit = defineEmits(['updateBook'])
 
 const router = useRouter()
 const open = computed(() => props.openModal)
 
 const vehicle = computed(() => props.vehicle)
+const bookingInfo = computed(() => props.bookingInfo)
+const mode = computed(() => props.mode)
 
 const book = ref({
     booking_start: null,
@@ -95,6 +107,14 @@ const initialize = () => {
 
 const storeData = async () => {
     loading.value = true
+    if(book.value.id) {
+        const {data, post} = updateBook(book.value);
+        await post();
+        loading.value = false
+        emit('updateBook', data.value)
+        return;
+    }
+
     const {post, data, errorData} = storeBook(book.value);
     await post();
     errorValue.value = errorData.value
@@ -106,8 +126,16 @@ const storeData = async () => {
     }
 }
 
+onMounted(() => {
+    if(bookingInfo.value && bookingInfo.value.id && mode.value) {
+        book.value = {...bookingInfo.value}
+        book.value.add_driver = book.value.add_driver == 1 ? true : false
+    }
+})
+
 onUpdated(() => {
-    initialize()
+    // initialize()
+    
 })
 
 // watch(book.value, (val) => {
@@ -330,7 +358,7 @@ onUpdated(() => {
                                                                 <div class="space-y-1">
                                                                     <div class="mt-1">
                                                                         <input type="checkbox" class="mr-2" name="" v-model="book.add_driver" id="">
-                                                                        <span class="text-sm text-gray-700">Add driver? (optional)</span>
+                                                                        <span class="text-sm text-gray-700">Hire a driver from the company? (optional)</span>
                                                                         <span class="text-sm text-red-400"
                                                                                 v-if="(errorValue && !loading && errorValue.add_driver)">
                                                                                 {{ errorValue.add_driver[0] ? 'Destination is required' : '' }}

@@ -6,7 +6,7 @@ import {
 } from '@heroicons/vue/24/solid'
 import GPagination from "@/components/GPagination.vue";
 import CreateDriverModal from '../modals/CreateDriverModal.vue'
-import GNotification from '@/components/GNotification.vue';
+import GNotification from '../../../../components/GPagination.vue';
 import { loadDrivers } from '../composables/driver-composables';
 const drivers = ref([])
 

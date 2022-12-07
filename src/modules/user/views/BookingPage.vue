@@ -127,6 +127,13 @@
                                                                 aria-hidden="true" />
                                                         </div> -->
                                                         <div class="flex flex-wrap">
+                                                            <button type="button" v-if="handleBookingEdit(book)"
+                                                                @click="handeClickEdit(book)"
+                                                                class="inline-flex h-6 items-center mr-1 mr-2 my-1 rounded border border-transparent bg-green-500 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                                                                <PencilSquareIcon class="h-5 w-5 text-white"
+                                                                    aria-hidden="true" />
+                                                                Edit
+                                                            </button>
                                                             <button type="button" v-if="handleBookingCancel(book)"
                                                                 @click="handleClickCancel(book)"
                                                                 class="inline-flex h-6 items-center mr-1 mr-2 my-1 rounded border border-transparent bg-red-500 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
@@ -223,30 +230,6 @@
                                                             currentBook.vehicle.vehicle_brand.name
                                                     }}</dd>
                                                 </div>
-                                                <!-- <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                                                    <dt class="text-sm font-medium text-gray-500">Downloadable Forms
-                                                    </dt>
-                                                    <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-                                                        <ul role="list"
-                                                            class="divide-y divide-gray-200 rounded-md border border-gray-200">
-                                                            <li v-for="form in forms" :key="form.id"
-                                                                class="flex items-center justify-between py-3 pl-3 pr-4 text-sm">
-                                                                <div class="flex w-0 flex-1 items-center">
-                                                                    <PaperClipIcon
-                                                                        class="h-5 w-5 flex-shrink-0 text-gray-400"
-                                                                        aria-hidden="true" />
-                                                                    <span
-                                                                        class="ml-2 w-0 flex-1 truncate">{{form.name}}</span>
-                                                                </div>
-                                                                <div class="ml-4 flex-shrink-0">
-                                                                    <a :href="form.file_url"
-                                                                        target="_blank"
-                                                                        class="font-medium text-indigo-600 hover:text-indigo-500">Download</a>
-                                                                </div>
-                                                            </li>
-                                                        </ul>
-                                                    </dd>
-                                                </div> -->
                                             </dl>
                                         </div>
                                     </div>
@@ -262,6 +245,9 @@
         <GNotification :show-notif="showNotif" :message="message" />
         <CancelBookingModal :openModal="showCancelModal" :selected-book="selectedBook" @closeModal="handleCloseModal"
             @cancelBook="handleCancelBooking" />
+
+        <BookingModal v-if="(openModalBook && selecteVehicle)" :open-modal="openModalBook" :handleClickCloseModal="handleClickCloseModal"
+        :vehicle="selecteVehicle" :booking-info="bookingInfo" :mode="true" @updateBook="handleUpdateBook"/>
     </main>
 </template>
 <script setup>
@@ -286,7 +272,8 @@ import {
     CalendarIcon,
     MapPinIcon,
     XMarkIcon,
-    RocketLaunchIcon
+    RocketLaunchIcon,
+    PencilSquareIcon
 } from '@heroicons/vue/24/outline'
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
@@ -299,6 +286,7 @@ import CancelBookingModal from '@/modules/admin/components/modals/CancelBookingM
 import GNotification from '@/components/GNotification.vue';
 import { showFormSelect } from '@/modules/admin/components/composables/form-composables';
 import { downloadAgreement, downloadTransactionForm } from '@/modules/admin/composables/admin-download-composables';
+import BookingModal from '../modal/BookingModal.vue';
 
 const url = storageUrl();
 const loading = ref(true)
@@ -309,6 +297,7 @@ const params = ref({
     page: 1,
     search: null,
 })
+const openModalBook = ref(false)
 const showNotif = ref(false)
 const message = ref(null)
 const loadingCurrentBook = ref(true)
@@ -316,6 +305,8 @@ const currentBook = ref(null)
 const showCancelModal = ref(false)
 const selectedBook = ref(null)
 const forms = ref([])
+const selecteVehicle = ref(null)
+const bookingInfo = ref(null)
 
 const handleChangeSize = (size) => {
     params.value.page_size = size
@@ -323,6 +314,24 @@ const handleChangeSize = (size) => {
 
 const handleCloseModal = () => {
     showCancelModal.value = false
+}
+
+const handleClickCloseModal = () => {
+    openModalBook.value = false
+}
+
+const handleUpdateBook = (book) => {
+    bookings.value.map(b => {
+        if(b.id == book.id){
+            for(let key in book) {
+                b[key] = book[key]
+            }
+        }
+
+        return b;
+    })
+    
+    openModalBook.value = false
 }
 
 const handleCancelBooking = (selected) => {
@@ -445,6 +454,25 @@ const handleBookingCancel = (book) => {
     }
     
     return true
+}
+
+const handleBookingEdit = (book) => {
+    if (!book.booking_status == 'pending' ) {
+        return false
+    }
+
+    if(book.deployed || book.returned) {
+        return false
+    }
+    
+    return true
+}
+
+const handeClickEdit = (book)  => {
+    console.log(book.vehicle)
+    openModalBook.value = true
+    selecteVehicle.value = book.vehicle
+    bookingInfo.value = book
 }
 
 const getCurrentBookData = async () => {

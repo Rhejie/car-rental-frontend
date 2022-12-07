@@ -69,7 +69,7 @@
                         </div>
                         <div class="bg-cyan-50 px-5 py-3">
                             <div class="text-sm">
-                                <router-link :to="{name: 'Income Reports'}" href="#" class="font-medium text-cyan-700 hover:text-cyan-900">Generate</router-link>
+                                <router-link :to="{name: 'Monthly Reports'}" href="#" class="font-medium text-cyan-700 hover:text-cyan-900">Generate</router-link>
                             </div>
                         </div>
                     </div>
