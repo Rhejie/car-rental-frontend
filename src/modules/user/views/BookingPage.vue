@@ -134,13 +134,13 @@
                                                                     aria-hidden="true" />
                                                                 Cancel
                                                             </button>
-                                                            <button type="button" @click="handlePrintInvoice(book)"
+                                                            <button type="button" v-if="handleBookingCancelButton(book)" @click="handlePrintInvoice(book)"
                                                                 class="inline-flex h-6 mr-1 items-center rounded border border-transparent bg-cyan-500 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2">
                                                                 <DocumentCheckIcon class="h-5 w-5 text-white"
                                                                     aria-hidden="true" />
                                                                 Print Invoice
                                                             </button>
-                                                            <button type="button" @click="hnadlePrintForm(book)"
+                                                            <button type="button" v-if="handleBookingCancelButton(book)" @click="hnadlePrintForm(book)"
                                                                 class="inline-flex h-6 items-center rounded border border-transparent bg-emerald-500 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
                                                                 <DocumentTextIcon class="h-5 w-5 text-white"
                                                                     aria-hidden="true" />
@@ -425,9 +425,7 @@ const handleBookingCancelButton = (book) => {
     if (book.booking_status == 'cancel' || book.booking_status == 'decline') {
         return false
     }
-    if (book.deployed || book.returned) {
-        return false
-    }
+    
     return true
 }
 

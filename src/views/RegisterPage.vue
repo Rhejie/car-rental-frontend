@@ -137,6 +137,8 @@
                                 </div>
                             </div>
 
+                            <span class="text-sm text-gray-600">By signing up, you are agreeing to the APC Car Rental Terms and Conditions of service  View our <span class="text-cyan-500 cursor-pointer" @click="handleClickPolicy"> terms and condition</span></span>
+
                             <div class="mt-10 border-t border-gray-200 pt-10">
                                 <button type="button" @click="handleRegister"
                                     class="inline-flex 
@@ -160,10 +162,12 @@
         <div class="relative hidden w-0 flex-1 lg:block">
             <img class="absolute inset-0 h-full w-full object-cover" src=".././assets/suv2.webp" alt="" />
         </div>
+        <PolicyModal :open-modal="showModal" @close-modal="handleCloseModal"/>
     </div>
 </template>
 <script setup>
 import { registerUser } from '@/global-composables/authentication';
+import PolicyModal from '@/modules/user/modal/PolicyModal.vue';
 import UserProfileUploader from '@/modules/user/user-components/UserProfileUploader.vue';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -210,5 +214,13 @@ const handleUploadedProfile = (imageUrl) => {
 
 const handleUploadedSelfi = (imageUrl) => {
     registerData.value.user_selfi = imageUrl
+}
+const showModal = ref(false)
+const handleClickPolicy = () => {
+    showModal.value = true
+}
+
+const handleCloseModal = () => {
+    showModal.value = false
 }
 </script>

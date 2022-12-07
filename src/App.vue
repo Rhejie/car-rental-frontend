@@ -24,7 +24,7 @@ const getUser = async () => {
 }
 
 onMounted(async () => {
-  await getUser()
+  // await getUser()
   console.log('user', userProfile.value)
   console.log('auth', JSON.parse(auth.remember()))
   provide('userData', userProfile.value)
