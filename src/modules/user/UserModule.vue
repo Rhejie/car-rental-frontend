@@ -305,6 +305,7 @@ import { getMyNotifications, viewNotification } from './composables/user-notific
 import { loadUser } from '@/global-composables/get-user-profile';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
+import {useEmitter} from '@/global-composables/emitter'
 
 const router = useRouter()
 const store = useStore();
@@ -312,6 +313,7 @@ const selectedColors = ref([])
 const selectedFuelType = ref([])
 const selectedBrands = ref([])
 const myNotifications = ref([])
+const emitter = useEmitter;
 const loadingNotification = ref(true)
 const auth = inject('auth');
 const navigation = {
@@ -367,6 +369,7 @@ onMounted(async () => {
   Echo.private('notify.' + userProfile.value.id)
     .notification((notification) => {
       myNotifications.value.unshift(notification.notification)
+      emitter.emit('REFRESH_BOOKING')
     })
 
   // Echo.private('user-notify')

@@ -288,7 +288,9 @@ import { showFormSelect } from '@/modules/admin/components/composables/form-comp
 import { downloadAgreement, downloadTransactionForm } from '@/modules/admin/composables/admin-download-composables';
 import BookingModal from '../modal/BookingModal.vue';
 import moment from 'moment';
+import { useEmitter } from '@/global-composables/emitter';
 
+const emitter = useEmitter;
 const url = storageUrl();
 const loading = ref(true)
 const bookings = ref([])
@@ -462,7 +464,7 @@ const handleBookingCancel = (book) => {
 }
 
 const handleBookingEdit = (book) => {
-    if (!book.booking_status == 'pending' ) {
+    if (book.booking_status != 'pending' ) {
         return false
     }
 
@@ -512,6 +514,10 @@ onMounted(async () => {
     await fetch();
     getCurrentBookData();
     fetchDownloadableForms();
+
+    emitter.on('REFRESH_BOOKING', async () => {
+        await fetch();
+    })
     
 })
 

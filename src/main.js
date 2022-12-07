@@ -34,6 +34,8 @@ const instance = axios.create({
     },
 });
 
+import mitt from 'mitt';
+
 instance.CancelToken = axios.CancelToken;
 instance.isCancel = axios.isCancel;
 
@@ -54,6 +56,8 @@ var auth = createAuth({
         notFoundRedirect: { name: 'user-account' },
     }
 });
+
+const emitter = mitt();
 
 import Echo from "laravel-echo"
 import { accessToken } from './global-composables/local-storage'
@@ -77,10 +81,10 @@ window.Echo = new Echo({
       },
     }
 });
-
-
-
 const app = createApp(App)
+
+app.config.globalProperties.emitter = emitter;
+
 app.use(VueAxios, instance)
 app.use(auth)
 app.use(ElementPlus)
