@@ -150,9 +150,14 @@
                   <PopoverButton
                     :class="[open ? 'text-gray-900' : 'text-gray-500', 'group inline-flex items-center rounded-md bg-white text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2']">
 
-                    <BellIcon
+                    
+                      <span class="flex">
+                        <BellIcon
                       :class="[open ? 'text-gray-600' : 'text-gray-400', 'mx-2 mt-1  w-7 group-hover:text-gray-500']"
                       aria-hidden="true" />
+  <span v-if="hasNotification" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+  <span v-if="hasNotification" class="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
+</span>
                   </PopoverButton>
 
                   <transition enter-active-class="transition ease-out duration-200"
@@ -164,7 +169,7 @@
                       <div class="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5"
                         v-loading="loadingNotification">
                         <div class="relative grid gap-6 bg-white px-3 py-6 sm:gap-8">
-                          <router-link v-for="(notification, index) in myNotifications" :key="notification.id"
+                          <router-link @click="handleClickViewNotification(notification.id)" v-for="(notification, index) in myNotifications" :key="notification.id"
                             :to="`${notification.data.link}`" :class="[index ? 'border-t border-gray-300': '','-m-3 block px-6 py-1 p-3 transition duration-150 ease-in-out ']">
                             <p :class="[!notification.read_at? 'font-bold' : 'font-medium', 'text-base  text-gray-900']">{{ notification.data.title }}</p>
                             <p class="mt-1 text-sm text-gray-500">{{ notification.data.message }}</p>
@@ -291,7 +296,7 @@ import { ChevronDownIcon, BellIcon, PlusIcon } from '@heroicons/vue/20/solid'
 import FilterColors from '../admin/components/settings/color-utilities/FilterColors.vue';
 import FilterFuelTypes from '../admin/components/settings/fuel-type-utilities/FilterFuelTypes.vue';
 import FilterVehicleBrand from '../admin/components/settings/vehicle-brand-utilities/FilterVehicleBrand.vue';
-import { getMyNotifications } from './composables/user-notification-composables';
+import { getMyNotifications, viewNotification } from './composables/user-notification-composables';
 import { loadUser } from '@/global-composables/get-user-profile';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
@@ -315,7 +320,36 @@ const hasError = ref(null)
 const userProfile = computed(() => JSON.parse(auth.remember()))
 console.log(userProfile.value)
 
+const hasNotification = computed({
+  get() {
+    if(myNotifications.value.length == 0) {
+      return false
+    }
 
+    let find = myNotifications.value.find(notif => notif.read_at == null || notif.read_at == '');
+
+    if(!find) {
+      return false
+    }
+
+    return true
+  },
+  set(newValue) {
+    newValue
+  }
+})
+
+const handleClickViewNotification = async () => {
+    const {view} = viewNotification(userProfile.value.id);
+    myNotifications.value.map(notification => {
+
+      notification.read_at = new Date
+
+      return notification
+    })
+    await view();
+    router.push({ name: 'User Bookings'})
+}
 
 const loadNotifications = async () => {
   const { data, load } = getMyNotifications();

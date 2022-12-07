@@ -14,3 +14,15 @@ export const getMyNotifications = () => {
         data, load
     }
 }
+
+export const viewNotification = (id) => {
+    const view = async () => {
+        await http().post('/notification/view/'+id).then(res => {
+            console.log(res)
+        }).catch(error => {
+            console.log('Error in viewing notification', error)
+        })
+    }
+
+    return {view}
+}
