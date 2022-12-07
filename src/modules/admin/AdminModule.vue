@@ -158,6 +158,7 @@ import {
   MagnifyingGlassIcon,
 } from '@heroicons/vue/20/solid'
 import { useRouter } from 'vue-router'
+import { loadUser } from '@/global-composables/get-user-profile'
 
 const router = useRouter()
 const navigation = [

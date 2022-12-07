@@ -1,6 +1,6 @@
 <script setup>
 import { storageUrl } from '@/global-composables/http_service';
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch, computed, inject } from 'vue';
 import { useRouter } from 'vue-router';
 import { fetchVehicles } from '../components/vehciles/composables/vehcile-composables';
 import CreatevehicleModal from '../components/vehciles/modals/CreatevehicleModal.vue'
@@ -17,8 +17,10 @@ import DeployBookingModal from '../components/modals/DeployBookingModal.vue';
 import CancelBookingModal from '../components/modals/CancelBookingModal.vue';
 
 const router = useRouter()
+const auth = inject('auth')
 
 const openModal = ref(false)
+const userProfile = computed(() => JSON.parse(auth.remember()))
 
 const bookings = ref([])
 const loading = ref(true)
@@ -46,8 +48,8 @@ const handleAcceptedBook = (selected) => {
   message.value = "Successfully accepted!"
   showNotif.value = true
   bookings.value.map(book => {
-    if(selected.id == book.id) {
-      for(let key in selected) {
+    if (selected.id == book.id) {
+      for (let key in selected) {
         book[key] = selected[key]
       }
     }
@@ -56,16 +58,16 @@ const handleAcceptedBook = (selected) => {
 
   openModal.value = false
   setTimeout(() => {
-        showNotif.value = false
-    }, 2000)
+    showNotif.value = false
+  }, 2000)
 }
 
 const handleDeclinedBook = (selected) => {
   message.value = "Successfully declined!"
   showNotif.value = true
   bookings.value.map(book => {
-    if(selected.id == book.id) {
-      for(let key in selected) {
+    if (selected.id == book.id) {
+      for (let key in selected) {
         book[key] = selected[key]
       }
     }
@@ -74,8 +76,8 @@ const handleDeclinedBook = (selected) => {
 
   showDeclineModal.value = false
   setTimeout(() => {
-        showNotif.value = false
-    }, 2000)
+    showNotif.value = false
+  }, 2000)
 }
 
 const handleCloseModal = () => {
@@ -109,19 +111,19 @@ const handleUserName = (user) => {
 }
 
 const handleLickUser = (user) => {
-  router.push({name: 'Admin User Profile', params: { id: user.id } })
+  router.push({ name: 'Admin User Profile', params: { id: user.id } })
 }
 
 const handleVehicleName = (vehicle) => {
-    return vehicle.model + ' - ' + vehicle.vehicle_brand.name
+  return vehicle.model + ' - ' + vehicle.vehicle_brand.name
 }
 
 const handleVehicleTracker = (vehicle) => {
-    return vehicle.tracker.name
+  return vehicle.tracker.name
 }
 
 const handleDestination = (destination) => {
-    return destination.place.name
+  return destination.place.name
 }
 
 const handleSetStatus = (vehicleStatus) => {
@@ -129,18 +131,18 @@ const handleSetStatus = (vehicleStatus) => {
 }
 
 const handleBookingStatusColor = (status) => {
-  if(status == 'pending') {
+  if (status == 'pending') {
     return 'bg-yellow-600 px-2 rounded-md py-1 shadow'
   }
-  if(status == 'accept') {
+  if (status == 'accept') {
     return 'bg-green-600 px-2 rounded-md py-1 shadow'
   }
-  
-  if(status == 'decline') {
+
+  if (status == 'decline') {
     return 'bg-red-600 px-2 rounded-md py-1 shadow'
   }
-  
-  if(status == 'accept') {
+
+  if (status == 'accept') {
     return 'bg-orange-600 px-2 rounded-md py-1 shadow'
   }
   if (status == 'cancel') {
@@ -180,8 +182,8 @@ const handleDeployedBooking = (book) => {
   showNotif.value = true
 
   setTimeout(() => {
-        showNotif.value = false
-    }, 2000)
+    showNotif.value = false
+  }, 2000)
 }
 
 const handleCancelBooking = (selected) => {
@@ -204,8 +206,14 @@ const handleCancelBooking = (selected) => {
 }
 
 onMounted(async () => {
+  Echo.private('new-booking.' + userProfile.value.role_id)
+    .listen('NewAddedBookingEvent', (e) => {
+      console.log(e, 'hello')
+    });
   fetch();
 })
+
+
 
 watch(params.value, () => {
   fetch();
@@ -213,12 +221,16 @@ watch(params.value, () => {
 
 </script>
 <template>
-  
-  <GNotification :show-notif="showNotif" :message="message"/>
-  <AcceptBookingModal  v-if="selectedBooking" :openModal="openModal" :selected-book="selectedBooking" @closeModal="handleCloseModal" @acceptBook="handleAcceptedBook"/>
-  <CancelBookingModal :openModal="showCancelBookingModal" :selected-book="selectedBooking" @closeModal="handleCloseModal" @acceptBook="handleCancelBooking"/>
-  <DeclineBookingModal :openModal="showDeclineModal" :selected-book="selectedBooking" @closeModal="handleCloseModal" @declineBook="handleDeclinedBook"/>
-  <DeployBookingModal v-if="(selectedBooking && showDeployModal)" :openModal="showDeployModal" :selected-booking="selectedBooking" @closeModal="handleCloseModal" @deployedBooking="handleDeployedBooking"/>
+
+  <GNotification :show-notif="showNotif" :message="message" />
+  <AcceptBookingModal v-if="selectedBooking" :openModal="openModal" :selected-book="selectedBooking"
+    @closeModal="handleCloseModal" @acceptBook="handleAcceptedBook" />
+  <CancelBookingModal :openModal="showCancelBookingModal" :selected-book="selectedBooking"
+    @closeModal="handleCloseModal" @acceptBook="handleCancelBooking" />
+  <DeclineBookingModal :openModal="showDeclineModal" :selected-book="selectedBooking" @closeModal="handleCloseModal"
+    @declineBook="handleDeclinedBook" />
+  <DeployBookingModal v-if="(selectedBooking && showDeployModal)" :openModal="showDeployModal"
+    :selected-booking="selectedBooking" @closeModal="handleCloseModal" @deployedBooking="handleDeployedBooking" />
   <div class="w-full bg-gray-500">
     <div class="mx-auto max-w-2xl  py-4 px-4 lg:max-w-7xl lg:px-0">
       <h1 class="text-2xl font-bold tracking-tight text-white sm:text-3xl">Manage Bookings</h1>
@@ -272,21 +284,25 @@ watch(params.value, () => {
               <tbody class="divide-y divide-gray-200 bg-white" v-loading="loading">
                 <tr v-for="(book, index) in bookings" :key="book.id">
                   <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">
-                    <span :class="['text-white text-sm', handleBookingStatusColor(book.booking_status)]">{{ (book.booking_status).toUpperCase() }}</span>
+                    <span :class="['text-white text-sm', handleBookingStatusColor(book.booking_status)]">{{
+                        (book.booking_status).toUpperCase()
+                    }}</span>
                   </td>
-                  <td @click="handleLickUser(book.user)" class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-cyan-500 sm:pl-6 cursor-pointer" >
-                    {{handleUserName(book.user)}}
-                </td>
-                  <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ handleVehicleTracker(book.vehicle) }}</td>
+                  <td @click="handleLickUser(book.user)"
+                    class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-cyan-500 sm:pl-6 cursor-pointer">
+                    {{ handleUserName(book.user) }}
+                  </td>
+                  <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ handleVehicleTracker(book.vehicle) }}
+                  </td>
                   <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">
-                    {{handleVehicleName(book.vehicle)}}
+                    {{ handleVehicleName(book.vehicle) }}
                   </td>
                   <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900">{{ book.booking_start }}</td>
                   <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ book.booking_end }}
                   </td>
-                  <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{book.destination}}</td>
+                  <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ book.destination }}</td>
                   <td class="relative whitespace-nowrap py-2 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                    
+
 
                     <!-- <button type="button" @click="handleClickDetails(book)"
                       class="inline-flex items-center rounded-md mr-2 border border-transparent bg-cyan-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2">
@@ -294,30 +310,30 @@ watch(params.value, () => {
                       View
                     </button> -->
                     <!-- Pending Booking -->
-                    <button type="button" @click="handleAcceptBook(book)"  v-if="book.booking_status != 'accept' && book.booking_status != 'decline' && book.booking_status != 'cancel'"
+                    <button type="button" @click="handleAcceptBook(book)"
+                      v-if="book.booking_status != 'accept' && book.booking_status != 'decline' && book.booking_status != 'cancel'"
                       class="inline-flex items-center rounded-md mr-2 border border-transparent bg-green-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
                       <CheckCircleIcon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
                       Accept
                     </button>
-                    
-                    <button type="button"
-                      @click="handleCLickDecline(book, index)"
-                    v-if="book.booking_status != 'accept' && book.booking_status != 'decline' && book.booking_status != 'cancel'"
+
+                    <button type="button" @click="handleCLickDecline(book, index)"
+                      v-if="book.booking_status != 'accept' && book.booking_status != 'decline' && book.booking_status != 'cancel'"
                       class="inline-flex items-center rounded-md mr-2 border border-transparent bg-red-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
                       <XMarkIcon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
                       Decline
                     </button>
 
                     <!-- Accepted Booking -->
-                    <button type="button" @click="handleDeployeButton(book, index)"  
-                    v-if="book.booking_status != 'pending' && book.booking_status != 'decline' && book.booking_status != 'cancel'"
+                    <button type="button" @click="handleDeployeButton(book, index)"
+                      v-if="book.booking_status != 'pending' && book.booking_status != 'decline' && book.booking_status != 'cancel'"
                       class="inline-flex items-center rounded-md mr-2 border border-transparent bg-cyan-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2">
                       <RocketLaunchIcon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
                       Deploy
                     </button>
 
-                    <button type="button" @click="handleCancelButton(book, index)"  
-                    v-if="book.booking_status != 'pending' && book.booking_status != 'decline' && book.booking_status != 'cancel'"
+                    <button type="button" @click="handleCancelButton(book, index)"
+                      v-if="book.booking_status != 'pending' && book.booking_status != 'decline' && book.booking_status != 'cancel'"
                       class="inline-flex items-center rounded-md mr-2 border border-transparent bg-orange-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
                       <XCircleIcon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
                       Cancel

@@ -126,25 +126,31 @@
                                                             <InformationCircleIcon class="h-5 w-5 text-gray-400"
                                                                 aria-hidden="true" />
                                                         </div> -->
-                                                        <div>
-                                                            <button type="button" v-if="handleBookingCancelButton(book)"
+                                                        <div class="flex flex-wrap">
+                                                            <button type="button" v-if="handleBookingCancel(book)"
                                                                 @click="handleClickCancel(book)"
-                                                                class="inline-flex h-6 items-center mr-1 rounded border border-transparent bg-red-500 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                                                                class="inline-flex h-6 items-center mr-1 mr-2 my-1 rounded border border-transparent bg-red-500 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
                                                                 <XCircleIcon class="h-5 w-5 text-white"
                                                                     aria-hidden="true" />
                                                                 Cancel
                                                             </button>
                                                             <button type="button" v-if="handleBookingCancelButton(book)" @click="handlePrintInvoice(book)"
-                                                                class="inline-flex h-6 mr-1 items-center rounded border border-transparent bg-cyan-500 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2">
+                                                                class="inline-flex h-6 mr-1 items-center mr-2 my-1 rounded border border-transparent bg-cyan-500 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2">
                                                                 <DocumentCheckIcon class="h-5 w-5 text-white"
                                                                     aria-hidden="true" />
                                                                 Print Invoice
                                                             </button>
                                                             <button type="button" v-if="handleBookingCancelButton(book)" @click="hnadlePrintForm(book)"
-                                                                class="inline-flex h-6 items-center rounded border border-transparent bg-emerald-500 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
+                                                                class="inline-flex h-6 items-center mr-2 my-1 rounded border border-transparent bg-emerald-500 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
                                                                 <DocumentTextIcon class="h-5 w-5 text-white"
                                                                     aria-hidden="true" />
                                                                 Form
+                                                            </button>
+                                                            <button type="button" v-if="handleBookingCancelButton(book)" @click="handleClickAgreement(book, index)"
+                                                            
+                                                            class="inline-flex h-6 items-center mr-2 my-1 rounded border border-transparent bg-stone-500 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-stone-700 focus:outline-none focus:ring-2 focus:ring-stone-500 focus:ring-offset-2">
+                                                            <DocumentTextIcon class="h-5 w-5 text-white" aria-hidden="true" />
+                                                            Agreement Form
                                                             </button>
                                                         </div>
                                                     </div>
@@ -292,7 +298,7 @@ import GFullyPaid from '@/components/GFullyPaid.vue';
 import CancelBookingModal from '@/modules/admin/components/modals/CancelBookingModal.vue';
 import GNotification from '@/components/GNotification.vue';
 import { showFormSelect } from '@/modules/admin/components/composables/form-composables';
-import { downloadTransactionForm } from '@/modules/admin/composables/admin-download-composables';
+import { downloadAgreement, downloadTransactionForm } from '@/modules/admin/composables/admin-download-composables';
 
 const url = storageUrl();
 const loading = ref(true)
@@ -377,7 +383,7 @@ const hnadlePrintForm = async (book) => {
         const url = window.URL.createObjectURL(new Blob([res.data]));
         const link = document.createElement('a');
         link.href = url;
-        link.setAttribute('download', `${book.user.first_name} - ${book.user.last_name}.pdf`);
+        link.setAttribute('download', `${book.user.first_name} - ${book.user.last_name}. - transacton-form.pdf`);
         document.body.appendChild(link);
         link.click();
     })
@@ -422,7 +428,19 @@ const handleClickCancel = (book) => {
 }
 
 const handleBookingCancelButton = (book) => {
-    if (book.booking_status == 'cancel' || book.booking_status == 'decline') {
+    if (book.booking_status == 'cancel' || book.booking_status == 'decline' || book.booking_status == 'pending') {
+        return false
+    }
+    
+    return true
+}
+
+const handleBookingCancel = (book) => {
+    if (book.booking_status == 'cancel' || book.booking_status == 'decline' ) {
+        return false
+    }
+
+    if(book.deployed || book.returned) {
         return false
     }
     
@@ -434,6 +452,18 @@ const getCurrentBookData = async () => {
     await load()
     currentBook.value = data.value
     loadingCurrentBook.value = false
+}
+
+const handleClickAgreement = async (book, index) => {
+  await downloadAgreement(book.id).then(res => {
+        console.log(res, 'asda');
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `${book.user.first_name} - ${book.user.last_name} - agreement.pdf`);
+        document.body.appendChild(link);
+        link.click();
+      })
 }
 
 const handleGetImage = (images) => {
@@ -449,6 +479,7 @@ onMounted(async () => {
     await fetch();
     getCurrentBookData();
     fetchDownloadableForms();
+    
 })
 
 watch(params.value, async () => {

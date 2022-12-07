@@ -148,7 +148,7 @@
               <div class="ml-auto flex items-center">
                 <Popover class="relative" v-slot="{ open }">
                   <PopoverButton
-                    :class="[open ? 'text-gray-900' : 'text-gray-500', 'group inline-flex items-center rounded-md bg-white text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2']">
+                    :class="[open ? 'text-gray-900' : 'text-gray-500', 'group inline-flex items-center rounded-md bg-white text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-cyan-50 focus:ring-offset-2']">
 
 
                     <span class="flex">
@@ -177,7 +177,7 @@
                             <p
                               :class="[!notification.read_at ? 'font-bold' : 'font-medium', 'text-base  text-gray-900']">
                               {{ notification.data.title }}</p>
-                            <p class="mt-1 text-sm text-gray-500">{{ notification.data.message }}</p>
+                            <p :class="['mt-1 text-sm text-gray-500', !notification.read_at ? 'text-cyan-800' : 'text-gray-500']">{{ notification.data.message }}</p>
                           </router-link>
                         </div>
                       </div>
@@ -192,11 +192,11 @@
 
                 <!-- Cart -->
                 <div class="ml-4 flow-root lg:ml-6">
-                  <a href="#" class="group -m-2 flex items-center p-2">
+                  <span @click="handleClickLogout" href="#" class="group -m-2 flex items-center p-2">
                     <PowerIcon class="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
                       aria-hidden="true" />
                     <span class="sr-only">items in cart, view bag</span>
-                  </a>
+                  </span>
                 </div>
               </div>
             </div>
@@ -367,7 +367,6 @@ onMounted(async () => {
   Echo.private('notify.' + userProfile.value.id)
     .notification((notification) => {
       myNotifications.value.unshift(notification.notification)
-      console.log(notification, 'notification')
     })
 
   // Echo.private('user-notify')

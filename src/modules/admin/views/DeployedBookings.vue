@@ -13,7 +13,7 @@ import { loadBookings, loadDeployedBookings } from '../components/composables/bo
 import AcceptBookingModal from '../components/modals/AcceptBookingModal.vue';
 import GNotification from '@/components/GNotification.vue';
 import ReturnBookingModal from '../components/modals/ReturnBookingModal.vue';
-import { downloadTransactionForm } from '../composables/admin-download-composables';
+import { downloadAgreement, downloadTransactionForm } from '../composables/admin-download-composables';
 
 const router = useRouter()
 
@@ -112,11 +112,23 @@ const handleClickTransactionForm = async (book, index) => {
         const url = window.URL.createObjectURL(new Blob([res.data]));
         const link = document.createElement('a');
         link.href = url;
-        link.setAttribute('download', `${book.user.first_name} - ${book.user.last_name}.pdf`);
+        link.setAttribute('download', `${book.user.first_name} - ${book.user.last_name} - transaction-form.pdf`);
         document.body.appendChild(link);
         link.click();
       })
 } 
+
+const handleClickAgreement = async (book, index) => {
+  await downloadAgreement(book.id).then(res => {
+        console.log(res, 'asda');
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `${book.user.first_name} - ${book.user.last_name} - agreement.pdf`);
+        document.body.appendChild(link);
+        link.click();
+      })
+}
 
 const handleClickReturned = (book) => {
   let index = bookings.value.findIndex(b => b.id == book.id)
@@ -213,7 +225,7 @@ watch(params.value, () => {
                   <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ book.destination
                     }}
                   </td>
-                  <td class="relative whitespace-nowrap py-2 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                  <td class="relative flex flex-wrap w-80 whitespace-nowrap py-2 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                     <!-- <button type="button" @click="handleReturnVehicle(book, index)"
                       v-if="book.booking_status != 'pending' && book.booking_status != 'decline'"
                       class="inline-flex items-center rounded-md mr-2 border border-transparent bg-orange-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
@@ -223,15 +235,27 @@ watch(params.value, () => {
                     <!-- Accepted Booking -->
                     <button type="button" @click="handleReturnVehicle(book, index)"
                       v-if="book.booking_status != 'pending' && book.booking_status != 'decline'"
-                      class="inline-flex items-center rounded-md mr-2 border border-transparent bg-cyan-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2">
+                      class="inline-flex items-center rounded-md mr-2 my-1 border border-transparent bg-cyan-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2">
                       <ArrowUturnLeftIcon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
                       Return
                     </button>
                     <button type="button" @click="handleClickTransactionForm(book, index)"
                       v-if="book.booking_status != 'pending' && book.booking_status != 'decline'"
-                      class="inline-flex items-center rounded-md mr-2 border border-transparent bg-emerald-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
+                      class="inline-flex items-center rounded-md mr-2 my-1 border border-transparent bg-orange-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
+                      <DocumentTextIcon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
+                      Notify Overdue
+                    </button>
+                    <button type="button" @click="handleClickTransactionForm(book, index)"
+                      v-if="book.booking_status != 'pending' && book.booking_status != 'decline'"
+                      class="inline-flex items-center rounded-md mr-2 my-1 border border-transparent bg-emerald-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
                       <DocumentTextIcon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
                       Transaction Form
+                    </button>
+                    <button type="button" @click="handleClickAgreement(book, index)"
+                      v-if="book.booking_status != 'pending' && book.booking_status != 'decline'"
+                      class="inline-flex items-center rounded-md mr-2 my-1 border border-transparent bg-stone-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-stone-700 focus:outline-none focus:ring-2 focus:ring-stone-500 focus:ring-offset-2">
+                      <DocumentTextIcon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
+                      Agreement Form
                     </button>
                   </td>
                 </tr>
