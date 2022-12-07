@@ -149,7 +149,7 @@
                 <Popover class="relative" v-slot="{ open }">
                   <PopoverButton
                     :class="[open ? 'text-gray-900' : 'text-gray-500', 'group inline-flex items-center rounded-md bg-white text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2']">
-                    
+
                     <BellIcon
                       :class="[open ? 'text-gray-600' : 'text-gray-400', 'mx-2 mt-1  w-7 group-hover:text-gray-500']"
                       aria-hidden="true" />
@@ -161,15 +161,13 @@
                     leave-to-class="opacity-0 translate-y-1">
                     <PopoverPanel
                       class="absolute left-1/2 z-10 mt-3 w-screen max-w-xs -translate-x-1/2 transform px-2 sm:px-0">
-                      <div class="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5" v-loading="loadingNotification">
-                        <div class="relative grid gap-6 bg-white px-3 py-4 sm:gap-8 sm:p-2">
-                          <router-link v-for="notification in myNotifications" :key="notification.name" :to="`${notification.link}`"
-                            :class="!notification.view && notification.action == 'success' ? 'bg-cyan-50 hover:bg-gray-50 text-white hover:text-gray-700': '', 
-                                !notification.view && notification.action == 'fail' ? 'bg-red-50 hover:bg-gray-50 text-white hover:text-gray-700': '',
-                                !notification.view && notification.action == 'warning' ? 'bg-orange-50 hover:bg-gray-50 text-white hover:text-gray-700': '',
-                              '-m-3 block rounded-md px-2 py-2 p-3 transition duration-150 ease-in-out '">
-                            <p class="text-base font-medium text-gray-900">{{ notification.title }}</p>
-                            <p class="mt-1 text-sm text-gray-500">{{ notification.message }}</p>
+                      <div class="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5"
+                        v-loading="loadingNotification">
+                        <div class="relative grid gap-6 bg-white px-3 py-6 sm:gap-8">
+                          <router-link v-for="(notification, index) in myNotifications" :key="notification.id"
+                            :to="`${notification.data.link}`" :class="[index ? 'border-t border-gray-300': '','-m-3 block px-6 py-1 p-3 transition duration-150 ease-in-out ']">
+                            <p :class="[!notification.read_at? 'font-bold' : 'font-medium', 'text-base  text-gray-900']">{{ notification.data.title }}</p>
+                            <p class="mt-1 text-sm text-gray-500">{{ notification.data.message }}</p>
                           </router-link>
                         </div>
                       </div>
@@ -269,7 +267,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, inject, computed } from 'vue'
 import {
   Dialog,
   DialogPanel,
@@ -294,45 +292,54 @@ import FilterColors from '../admin/components/settings/color-utilities/FilterCol
 import FilterFuelTypes from '../admin/components/settings/fuel-type-utilities/FilterFuelTypes.vue';
 import FilterVehicleBrand from '../admin/components/settings/vehicle-brand-utilities/FilterVehicleBrand.vue';
 import { getMyNotifications } from './composables/user-notification-composables';
+import { loadUser } from '@/global-composables/get-user-profile';
+import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 
+const router = useRouter()
+const store = useStore();
 const selectedColors = ref([])
 const selectedFuelType = ref([])
 const selectedBrands = ref([])
 const myNotifications = ref([])
 const loadingNotification = ref(true)
+const auth = inject('auth');
 const navigation = {
   pages: [
     { name: 'Home', routeName: 'UserHome' },
     { name: 'Booking', routeName: 'User Bookings' },
   ],
 }
-const solutions = [
-  { name: 'Blog', description: 'Learn about tips, product updates and company culture.', href: '#' },
-  {
-    name: 'Help Center',
-    description: 'Get all of your questions answered in our forums of contact support.',
-    href: '#',
-  },
-  { name: 'Guides', description: 'Learn how to maximize our platform to get the most out of it.', href: '#' },
-  { name: 'Events', description: 'Check out webinars with experts and learn about our annual conference.', href: '#' },
-  { name: 'Security', description: 'Understand how we take your privacy seriously.', href: '#' },
-]
+const loading = ref(true)
+const hasError = ref(null)
+const userProfile = computed(() => JSON.parse(auth.remember()))
+console.log(userProfile.value)
+
+
 
 const loadNotifications = async () => {
-  const { data, load } = getMyNotifications(); 
+  const { data, load } = getMyNotifications();
   await load();
   myNotifications.value = data.value
   loadingNotification.value = false
 }
 
-onMounted( async () => {
-  Echo.private('user-notify')
-  .listen('SendUserNotification', (e) => {
-    console.log('notif user', e)
-  })
+onMounted(async () => {
+  Echo.private('notify.' + userProfile.value.id)
+    .notification((notification) => {
+      myNotifications.value.unshift(notification.notification)
+      console.log(notification, 'notification')
+    })
+
+  // Echo.private('user-notify')
+  //   .listen('SendUserNotification', (e) => {
+  //     console.log('notif user', e)
+  //   })
+
 
   await loadNotifications();
 })
+
 
 
 const breadcrumbs = [{ id: 1, name: 'Home', href: '#' }]
@@ -373,56 +380,7 @@ const filters = [
     ],
   },
 ]
-const products = [
-  {
-    id: 1,
-    name: 'Basic Tee 8-Pack',
-    href: '#',
-    price: '$256',
-    description: 'Get the full lineup of our Basic Tees. Have a fresh shirt all week, and an extra for laundry day.',
-    options: '8 colors',
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/category-page-02-image-card-01.jpg',
-    imageAlt: 'Eight shirts arranged on table in black, olive, grey, blue, white, red, mustard, and green.',
-  },
-  {
-    id: 2,
-    name: 'Basic Tee',
-    href: '#',
-    price: '$32',
-    description: 'Look like a visionary CEO and wear the same black t-shirt every day.',
-    options: 'Black',
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/category-page-02-image-card-02.jpg',
-    imageAlt: 'Front of plain black t-shirt.',
-  },
-  // More products...
-]
-const footerNavigation = {
-  products: [
-    { name: 'Bags', href: '#' },
-    { name: 'Tees', href: '#' },
-    { name: 'Objects', href: '#' },
-    { name: 'Home Goods', href: '#' },
-    { name: 'Accessories', href: '#' },
-  ],
-  company: [
-    { name: 'Who we are', href: '#' },
-    { name: 'Sustainability', href: '#' },
-    { name: 'Press', href: '#' },
-    { name: 'Careers', href: '#' },
-    { name: 'Terms & Conditions', href: '#' },
-    { name: 'Privacy', href: '#' },
-  ],
-  customerService: [
-    { name: 'Contact', href: '#' },
-    { name: 'Shipping', href: '#' },
-    { name: 'Returns', href: '#' },
-    { name: 'Warranty', href: '#' },
-    { name: 'Secure Payments', href: '#' },
-    { name: 'FAQ', href: '#' },
-    { name: 'Find a store', href: '#' },
-  ],
-}
-
 const mobileMenuOpen = ref(false)
 const mobileFiltersOpen = ref(false)
+
 </script>
