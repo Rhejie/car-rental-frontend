@@ -75,7 +75,7 @@
                                                                             class="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
                                                                             aria-hidden="true" />
                                                                         <span class="truncate">
-                                                                            Start: {{ book.booking_start }}
+                                                                            Start: {{ formatDateTime(book.booking_start) }}
                                                                         </span>
                                                                     </p>
                                                                     <p
@@ -85,7 +85,7 @@
                                                                             aria-hidden="true" />
                                                                         <span class="truncate">
                                                                             End: {{
-                                                                                    book.booking_end
+                                                                                    formatDateTime(book.booking_end)
                                                                             }}
                                                                         </span>
                                                                     </p>
@@ -287,6 +287,7 @@ import GNotification from '@/components/GNotification.vue';
 import { showFormSelect } from '@/modules/admin/components/composables/form-composables';
 import { downloadAgreement, downloadTransactionForm } from '@/modules/admin/composables/admin-download-composables';
 import BookingModal from '../modal/BookingModal.vue';
+import moment from 'moment';
 
 const url = storageUrl();
 const loading = ref(true)
@@ -330,7 +331,7 @@ const handleUpdateBook = (book) => {
 
         return b;
     })
-    
+
     openModalBook.value = false
 }
 
@@ -353,6 +354,10 @@ const handleCancelBooking = (selected) => {
     }, 2000)
     getCurrentBookData()
 
+}
+
+const formatDateTime = (dateTime) => {
+    return moment(dateTime).format('MMM D YYYY h:mm a')
 }
 
 const handleChangePage = (page) => {

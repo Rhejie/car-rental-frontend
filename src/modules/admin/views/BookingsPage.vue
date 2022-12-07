@@ -15,6 +15,7 @@ import DeclineBookingModal from '../components/modals/DeclineBookingModal.vue'
 import GNotification from '@/components/GNotification.vue';
 import DeployBookingModal from '../components/modals/DeployBookingModal.vue';
 import CancelBookingModal from '../components/modals/CancelBookingModal.vue';
+import moment from 'moment'
 
 const router = useRouter()
 const auth = inject('auth')
@@ -163,6 +164,10 @@ const handleDeployeButton = (book, index) => {
   selectedBooking.value = book
 }
 
+const formatDateTime = (dateTime) => {
+    return moment(dateTime).format('MMM D YYYY h:mm a')
+}
+
 const handleCancelButton = (book, index) => {
   showCancelBookingModal.value = true
   selectedBooking.value = book
@@ -297,8 +302,8 @@ watch(params.value, () => {
                   <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">
                     {{ handleVehicleName(book.vehicle) }}
                   </td>
-                  <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900">{{ book.booking_start }}</td>
-                  <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ book.booking_end }}
+                  <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900">{{ formatDateTime(book.booking_start) }}</td>
+                  <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ formatDateTime(book.booking_end) }}
                   </td>
                   <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ book.destination }}</td>
                   <td class="relative whitespace-nowrap py-2 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">

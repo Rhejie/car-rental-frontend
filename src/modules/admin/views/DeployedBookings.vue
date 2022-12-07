@@ -14,6 +14,7 @@ import AcceptBookingModal from '../components/modals/AcceptBookingModal.vue';
 import GNotification from '@/components/GNotification.vue';
 import ReturnBookingModal from '../components/modals/ReturnBookingModal.vue';
 import { downloadAgreement, downloadTransactionForm } from '../composables/admin-download-composables';
+import moment from 'moment'
 
 const router = useRouter()
 
@@ -90,6 +91,10 @@ const handleDestination = (destination) => {
 const handleChangeSize = (size) => {
   params.value.page_size = size
 }
+const formatDateTime = (dateTime) => {
+    return moment(dateTime).format('MMM D YYYY h:mm a')
+}
+
 
 const handleChangePage = (page) => {
   params.value.page = page
@@ -219,8 +224,8 @@ watch(params.value, () => {
                   <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">
                     {{book.driver ? book.driver.name : null}}
                   </td>
-                  <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900">{{ book.booking_start }}</td>
-                  <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ book.booking_end }}
+                  <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900">{{ formatDateTime(book.booking_start) }}</td>
+                  <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ formatDateTime(book.booking_end) }}
                   </td>
                   <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ book.destination
                     }}

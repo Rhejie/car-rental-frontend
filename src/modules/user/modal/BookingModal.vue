@@ -108,10 +108,14 @@ const initialize = () => {
 const storeData = async () => {
     loading.value = true
     if(book.value.id) {
-        const {data, post} = updateBook(book.value);
+        const {data, post, errorData} = updateBook(book.value);
         await post();
+        errorValue.value = errorData.value
         loading.value = false
-        emit('updateBook', data.value)
+        
+        if(!loading.value && !errorValue.value, !errorData.value) {
+            emit('updateBook', data.value)
+        }
         return;
     }
 
