@@ -1,11 +1,12 @@
 
 <script setup>
-import { EyeIcon, PencilSquareIcon, MapPinIcon, TrashIcon } from '@heroicons/vue/24/outline';
+import { EyeIcon, PencilSquareIcon, MapPinIcon, TrashIcon, ArrowDownOnSquareIcon } from '@heroicons/vue/24/outline';
 import GPagination from "@/components/GPagination.vue";
 import { ref, defineProps, onMounted, watch } from 'vue';
 import CreateVehiclePlaceModal from '../modals/CreateVehiclePlaceModal.vue';
 import GNotification from '@/components/GNotification.vue';
 import { loadBookingHistory } from '../../composables/booking-composables';
+import { downloadVehicleBookingHistory } from '@/modules/admin/composables/admin-download-composables';
 
 const props = defineProps({
     vehicle_id: {
@@ -14,9 +15,9 @@ const props = defineProps({
 })
 
 const params = ref({
-  size: 10,
-  page: 1,
-  search: null,
+    size: 10,
+    page: 1,
+    search: null,
 })
 
 const total = ref(0)
@@ -47,10 +48,10 @@ const handleNewVehiclePlace = (book) => {
 }
 
 const handleUpdateVehiclePlace = (book) => {
-    
+
     bookings.value.map(id => {
-        if(id.id == book.id){
-            for(let key in book) {
+        if (id.id == book.id) {
+            for (let key in book) {
                 id[key] = book[key]
             }
         }
@@ -68,15 +69,27 @@ const handleUpdateVehiclePlace = (book) => {
 
 const handleClickEdit = (item) => {
     openModal.value = true,
-    selectedItem.value = item
+        selectedItem.value = item
 }
 
 const fetch = async () => {
-    const {load, data, totalBookings} = loadBookingHistory(params.value, props.vehicle_id)
+    const { load, data, totalBookings } = loadBookingHistory(params.value, props.vehicle_id)
     await load();
     bookings.value = data.value
     total.value = totalBookings.value
     loading.value = false
+}
+
+const downloadHistory = async () => {
+    await downloadVehicleBookingHistory(props.vehicle_id).then(res => {
+        console.log(res, 'asda');
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `booking-history.pdf`);
+        document.body.appendChild(link);
+        link.click();
+    })
 }
 
 const handleChangeSize = (size) => {
@@ -91,20 +104,20 @@ const handleChangePage = (page) => {
 
 
 const handleBookingStatusColor = (status) => {
-  if(status == 'pending') {
-    return 'bg-yellow-600 px-2 rounded-md py-1 shadow'
-  }
-  if(status == 'accept') {
-    return 'bg-green-600 px-2 rounded-md py-1 shadow'
-  }
-  
-  if(status == 'decline') {
-    return 'bg-red-600 px-2 rounded-md py-1 shadow'
-  }
-  
-  if(status == 'accept') {
-    return 'bg-orange-600 px-2 rounded-md py-1 shadow'
-  }
+    if (status == 'pending') {
+        return 'bg-yellow-600 px-2 rounded-md py-1 shadow'
+    }
+    if (status == 'accept') {
+        return 'bg-green-600 px-2 rounded-md py-1 shadow'
+    }
+
+    if (status == 'decline') {
+        return 'bg-red-600 px-2 rounded-md py-1 shadow'
+    }
+
+    if (status == 'accept') {
+        return 'bg-orange-600 px-2 rounded-md py-1 shadow'
+    }
 }
 
 watch(params.value, () => {
@@ -121,6 +134,13 @@ onMounted(async () => {
             <div class="sm:flex sm:items-center">
                 <div class="sm:flex-auto">
                     <h1 class="text-xl font-semibold text-gray-900">Booking History</h1>
+                </div>
+                <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+                    <button type="button" @click="downloadHistory"
+                        class="inline-flex items-center justify-center rounded-md border border-transparent bg-cyan-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 sm:w-auto">
+                        <ArrowDownOnSquareIcon class="-ml-0.5 mr-2 h-4 w-4" />
+                        Download history
+                    </button>
                 </div>
             </div>
             <div class=" flex flex-col">
@@ -156,10 +176,11 @@ onMounted(async () => {
                                 <tbody class="divide-y divide-gray-200 bg-white" v-loading="loading">
                                     <tr v-for="book in bookings" :key="book.id">
                                         <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 sm:pl-6">{{
-                                            book.booking_start
-                                            }}</td>
+                                                book.booking_start
+                                        }}</td>
                                         <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{
-                                            book.booking_start }}
+                                                book.booking_start
+                                        }}
                                         </td>
                                         <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">
                                             {{ book.user.last_name }}, {{ book.user.first_name }}
@@ -168,7 +189,10 @@ onMounted(async () => {
                                             {{ book.destination }}
                                         </td>
                                         <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">
-                                            <span :class="['text-white text-sm', handleBookingStatusColor(book.booking_status)]">{{ book.booking_status }} {{ book.deployed ? '- deployed' : null}}</span>
+                                            <span
+                                                :class="['text-white text-sm', handleBookingStatusColor(book.booking_status)]">{{
+                                                        book.booking_status
+                                                }} {{ book.deployed ? '- deployed' : null }}</span>
                                         </td>
                                     </tr>
                                 </tbody>

@@ -1,11 +1,12 @@
 
 <script setup>
-import { EyeIcon, PencilSquareIcon, Cog6ToothIcon, TrashIcon } from '@heroicons/vue/24/outline';
+import { EyeIcon, PencilSquareIcon, Cog6ToothIcon, TrashIcon, ArrowDownOnSquareIcon } from '@heroicons/vue/24/outline';
 import GPagination from "@/components/GPagination.vue";
 import { ref, defineProps, onMounted, watch, computed } from 'vue';
 import GNotification from '@/components/GNotification.vue';
 import CreateVehicleMaintenanceModal from '../../modals/CreateVehicleMaintenanceModal.vue';
 import { loadMaintenances } from '../../composables/maintenance-composables';
+import { donwloadVehicleMaintenance } from '@/modules/admin/composables/admin-download-composables';
 
 const props = defineProps({
     vehicle: {
@@ -38,6 +39,18 @@ const isFromShowVehicle = ref(true)
 const selectedItem = ref(null)
 const handleClickAddVehicle = () => {
     openModal.value = true
+}
+
+const downloadMaintenance = async () => {
+    await donwloadVehicleMaintenance(props.vehicle.id).then(res => {
+        console.log(res, 'asda');
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `maintenance.pdf`);
+        document.body.appendChild(link);
+        link.click();
+    })
 }
 
 const handleCloseAddVehiclePlaceModal = () => {
@@ -123,6 +136,11 @@ onMounted(async () => {
                         class="inline-flex items-center justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:w-auto">
                         <Cog6ToothIcon class="-ml-0.5 mr-2 h-4 w-4" />
                         Add Maintenance
+                    </button>
+                    <button type="button" @click="downloadMaintenance"
+                        class="inline-flex items-center ml-1 justify-center rounded-md border border-transparent bg-cyan-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 sm:w-auto">
+                        <ArrowDownOnSquareIcon class="-ml-0.5 mr-2 h-4 w-4" />
+                        Download maintenance
                     </button>
                 </div>
             </div>

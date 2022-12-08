@@ -106,10 +106,10 @@ onMounted(async () => {
             v-if="!loading"
             class="justify-stretch my-2 flex flex-col-reverse space-y-4 space-y-reverse sm:flex-row-reverse sm:justify-end sm:space-y-0 sm:space-x-3 sm:space-x-reverse md:mt-0 md:flex-row md:space-x-3">
             
-            <div class="flex">
+            <!-- <div class="flex">
                 <span class="text-sm font-bold text-gray-500">Vehicle Status: </span> 
                 <span class="text-sm text-gray-500"> &nbsp; {{handleSetVehicleStatus(vehicle)}}</span>
-            </div>
+            </div> -->
             <div>
                 <SelectStatus v-model="vehicle.publish" :read-only="true" />
             </div>
