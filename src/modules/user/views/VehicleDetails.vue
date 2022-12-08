@@ -85,11 +85,17 @@ onMounted(async () => {
                                 </div>
                                 <div class="border-t border-gray-200">
                                     <dl>
-                                        <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                        <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                             <dt class="text-sm font-medium text-gray-500">Model</dt>
                                             <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{
                                                     vehicle.model
                                             }}</dd>
+                                        </div>
+                                        <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                            <dt class="text-sm font-medium text-gray-500">Price</dt>
+                                            <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{
+                                                    vehicle.price
+                                            }} per day</dd>
                                         </div>
                                         <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                             <dt class="text-sm font-medium text-gray-500">Tracker</dt>
@@ -156,13 +162,13 @@ onMounted(async () => {
 
                         
 
-                        <ImagesViewer :imagesData="vehicle.vehicle_images" />
+                        
                     </div>
 
                     <section aria-labelledby="timeline-title" class="lg:col-span-1 lg:col-start-3">
                         <div class="bg-white px-4 py-5 shadow sm:rounded-lg sm:px-6 border-t border-cyan-600">
-                            <h2 id="timeline-title" class="text-lg font-medium text-gray-900">Available Destinations
-                            </h2>
+                            <!-- <h2 id="timeline-title" class="text-lg font-medium text-gray-900">Available Destinations
+                            </h2> -->
                             
                             <div class="justify-stretch mt-6 flex flex-col">
                                 <button type="button"
@@ -201,6 +207,7 @@ onMounted(async () => {
                                     </li>
                                 </ul>
                             </div>
+                            <ImagesViewer :imagesData="vehicle.vehicle_images" />
                         </div>
                     </section>
                 </div>

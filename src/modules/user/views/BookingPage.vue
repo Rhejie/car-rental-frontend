@@ -126,7 +126,7 @@
                                                             <InformationCircleIcon class="h-5 w-5 text-gray-400"
                                                                 aria-hidden="true" />
                                                         </div> -->
-                                                        <div class="flex flex-wrap">
+                                                        <div class="flex flex-wrap w-40">
                                                             <button type="button" v-if="handleBookingEdit(book)"
                                                                 @click="handeClickEdit(book)"
                                                                 class="inline-flex h-6 items-center mr-1 mr-2 my-1 rounded border border-transparent bg-green-500 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
