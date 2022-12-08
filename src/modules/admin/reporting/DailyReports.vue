@@ -57,13 +57,14 @@
                                                 {{ report.created_at }}</td>
                                             <td
                                                 class="whitespace-nowrap py-4 pl-4 pr-4 text-sm font-medium text-gray-900 sm:pl-6">
-                                                {{ capitalize(report.type) }}</td>
+                                                {{ formatType(capitalize(report.type), report.type) }}</td>
                                             <td class="whitespace-nowrap p-4 text-sm text-gray-500">{{ capitalize(report.process) }}
                                             </td>
                                             <td class="whitespace-nowrap p-4 text-sm text-gray-500">
                                                 <BookingValue v-if="report.type == 'booking'" :booking="report.transactionable"/>
                                                 <PaymentValue v-if="report.type == 'payment'" :payment="report.transactionable"/>
                                                 <OverchargeValue v-if="report.type == 'overcharge'" :overcharge="report.transactionable"/>
+                                                <MaintenanceValue v-if="report.type == 'vehicle_maintenance'" :maintenance="report.transactionable"/>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -88,6 +89,7 @@ import { getDailyReportsData } from '../composables/admin-report-composables'
 import BookingValue from './components/BookingValue.vue';
 import PaymentValue from './components/PaymentValue.vue';
 import OverchargeValue from './components/OverchargeValue.vue'
+import MaintenanceValue from './components/MaintenanceValue.vue'
 
 const route = useRoute();
 const store = useStore();
@@ -108,7 +110,12 @@ const getDailyTransactions = async (date) => {
 const capitalize = (str) => {
   return str.charAt(0).toUpperCase()+str.slice(1);
 }
-
+const formatType = (data, type) => {
+    if(type.toLowerCase() != 'vehicle_maintenance') {
+        return data
+    }
+    return data.split('_').join(' ')
+}
 watch(date, (val) => {
     if(val){
         getDailyTransactions(val);

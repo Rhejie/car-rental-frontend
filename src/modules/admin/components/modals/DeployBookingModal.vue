@@ -363,7 +363,8 @@ const payment = ref({
     primary_operator_license_no: selected.value.primary_operator_license_no,
     secondary_operator_name: selected.value.secondary_operator_name,
     secondary_operator_license_no: selected.value.secondary_operator_license_no,
-    has_secondary: false
+    has_secondary: false,
+    price: 0
 })
 
 const loading = ref(false)
@@ -436,6 +437,14 @@ watch(payment.value, (val) => {
         val.has_secondary = false
         val.secondary_operator_license_no = null
     }
+    
+    if(val.type === 'full') {
+        val.price = totalPriceData.value
+    }
+    if(val.type == 'downpayment') {
+        val.price = parseFloat(totalPriceData.value) / 2
+    }
+    
 })
 
 // watch(selected.value, (val) => {
@@ -456,5 +465,6 @@ onUpdated(async () => {
     if (payment.value.add_driver) {
         await handleGetAllAvailableDirver();
     }
+
 })
 </script>

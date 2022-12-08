@@ -9,7 +9,7 @@ import GSkeletonLoading from '@/components/GSkeletonLoading.vue'
 
 import GPagination from "@/components/GPagination.vue";
 import { CheckCircleIcon, EyeIcon, XCircleIcon, XMarkIcon, PlusCircleIcon, ArrowUturnLeftIcon, DocumentTextIcon, ExclamationCircleIcon } from '@heroicons/vue/20/solid'
-import { loadBookings, loadDeployedBookings } from '../components/composables/booking-composables';
+import { loadBookings, loadDeployedBookings, notofyOverdue } from '../components/composables/booking-composables';
 import AcceptBookingModal from '../components/modals/AcceptBookingModal.vue';
 import GNotification from '@/components/GNotification.vue';
 import ReturnBookingModal from '../components/modals/ReturnBookingModal.vue';
@@ -109,6 +109,19 @@ const handleReturnVehicle = (book, index) => {
 
   showReturnedModal.value = true
   selectedBooking.value = book
+}
+
+const handleClickOverdue = async (book) => {
+  const {notify, hasError} = notofyOverdue(book);
+  await notify();
+  if(!hasError) {
+    showNotif.value = true;
+    message.value = 'Successfully notify user for overdue.'
+
+    setTimeout(() => {
+      showNotif.value = false
+    }, 2000)
+  }
 }
 
 const handleClickTransactionForm = async (book, index) => {
@@ -244,11 +257,11 @@ watch(params.value, () => {
                       <ArrowUturnLeftIcon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
                       Return
                     </button>
-                    <button type="button" @click="handleClickTransactionForm(book, index)"
+                    <button type="button" @click="handleClickOverdue(book)"
                       v-if="book.booking_status != 'pending' && book.booking_status != 'decline'"
                       class="inline-flex items-center rounded-md mr-2 my-1 border border-transparent bg-orange-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
                       <DocumentTextIcon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
-                      Notify Overdue
+                      Overdue
                     </button>
                     <button type="button" @click="handleClickTransactionForm(book, index)"
                       v-if="book.booking_status != 'pending' && book.booking_status != 'decline'"

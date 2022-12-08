@@ -145,3 +145,18 @@ export const loadBookingHistory = (params, vehicle_id) => {
         totalBookings
     }
 }
+
+export const notofyOverdue = (book) => {
+    const hasError = ref(false)
+    const notify = async () => {
+        await http().post('/booking/overdue', book).then(() => {
+            hasError.value = true
+        }).catch(error => {
+            console.log('Error in notify user for overdue ', error)
+        })
+    }
+
+    return {
+        notify, hasError
+    }
+}
