@@ -78,7 +78,7 @@
 
                             <div class="space-y-6 border-t border-gray-200 py-6 px-4">
                                 <div v-for="page in navigation.pages" :key="page.name" class="flow-root">
-                                    <a :href="page.href" @click="handleClickPage(page)" class="-m-2 block p-2 font-medium text-gray-900">{{ page.name
+                                    <a  @click="handleClickPage(page.name)" class="-m-2 block p-2 font-medium text-gray-900">{{ page.name
                                     }}</a>
                                 </div>
                             </div>
@@ -228,7 +228,7 @@
 
         <main>
             <!-- Category section -->
-            <section aria-labelledby="category-heading" class="pt-24 sm:pt-32 xl:mx-auto xl:max-w-7xl xl:px-8" v-loading="loadingVehicles">
+            <section ref="vehicleDiv" aria-labelledby="category-heading" class="pt-24 sm:pt-32 xl:mx-auto xl:max-w-7xl xl:px-8" v-loading="loadingVehicles">
                 <div class="px-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8 xl:px-0">
                     <h2 id="category-heading" class="text-2xl font-bold tracking-tight text-gray-900">Vehicles
                     </h2>
@@ -238,7 +238,7 @@
                     </router-link>
                 </div>
 
-                <div class="mt-4 flow-root" v-if="(vehiclesData.length > 0)">
+                <div class="mt-4 flow-root" v-if="(vehiclesData.length > 0)" >
                     <div class="-my-2">
                         <div class="relative box-content h-80 overflow-x-auto py-2 xl:overflow-visible">
                             <div
@@ -357,10 +357,8 @@ const navigation = {
 
 const handleClickPage = (pageName) => {
     if(pageName == 'Location') {
-        let element = locationRef.value;
-        console.log(element);
-        let top = element.offsetTop;
-        window.scrollTo(0, top);
+        
+        console.log('location')
     }
 }
 const categories = [
