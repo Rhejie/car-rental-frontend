@@ -94,6 +94,11 @@ const moduleRoute = {
             component: () => import('../admin/reporting/ExpensesReport.vue')
         },
         {
+            path: '/admin/reports/driver-reports',
+            name: 'Driver Reports',
+            component: () => import('../admin/reporting/DriverReports.vue')
+        },
+        {
             path: '/admin/settings',
             component: () => import('./views/SettingsPage.vue'),
             children: [

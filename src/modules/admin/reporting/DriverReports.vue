@@ -13,7 +13,7 @@
                                     <UserCircleIcon class="h-16 w-16 text-gray-600 rounded-full sm:hidden" />
                                     <h1
                                         class="ml-3 text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:leading-9">
-                                        Expense Reports</h1>
+                                        Driver Reports</h1>
                                 </div>
                             </div>
                         </div>
@@ -26,14 +26,14 @@
             <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
                 <div class="mt-2 grid grid-cols-1 gap-5 sm:grid-cols-1 lg:grid-cols-1">
                     <div class="overflow-hidden w-96  rounded-lg bg-white shadow" v-loading="loading">
-                        <div class="p-5 w-96  bg-red-500 text-white">
+                        <div class="p-5 w-96  bg-stone-500 text-white">
                             <div class="flex items-center">
                                 <div class="flex-shrink-0">
-                                    <CurrencyDollarIcon class="w-10 " aria-hidden="true" />
+                                    <UserGroupIcon class="w-10 " aria-hidden="true" />
                                 </div>
                                 <div class="ml-5 w-0 flex-1">
                                     <dl>
-                                        <dt class="truncate text-lg font-medium">Total Expense</dt>
+                                        <dt class="truncate text-lg font-medium">Total Drivers</dt>
                                         <dd>
                                             <div class="text-sm font-medium">{{ total }}</div>
                                         </dd>
@@ -67,25 +67,25 @@
                                         Date</th>
                                     <th scope="col"
                                         class="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6">
-                                        Price</th>
+                                        License Expiration Date</th>
                                     <th scope="col"
                                         class="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6">
-                                        Type</th>
+                                        Total Drive</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200 bg-white" v-loading="loadingPayments">
                                 <tr v-for="driver in expenses" :key="driver.id">
                                     <td
                                         class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                        {{ driver.created_at }}
+                                        {{ driver.name }}
                                     </td>
                                     <td
                                         class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                        {{ driver.price }}
+                                        {{ driver.license_expiration_date }}
                                     </td>
                                     <td
                                         class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                        {{ capitalize(driver.type_of_maintenance) }}
+                                        {{ driver.booking_count }}
                                     </td>
                                 </tr>
                             </tbody>
@@ -97,12 +97,12 @@
     </main>
 </template>
 <script setup>
-import { DocumentCheckIcon, CurrencyDollarIcon } from '@heroicons/vue/24/solid';
+import { DocumentCheckIcon, UserGroupIcon } from '@heroicons/vue/24/solid';
 import { onMounted, ref, watch, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
-import { loadExpenses, totalExpense } from '../composables/admin-report-composables';
+import { countDrivers, loadDrivers } from '../composables/admin-report-composables';
 import GPagination from '@/components/GPagination.vue';
 import SelectMonths from './components/SelectMonths.vue';
 
@@ -131,7 +131,7 @@ const setMonthToNumber = (monthInNumber) => {
 }
 
 const loadTotalIncome = async () => {
-    const { data, load } = totalExpense();
+    const { data, load } = countDrivers();
     await load()
     total.value = data.value;
     loading.value = false
@@ -148,13 +148,14 @@ const handleReset = () => {
     params.value.year = null
     params.value.month = null
     selectedMonth.value = null
+    yearData.value = null
     getPayments()
 }
 
 const getPayments = async () => {
     loadingPayments.value = true
     
-    const { data, load, total } = loadExpenses(params.value)
+    const { data, load, total } = loadDrivers(params.value)
     await load();
     expenses.value = data.value
     totalPayments.value = total.value

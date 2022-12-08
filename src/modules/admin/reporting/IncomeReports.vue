@@ -44,10 +44,19 @@
                     </div>
                     
                     <input type="text" v-model="params.search"
-                        class="block w-full rounded-md border h-8 border-gray-200 p-2 focus:border-indigo-200 focus:ring-indigo-200 sm:text-sm"
+                        class="block w-full rounded-md border h-8 border-gray-200 p-2 focus:border-gray-200 focus:ring-gray-200 sm:text-sm"
                         placeholder="Search here...." />
+                    <div class="flex w-2/3 ">
+                        <SelectMonths class="mr-2" v-model="selectedMonth" :setMonthToNumber="setMonthToNumber"/>
+                        <input type="number" min="1" v-model="yearData" placeholder="Year"
+                        class=" rounded-md border mt-1 border-gray-300 bg-white py-2 pl-3 pr-2 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500 sm:text-sm" />
+                    </div>
+                    <div class="flex">
+                        <button type="button" @click="getMonthlyTransaction" class="inline-flex mt-1 w-20 items-center rounded border border-gray-300 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 mr-2 focus:ring-offset-2">Generate</button>
+                        <button type="button" @click="handleReset" class="inline-flex mt-1 w-15 items-center rounded border border-gray-300 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">Reset</button>
+                    </div>
                     <div class="">
-                        <g-pagination class="mx-2" :page_size="params.page_size" :current_size="totalPayments"
+                        <g-pagination class="mx-2" :size="params.size" :current_size="totalPayments"
                         :current_page="params.page" @change_size="handleChangeSize" @change_page="handleChangePage" />
                         <table class="min-w-full divide-y divide-gray-300">
                                     <thead class="bg-gray-50">
@@ -63,10 +72,13 @@
                                                 Payment Mode</th>
                                             <th scope="col"
                                                 class="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6">
+                                                Reference No.</th>
+                                            <th scope="col"
+                                                class="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6">
                                                 Type</th>
                                         </tr>
                                     </thead>
-                                    <tbody class="divide-y divide-gray-200 bg-white" v-loading="loading">
+                                    <tbody class="divide-y divide-gray-200 bg-white" v-loading="loadingPayments">
                                         <tr v-for="driver in payments" :key="driver.id">
                                             <td
                                                 class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
@@ -79,6 +91,10 @@
                                             <td
                                                 class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                                                 {{ driver.payment_mode.name }}
+                                            </td>
+                                            <td
+                                                class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                                {{ driver.reference_number ? driver.reference_number : 'N/A'}}
                                             </td>
                                             <td
                                                 class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
@@ -101,6 +117,7 @@ import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import { totalIncome, loadPayments } from '../composables/admin-report-composables';
 import GPagination from '@/components/GPagination.vue';
+import SelectMonths from './components/SelectMonths.vue';
 
 const route = useRoute();
 const store = useStore();
@@ -108,10 +125,11 @@ const router = useRouter();
 const total = ref(0)
 const loading = ref(true)
 const params = ref({
-    page_size: 10,
+    size: 10,
     page: 1,
     search: null
 })
+const yearData = ref(null)
 const totalPayments = ref(0)
 const payments = ref([])
 const loadingPayments = ref(true)
@@ -119,19 +137,11 @@ const loadiangMonths = ref(true)
 const months = ref([])
 const selectedMonth = ref(null)
 
-const getMonthNumber = computed({
-    get() { 
-        if(selectedMonth.value) {
-            let index = months.value.findIndex(mon => mon == selectedMonth.value);
-            return index + 1
-        }
+const getMonthNumber = ref(0)
 
-        return null
-    },
-    set(newValue) { 
-        newValue
-    }
-})
+const setMonthToNumber = (monthInNumbera) => {
+    getMonthNumber.value = monthInNumbera
+}
 
 const loadTotalIncome = async () => {
     const { data, load } = totalIncome();
@@ -142,6 +152,7 @@ const loadTotalIncome = async () => {
 
 const getPayments = async () => {
     loadingPayments.value = true
+    
     const { data, load, total } = loadPayments(params.value)
     await load();
     payments.value = data.value
@@ -151,7 +162,7 @@ const getPayments = async () => {
 }
 
 const handleChangeSize = (size) => {
-    params.value.page_size = size
+    params.value.size = size
 }
 
 const handleChangePage = (page) => {
@@ -160,6 +171,21 @@ const handleChangePage = (page) => {
 
 const capitalize = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+const getMonthlyTransaction = () => {
+    params.value.year = yearData.value
+    params.value.month = getMonthNumber.value
+    getPayments()
+}
+
+const handleReset = () => {
+    params.value.year = null
+    params.value.month = null
+    getMonthNumber.value = null
+    yearData.value = null
+    selectedMonth.value = null
+    getPayments()
 }
 
 const handleGetAllMonths = async () => {

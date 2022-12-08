@@ -65,7 +65,7 @@ export const loadPayments = (params) => {
     const data = ref([])
     const total = ref(0)
     const load = async () => {
-        await http().get(`/reports/payments?search=${params.search}&page=${params.page}&size=${params.page_size}`).then(res => {
+        await http().get(`/reports/payments`, {params}).then(res => {
             data.value = res.data.data
             total.value = res.data.total
         }).catch(error => {
@@ -77,5 +77,70 @@ export const loadPayments = (params) => {
         load,
         data,
         total
+    }
+}
+
+export const totalExpense = () => {
+    const data = ref(0)
+
+    const load = async () => {
+        await http().get('/reports/total-expense').then(res => {
+            data.value = res.data
+        })
+    }
+
+    return {
+        data, load
+    }
+}
+
+export const loadExpenses = (params) => {
+    const data = ref([])
+    const total = ref(0)
+    const load = async () => {
+        await http().get(`/reports/expenses`, {params}).then(res => {
+            data.value = res.data.data
+            total.value = res.data.total
+        }).catch(error => {
+            console.log('Error in getting driver: ', error)
+        })
+    }
+
+    return {
+        load,
+        data,
+        total
+    }
+}
+
+export const loadDrivers = (params) => {
+    
+    const data = ref([])
+    const total = ref(0)
+    const load = async () => {
+        await http().get('/reports/drivers-report', {params}).then(res => {
+            data.value = res.data.data
+            total.value = res.data.total
+        }).catch(error => {
+            console.log('Error in getting driver: ', error)
+        })
+    }
+
+    return {
+        data, total, load
+    }
+}
+
+export const countDrivers = () => {
+    const data = ref(0)
+
+    const load = async () => {
+        await http().get('/reports/total-drivers').then(res => {
+            data.value = res.data
+        })
+    }
+
+    return {
+        data, load
     }
 }

@@ -139,7 +139,7 @@
                         </div>
                         <div class="bg-gray-50 px-5 py-3">
                             <div class="text-sm">
-                                <router-link :to="{name: 'Expenses Reports'}" href="#" class="font-medium text-gray-700 hover:text-gray-900">Generate</router-link>
+                                <router-link :to="{name: 'Driver Reports'}" href="#" class="font-medium text-gray-700 hover:text-gray-900">Generate</router-link>
                             </div>
                         </div>
                     </div>

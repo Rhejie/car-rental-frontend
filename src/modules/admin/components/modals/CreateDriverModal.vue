@@ -126,6 +126,19 @@ onUpdated(() => {
                                                 <div class="col-span-12">
                                                     <label for="first-name"
                                                         class="block text-sm font-medium text-gray-700">
+                                                        Contact Number
+                                                    </label>
+                                                    <input type="string" name="first-name" v-model="driver.contact_number"
+                                                        class="mt-1 block w-full rounded-md border h-8 border-gray-100 focus:border-indigo-100 focus:ring-indigo-100 pl-2 sm:text-sm" placeholder="License No." />
+                                                    <span 
+                                                        class="text-sm text-red-400"
+                                                        v-if="(errorValue && !loading && errorValue.contact_number)">
+                                                            {{errorValue.contact_number[0]}}
+                                                    </span>
+                                                </div>
+                                                <div class="col-span-12">
+                                                    <label for="first-name"
+                                                        class="block text-sm font-medium text-gray-700">
                                                         License No.
                                                     </label>
                                                     <input type="string" name="first-name" v-model="driver.license_no"
