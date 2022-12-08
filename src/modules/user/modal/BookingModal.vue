@@ -41,7 +41,12 @@ const book = ref({
     booking_end: null,
     vehicle_place_id: null,
     vehicle_id: vehicle.value.id,
-    add_driver: false
+    add_driver: false,
+    has_secondary: false,
+    primary_operator_name: null,
+    primary_operator_license_no: null,
+    secondary_operator_name: null,
+    secondary_operator_license_no: null
 })
 
 const price = computed({
@@ -142,12 +147,15 @@ onUpdated(() => {
     
 })
 
-// watch(book.value, (val) => {
-//     if(val.vehicle_place_id) {
-//         let place = vehicle.value.vehicle_place.find(place => val.vehicle_place_id == place.id)
-//         price.value = place
-//     }
-// })
+watch(book.value, (val) => {
+    if(val.secondary_operator_name) {
+        val.has_secondary = true
+    }
+    else {
+        val.secondary_operator_license_no = null;
+        val.has_secondary = false
+    }
+})
 
 
 </script>

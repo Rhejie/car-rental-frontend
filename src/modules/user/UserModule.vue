@@ -192,8 +192,8 @@
 
                 <!-- Cart -->
                 <div class="ml-4 flow-root lg:ml-6">
-                  <span @click="handleClickLogout" href="#" class="group -m-2 flex items-center p-2">
-                    <PowerIcon class="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
+                  <span  class="group  cursor-pointer -m-2 flex items-center p-2">
+                    <PowerIcon @click="handleClickLogout" class="h-6 w-6 cursor-pointer flex-shrink-0 text-gray-400 group-hover:text-gray-500"
                       aria-hidden="true" />
                     <span class="sr-only">items in cart, view bag</span>
                   </span>
@@ -302,7 +302,7 @@ import FilterColors from '../admin/components/settings/color-utilities/FilterCol
 import FilterFuelTypes from '../admin/components/settings/fuel-type-utilities/FilterFuelTypes.vue';
 import FilterVehicleBrand from '../admin/components/settings/vehicle-brand-utilities/FilterVehicleBrand.vue';
 import { getMyNotifications, viewNotification } from './composables/user-notification-composables';
-import { loadUser } from '@/global-composables/get-user-profile';
+import { loadUser, logoutUser } from '@/global-composables/get-user-profile';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import {useEmitter} from '@/global-composables/emitter'
@@ -358,12 +358,24 @@ const handleClickViewNotification = async () => {
   router.push({ name: 'User Bookings' })
 }
 
+
 const loadNotifications = async () => {
   const { data, load } = getMyNotifications();
   await load();
   myNotifications.value = data.value
   loadingNotification.value = false
 }
+
+const handleClickLogout = async () => {
+    const {logout, islogout} = logoutUser()
+    await logout();
+    if(islogout.value) {
+      router.push('/login')
+      localStorage.clear()
+      sessionStorage.clear();
+    }
+}
+
 
 onMounted(async () => {
   Echo.private('notify.' + userProfile.value.id)

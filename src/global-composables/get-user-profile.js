@@ -52,16 +52,18 @@ export const loadUserProfile = (id) => {
 }
 
 export const logoutUser = () => {
+    const islogout = ref(false)
     const logout = async () => {
         await http().post('/user/logout').then(res => {
             console.log(res)
-            router.push('/login')
+            islogout.value = true
         }).catch(error => {
             console.log('Error in logout', error)
         })
     }
 
     return {
-        logout
+        logout,
+        islogout
     }
 }

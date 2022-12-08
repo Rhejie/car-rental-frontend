@@ -1,27 +1,29 @@
 <template>
     <div class="flex h-screen overflow-hidden ">
-        <div class="flex flex-1 flex-col overflow-y-auto  justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
+        <div
+            class="flex flex-1 flex-col overflow-y-auto  justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
             <div class="mx-auto w-full max-w-sm lg:w-96">
-                <div>
-                    <img class="h-12 w-auto" src="../assets/APCLogo.jpg"
-                        alt="Your Company" />
-                    <h2 class="mt-2 text-3xl font-bold tracking-tight text-gray-900">Register Account</h2>
-                </div>
+
 
                 <div class="mt-2">
 
-                    <div class="mt-6 h-full">
-                        <form class="space-y-6">
+                    <div class="mt-6 h-auto">
+                        <div>
+                            <img class="h-12 w-auto" src="../assets/APCLogo.jpg" alt="Your Company" />
+                            <h2 class="mt-2 text-3xl font-bold tracking-tight text-gray-900">Register Account</h2>
+                        </div>
+                        <form class="">
                             <div>
                                 <div class="mt-1">
-                                    <UserProfileUploader @newImage="handleUploadedSelfi" :storage-name="'selfi'" :message="'Image of person holding the valid id'"/>
+                                    <UserProfileUploader @newImage="handleUploadedSelfi" :storage-name="'selfi'"
+                                        :message="'Image of person holding the valid id'" />
                                     <span class="text-sm text-red-400"
                                         v-if="(errorValue && !loading && errorValue.user_selfi)">
                                         {{ errorValue.user_selfi[0] }}
                                     </span>
                                 </div>
                                 <div class="mt-1">
-                                    <UserProfileUploader @newImage="handleUploadedProfile" :storage-name="'id'"/>
+                                    <UserProfileUploader @newImage="handleUploadedProfile" :storage-name="'id'" />
                                     <span class="text-sm text-red-400"
                                         v-if="(errorValue && !loading && errorValue.user_identification)">
                                         {{ errorValue.user_identification[0] }}
@@ -58,7 +60,7 @@
                                 <div>
                                     <label for="email" class="block text-sm font-medium text-gray-700">
                                         Contact Number
-                                        </label>
+                                    </label>
                                     <div class="mt-1">
                                         <input id="email" type="text" v-model="registerData.contact_number"
                                             placeholder="Contact Number"
@@ -74,24 +76,36 @@
                                         Gender
                                     </label>
                                     <div class="mt-1">
-                                            <select id="location" name="location"
-                                                v-model="registerData.gender"
-                                                class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
-                                                <option selected value="Male">Male</option>
-                                                <option value="Female">Female</option>
-                                            </select>
-                                            <span class="text-sm text-red-400"
-                                        v-if="errorValue && !loading && errorValue.gender">
-                                        {{ errorValue.gender[0] }}
-                                    </span>
+                                        <select id="location" name="location" v-model="registerData.gender"
+                                            class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
+                                            <option selected value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                        </select>
+                                        <span class="text-sm text-red-400"
+                                            v-if="errorValue && !loading && errorValue.gender">
+                                            {{ errorValue.gender[0] }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label for="email" class="block text-sm font-medium text-gray-700">
+                                        Date of Birth
+                                    </label>
+                                    <div class="mt-1">
+                                        <input id="email" type="date" v-model="registerData.birthday"
+                                            placeholder="Contact Number"
+                                            class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
+                                        <span class="text-sm text-red-400"
+                                            v-if="(errorValue && !loading && errorValue.birthday)">
+                                            {{ errorValue.birthday[0] }}
+                                        </span>
                                     </div>
                                 </div>
                             </div>
                             <div>
                                 <label for="email" class="block text-sm font-medium text-gray-700">Address</label>
                                 <div class="mt-1">
-                                    <textarea v-model="registerData.address" 
-                                        placeholder="Address"
+                                    <textarea v-model="registerData.address" placeholder="Address"
                                         class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
                                     <span class="text-sm text-red-400"
                                         v-if="errorValue && !loading && errorValue.address">
@@ -125,10 +139,11 @@
                                 </div>
                             </div>
                             <div class="space-y-1">
-                                <label for="password" class="block text-sm font-medium text-gray-700">Confirm Password</label>
+                                <label for="password" class="block text-sm font-medium text-gray-700">Confirm
+                                    Password</label>
                                 <div class="mt-1">
-                                    <input id="password" v-model="registerData.password_confirmation" name="password" type="password"
-                                        placeholder="Enter your password"
+                                    <input id="password" v-model="registerData.password_confirmation" name="password"
+                                        type="password" placeholder="Enter your password"
                                         class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
                                     <span class="text-sm text-red-400"
                                         v-if="errorValue && !loading && errorValue.password_confirmation">
@@ -137,19 +152,19 @@
                                 </div>
                             </div>
 
-                            <span class="text-sm text-gray-600">By signing up, you are agreeing to the APC Car Rental Terms and Conditions of service  View our <span class="text-cyan-500 cursor-pointer" @click="handleClickPolicy"> terms and condition</span></span>
+                            <span class="text-sm text-gray-600">By signing up, you are agreeing to the APC Car Rental
+                                Terms and Conditions of service View our <span class="text-cyan-500 cursor-pointer"
+                                    @click="handleClickPolicy"> terms and condition</span></span>
 
                             <div class="mt-10 border-t border-gray-200 pt-10">
-                                <button type="button" @click="handleRegister"
-                                    class="inline-flex 
+                                <button type="button" @click="handleRegister" class="inline-flex 
                                         float-right bg-cyan-500 text-white text-white items-center 
                                         rounded-md border border-cyan-300 px-3 py-2 text-sm font-medium 
                                         leading-4 shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 
                                         focus:ring-indigo-500 focus:ring-offset-2">
                                     Register
                                 </button>
-                                <button type="button"
-                                    @click="handleClickLogin"
+                                <button type="button" @click="handleClickLogin"
                                     class="mr-2 inline-flex float-right items-center rounded-md border border-cyan-300 bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                                     Login
                                 </button>
@@ -162,7 +177,7 @@
         <div class="relative hidden w-0 flex-1 lg:block">
             <img class="absolute inset-0 h-full w-full object-cover" src=".././assets/suv2.webp" alt="" />
         </div>
-        <PolicyModal :open-modal="showModal" @close-modal="handleCloseModal"/>
+        <PolicyModal :open-modal="showModal" @close-modal="handleCloseModal" />
     </div>
 </template>
 <script setup>
@@ -189,7 +204,7 @@ const loading = ref(false)
 const handleRegister = async () => {
     const imageUrl = localStorage.getItem('id')
     const selfi = localStorage.getItem('selfi')
-    if(imageUrl && selfi)  {
+    if (imageUrl && selfi) {
         registerData.value.user_identification = imageUrl
         registerData.value.user_selfi = selfi
     }
@@ -200,12 +215,12 @@ const handleRegister = async () => {
     errorValue.value = errorData.value
     loading.value = false
     if (!loading.value && !errorValue.value, !errorData.value) {
-        router.push({name: 'Login'})
+        router.push({ name: 'Login' })
     }
 }
 
 const handleClickLogin = () => {
-    router.push({name: 'Login'})
+    router.push({ name: 'Login' })
 }
 
 const handleUploadedProfile = (imageUrl) => {

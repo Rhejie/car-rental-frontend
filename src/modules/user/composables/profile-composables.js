@@ -20,3 +20,19 @@ export const editProfile = (profile) => {
         errorData
     }
 }
+
+export const logoutUser = () => {
+    const isLogout = ref(false)
+    const logout = async () => {
+        await http().post('/profile/logout').then(() => {
+            isLogout.value = true
+        }).catch(error => {
+            console.log('Error in logout')
+        })
+    }
+
+    return {
+        logout,
+        isLogs
+    }
+}
