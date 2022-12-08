@@ -33,7 +33,7 @@ onMounted(async () => {
         container: 'map', // container ID
         // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
         style: 'mapbox://styles/mapbox/streets-v11?optimize=true', // style URL
-        center: [125.6678903, 7.3003923], // starting position [lng, lat]
+        center: [125.6739896672411, 7.319240543229999], // starting position [lng, lat]
         zoom: 11, // starting zoom
         pitch: 60, // pitch in degrees
         bearing: -60,
@@ -45,24 +45,24 @@ onMounted(async () => {
                 'type': 'raster-dem',
                 'url': 'mapbox://mapbox.mapbox-terrain-dem-v1',
                 'tileSize': 512,
-                'maxzoom': 14
+                'maxzoom': 16
             });
             map.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1.5 });
 
-            // const startingPointMarker = new mapboxgl.Marker()
-            //     .setLngLat(route[0])
-            //     .addTo(map);
+            const startingPointMarker = new mapboxgl.Marker()
+                .setLngLat([125.6739896672411, 7.319240543229999])
+                .addTo(map);
 
 
 
             // const currentPointMarker = new mapboxgl.Marker({ color: 'black', rotation: 45 })
-            //     .setLngLat(route[index])
+            //     .setLngLat([125.6739896672411, 7.391240543129999])
             //     .addTo(map);
 
-            // const startingPopup = new mapboxgl.Popup({ closeOnClick: false })
-            //     .setLngLat(route[index])
-            //     .setHTML(handleGetBookingInfo(index))
-            //     .addTo(map);
+            const startingPopup = new mapboxgl.Popup({ closeOnClick: false })
+                .setLngLat([125.6739896672411, 7.319240543229999])
+                .setHTML(`<h1>I'm Here!</h1>`)
+                .addTo(map);
 
         }, 2000)
     })

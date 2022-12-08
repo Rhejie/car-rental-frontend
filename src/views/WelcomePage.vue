@@ -78,7 +78,7 @@
 
                             <div class="space-y-6 border-t border-gray-200 py-6 px-4">
                                 <div v-for="page in navigation.pages" :key="page.name" class="flow-root">
-                                    <a :href="page.href" class="-m-2 block p-2 font-medium text-gray-900">{{ page.name
+                                    <a :href="page.href" @click="handleClickPage(page)" class="-m-2 block p-2 font-medium text-gray-900">{{ page.name
                                     }}</a>
                                 </div>
                             </div>
@@ -269,9 +269,9 @@
             </section>
 
             <!-- Featured section -->
-            <section aria-labelledby="social-impact-heading"
+            <section aria-labelledby="social-impact-heading" ref="locationRef"
                 class="mx-auto max-w-7xl px-4 sm:px-6  pt-3 lg:px-8">
-                <LocationPage/>
+                <LocationPage />
             </section>
 
             <!-- Collection section -->
@@ -341,6 +341,8 @@ import { ChevronDownIcon } from '@heroicons/vue/20/solid'
 import LocationPage from './LocationPage.vue'
 import FaqPage from './FaqPage.vue'
 
+const locationRef = ref()
+
 const currencies = ['CAD', 'USD', 'AUD', 'EUR', 'GBP']
 const navigation = {
     pages: [
@@ -348,6 +350,15 @@ const navigation = {
         { name: 'Location', href: '#' },
         { name: 'FAQ', href: '#' },
     ],
+}
+
+const handleClickPage = (pageName) => {
+    if(pageName == 'Location') {
+        let element = locationRef.value;
+        console.log(element);
+        let top = element.offsetTop;
+        window.scrollTo(0, top);
+    }
 }
 const categories = [
     {
