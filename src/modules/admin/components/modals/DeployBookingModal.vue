@@ -109,6 +109,10 @@
                                                                 License Expiration Date:
                                                                 {{ driver.license_expiration_date }}
                                                             </dd>
+                                                            <dd class="mt-1 text-sm ">
+                                                                Contact Number:
+                                                                {{ driver.contact_number }}
+                                                            </dd>
                                                             <dd class="mt-1 text-sm " v-if="!payment.driver">
                                                                 <button type="button"
                                                                     class="mt-3 inline-flex w-full justify-center text-white rounded-md border border-gray-300 bg-cyan-600  text-base font-medium hover:text-gray-700  shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 sm:col-start-1 sm:mt-0 sm:text-sm"
