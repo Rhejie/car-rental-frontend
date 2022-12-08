@@ -28,7 +28,8 @@
                     <!-- Card -->
                     <input type="date" min="1" v-model="date" placeholder="Expiration Date"
                         class="w-96 rounded-md border border-gray-300 bg-white py-2 pl-3 pr-2 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500 sm:text-sm" />
-                </div>
+                        <button type="button" @click="handleDownloadDaily" class="inline-flex mt-1 w-36 items-center rounded border border-gray-300 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 mr-2 focus:ring-offset-2">Download a report</button>
+                    </div>
                 <div class="mt-8 flex flex-col">
                     <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
                         <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
@@ -90,6 +91,7 @@ import BookingValue from './components/BookingValue.vue';
 import PaymentValue from './components/PaymentValue.vue';
 import OverchargeValue from './components/OverchargeValue.vue'
 import MaintenanceValue from './components/MaintenanceValue.vue'
+import { downloadDailyReport } from '../composables/admin-download-composables';
 
 const route = useRoute();
 const store = useStore();
@@ -105,6 +107,19 @@ const getDailyTransactions = async (date) => {
     await load();
     reports.value = data.value
     loading.value = false
+}
+
+const handleDownloadDaily = async () => {
+    const dateData = date.value
+    await downloadDailyReport(dateData).then(res => {
+        console.log(res, 'asda');
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `daily-report.pdf`);
+        document.body.appendChild(link);
+        link.click();
+    })
 }
 
 const capitalize = (str) => {

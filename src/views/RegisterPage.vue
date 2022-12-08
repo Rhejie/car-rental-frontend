@@ -58,11 +58,24 @@
                                     </div>
                                 </div>
                                 <div>
+                                    <label for="email" class="block text-sm font-medium text-gray-700">Middle
+                                        Name</label>
+                                    <div class="mt-1">
+                                        <input id="email" type="text" v-model="registerData.middle_name"
+                                            placeholder="First Name"
+                                            class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
+                                        <span class="text-sm text-red-400"
+                                            v-if="(errorValue && !loading && errorValue.middle_name)">
+                                            {{ errorValue.middle_name[0] }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div>
                                     <label for="email" class="block text-sm font-medium text-gray-700">
                                         Contact Number
                                     </label>
                                     <div class="mt-1">
-                                        <input id="email" type="text" v-model="registerData.contact_number"
+                                        <input  type="text" v-model="registerData.contact_number"
                                             placeholder="Contact Number"
                                             class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
                                         <span class="text-sm text-red-400"
@@ -152,9 +165,8 @@
                                 </div>
                             </div>
 
-                            <span class="text-sm text-gray-600">By signing up, you are agreeing to the APC Car Rental
-                                Terms and Conditions of service View our <span class="text-cyan-500 cursor-pointer"
-                                    @click="handleClickPolicy"> terms and condition</span></span>
+                            <span class="text-sm text-gray-600">By signing up, you are agreeing to the APC Car Rental <span class="text-cyan-500 cursor-pointer"
+                                    @click="handleClickPolicy"> terms and condition</span>, View our <span @click="handleClickPrivacy" class="text-cyan-500 cursor-pointer">privacy policy</span></span>
 
                             <div class="mt-10 border-t border-gray-200 pt-10">
                                 <button type="button" @click="handleRegister" class="inline-flex 
@@ -178,11 +190,13 @@
             <img class="absolute inset-0 h-full w-full object-cover" src=".././assets/suv2.webp" alt="" />
         </div>
         <PolicyModal :open-modal="showModal" @close-modal="handleCloseModal" />
+        <PrivacyModal :open-modal="showModalPrivacy" @close-modal="handleCloseModal" />
     </div>
 </template>
 <script setup>
 import { registerUser } from '@/global-composables/authentication';
 import PolicyModal from '@/modules/user/modal/PolicyModal.vue';
+import PrivacyModal from '@/modules/user/modal/PrivacyModal.vue';
 import UserProfileUploader from '@/modules/user/user-components/UserProfileUploader.vue';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -195,8 +209,11 @@ const registerData = ref({
     email: '',
     password: '',
     user_identification: '',
-    user_selfi: ''
+    user_selfi: '',
+    middle_name: ''
 })
+
+const showModalPrivacy = ref(false)
 
 const errorValue = ref(null)
 const loading = ref(false)
@@ -235,7 +252,12 @@ const handleClickPolicy = () => {
     showModal.value = true
 }
 
+const handleClickPrivacy = () => {
+    showModalPrivacy.value = true
+}
+
 const handleCloseModal = () => {
     showModal.value = false
+    showModalPrivacy.value = false
 }
 </script>

@@ -235,7 +235,7 @@ watch(params.value, () => {
                     {{handleVehicleName(book.vehicle)}}
                   </td>
                   <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">
-                    {{book.driver ? book.driver.name : null}}
+                    {{book.driver ? book.driver.name : book.primary_operator_name}}
                   </td>
                   <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900">{{ formatDateTime(book.booking_start) }}</td>
                   <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ formatDateTime(book.booking_end) }}

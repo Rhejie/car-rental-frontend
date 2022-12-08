@@ -31,6 +31,7 @@
                         <input type="number" min="1" v-model="yearData" placeholder="Year"
                         class="w-96 rounded-md border mt-1 border-gray-300 bg-white py-2 pl-3 pr-2 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500 sm:text-sm" />
                         <button type="button" @click="getMonthlyTransaction" class="inline-flex mt-1 items-center rounded border border-gray-300 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Generate</button>
+                        <button type="button" @click="handleDownloadMonthly" class="inline-flex mt-1 w-32 ml-2 items-center rounded border border-gray-300 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 mr-2 focus:ring-offset-2">Download a report</button>
                     </div>
                 </div>
                 <div class="mt-8 flex flex-col">
@@ -97,6 +98,7 @@ import PaymentValue from './components/PaymentValue.vue';
 import OverchargeValue from './components/OverchargeValue.vue';
 import MaintenanceValue from './components/MaintenanceValue.vue';
 import SelectMonths from './components/SelectMonths.vue';
+import { downloadMonthReport } from '../composables/admin-download-composables';
 
 const route = useRoute();
 const store = useStore();
@@ -128,6 +130,21 @@ const getMonthlyTransaction = async (year) => {
     reports.value = data.value
     loading.value = false
     // total.value = totalReport.value
+}
+
+const handleDownloadMonthly = async () => {
+    const yearValue = yearData.value
+    const monthInNumber = getMonthNumber.value
+    const month = selectedMonth.value
+    await downloadMonthReport(yearValue, month, monthInNumber).then(res => {
+        console.log(res, 'asda');
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `monthly-report.pdf`);
+        document.body.appendChild(link);
+        link.click();
+    })
 }
 
 const capitalize = (str) => {
