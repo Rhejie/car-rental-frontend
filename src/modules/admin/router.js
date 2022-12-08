@@ -58,6 +58,12 @@ const moduleRoute = {
             props: true
         },
         {
+            path: '/admin/deployed-bookings',
+            name: "Booking History",
+            component: () => import('./views/BookingHistoryPage.vue'),
+            props: true
+        },
+        {
             path: '/admin/maintenance',
             name: "Maintenance",
             component: () => import('./views/MaintenancePage.vue'),

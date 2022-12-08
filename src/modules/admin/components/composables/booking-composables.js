@@ -41,6 +41,26 @@ export const loadDeployedBookings = (params) => {
     }
 }
 
+export const loadAllBookingHistory = (params) => {
+
+    const data = ref([])
+    const totalBookings = ref(0)
+    const load = async () => {
+        await http().get(`/booking/all-booking?search=${params.search}&page=${params.page}&size=${params.page_size}`).then(res => {
+            data.value = res.data.data
+            totalBookings.value = res.data.total
+        }).catch(error => {
+            console.log('Error in getting Booking list: ', error)
+        })
+    }
+
+    return {
+        load,
+        data,
+        totalBookings
+    }
+}
+
 export const acceptBooking = (book) => {
     const data = ref(null)
 

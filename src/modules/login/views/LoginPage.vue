@@ -89,7 +89,7 @@ const handleClickLogIn = async () => {
                     </div>
     
                     <div class="text-sm">
-                        <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">Forgot your password?</a>
+                        <router-link to="/" class="font-medium text-indigo-600 hover:text-indigo-500">back to home</router-link>
                     </div>
                 </div>
     

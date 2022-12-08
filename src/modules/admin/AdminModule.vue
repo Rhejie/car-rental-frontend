@@ -103,7 +103,7 @@
             <button type="button" @click="handleCLickLogout"
               class="rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2">
               <span class="sr-only">View notifications</span>
-              <PowerIcon class="h-6 w-6" aria-hidden="true" />
+              <PowerIcon class="h-6 w-6 cursor-pointer" aria-hidden="true" @click="handleClickLogout" />
             </button>
 
             <!-- Profile dropdown -->
@@ -147,7 +147,8 @@ import {
   UsersIcon,
   ClipboardDocumentIcon,
   AdjustmentsHorizontalIcon,
-  RocketLaunchIcon
+  RocketLaunchIcon,
+  BookOpenIcon
 } from '@heroicons/vue/24/outline'
 import {
   BanknotesIcon,
@@ -158,7 +159,7 @@ import {
   MagnifyingGlassIcon,
 } from '@heroicons/vue/20/solid'
 import { useRouter } from 'vue-router'
-import { loadUser } from '@/global-composables/get-user-profile'
+import { loadUser, logoutUser } from '@/global-composables/get-user-profile'
 
 const router = useRouter()
 const navigation = [
@@ -166,6 +167,7 @@ const navigation = [
   { name: 'Users', routeName: 'Admin Users', icon: UsersIcon, current: false },
   { name: 'Booking Applications', routeName: 'Admin Bookings', icon: CalendarIcon, current: false },
   { name: 'Deployed Vehicles', routeName: 'Deployed Bookings', icon: RocketLaunchIcon, current: false },
+  { name: 'Booking History', routeName: 'Booking History', icon: BookOpenIcon, current: false },
   { name: 'Vehicles', routeName: 'Vehicles', icon: TruckIcon, current: false },
   { name: 'Trackers', routeName: 'Trackers', icon: InboxIcon, current: false },
   { name: 'Maintenance', routeName: 'Maintenance', icon: ChartBarIcon, current: false },
@@ -213,6 +215,16 @@ const getUser = async () => {
     router.push('/login')
     return
   }
+}
+
+const handleClickLogout = async () => {
+    const {logout, islogout} = logoutUser()
+    await logout();
+    if(islogout.value) {
+      router.push('/login')
+      localStorage.clear()
+      sessionStorage.clear();
+    }
 }
 
 onMounted(async () => {
