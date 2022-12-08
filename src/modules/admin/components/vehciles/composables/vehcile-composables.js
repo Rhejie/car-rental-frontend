@@ -121,3 +121,18 @@ export const selectVehicle = (searchVal) => {
     }
 }
 
+
+export const getRamdomVehicles = () => {
+    const data = ref([])
+
+    const load = async () => {
+        await http().get('/vehicles').then(res => {
+            data.value = res.data
+        })
+    }
+
+    return {
+        data,
+        load
+    }
+}

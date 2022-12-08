@@ -217,12 +217,12 @@
 
             <div class="relative mx-auto flex max-w-3xl flex-col items-center py-32 px-6 text-center sm:py-64 lg:px-0">
                 <h1 class="text-4xl font-bold tracking-tight text-white lg:text-6xl">Your are safe here</h1>
-                <p class="mt-4 text-xl text-white">The new arrivals have, well, newly arrived. Check out the latest
-                    options from our summer small-batch release while they're still in stock.</p>
-                <button 
+                <p class="mt-4 text-xl text-white">Check out the latest and beautifull car release while they're still in stock.</p>
+                <router-link to="/login" 
+                    
                     class="mt-8 inline-block rounded-md border border-transparent bg-white py-3 px-8 text-base font-medium text-gray-900 hover:bg-gray-100">
                     Book now
-                </button>
+                </router-link>
             </div>
         </div>
 
@@ -232,10 +232,10 @@
                 <div class="px-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8 xl:px-0">
                     <h2 id="category-heading" class="text-2xl font-bold tracking-tight text-gray-900">Vehicles
                     </h2>
-                    <a href="#" class="hidden text-sm font-semibold text-indigo-600 hover:text-indigo-500 sm:block">
+                    <router-link to="/login" class="hidden text-sm font-semibold text-indigo-600 hover:text-indigo-500 sm:block">
                         Show all vehicles
                         <span aria-hidden="true"> &rarr;</span>
-                    </a>
+                    </router-link>
                 </div>
 
                 <div class="mt-4 flow-root">
@@ -243,18 +243,18 @@
                         <div class="relative box-content h-80 overflow-x-auto py-2 xl:overflow-visible">
                             <div
                                 class="min-w-screen-xl absolute flex space-x-8 px-4 sm:px-6 lg:px-8 xl:relative xl:grid xl:grid-cols-5 xl:gap-x-8 xl:space-x-0 xl:px-0">
-                                <a v-for="category in categories" :key="category.name" :href="category.href"
+                                <router-link v-for="vehicle in vehiclesData" :key="vehicle.id" to="/login"
                                     class="relative flex h-80 w-56 flex-col overflow-hidden rounded-lg p-6 hover:opacity-75 xl:w-auto">
                                     <span aria-hidden="true" class="absolute inset-0">
-                                        <img :src="category.imageSrc" alt=""
+                                        <img :src="url + (vehicle.vehicle_images && vehicle.vehicle_images ? vehicle.vehicle_images[0].image_url : '../assets/APCLogo.jpg')" alt=""
                                             class="h-full w-full object-cover object-center" />
                                     </span>
                                     <span aria-hidden="true"
                                         class="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-gray-800 opacity-50" />
                                     <span class="relative mt-auto text-center text-xl font-bold text-white">{{
-                                            category.name
+                                            vehicle.name
                                     }}</span>
-                                </a>
+                                </router-link>
                             </div>
                         </div>
                     </div>
@@ -314,7 +314,7 @@
 </template>
   
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import {
     Dialog,
     DialogPanel,
@@ -340,9 +340,12 @@ import {
 import { ChevronDownIcon } from '@heroicons/vue/20/solid'
 import LocationPage from './LocationPage.vue'
 import FaqPage from './FaqPage.vue'
+import { getRamdomVehicles } from '@/modules/admin/components/vehciles/composables/vehcile-composables'
+import { storageUrl } from '@/global-composables/http_service'
 
 const locationRef = ref()
 
+const url = storageUrl();
 const currencies = ['CAD', 'USD', 'AUD', 'EUR', 'GBP']
 const navigation = {
     pages: [
@@ -434,6 +437,17 @@ const footerNavigation = {
         { name: 'Pinterest', href: '#' },
     ],
 }
+const vehiclesData = ref([])
+const loadingVehicles = ref(true)
+const vehicles = async () => {
+    const {data, load} = getRamdomVehicles()
+    await load();
+    vehiclesData.value = data.value
+    loadingVehicles.value = false
+}
 
+onMounted(() => {
+    vehicles();
+})
 const mobileMenuOpen = ref(false)
 </script>

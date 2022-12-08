@@ -133,9 +133,9 @@ const getMonthlyTransaction = async (year) => {
 }
 
 const handleDownloadMonthly = async () => {
-    const yearValue = yearData.value
-    const monthInNumber = getMonthNumber.value
-    const month = selectedMonth.value
+    let yearValue = yearData.value
+    let monthInNumber = getMonthNumber.value
+    let month = selectedMonth.value
     await downloadMonthReport(yearValue, month, monthInNumber).then(res => {
         console.log(res, 'asda');
         const url = window.URL.createObjectURL(new Blob([res.data]));
