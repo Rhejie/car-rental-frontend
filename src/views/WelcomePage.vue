@@ -228,7 +228,7 @@
 
         <main>
             <!-- Category section -->
-            <section aria-labelledby="category-heading" class="pt-24 sm:pt-32 xl:mx-auto xl:max-w-7xl xl:px-8">
+            <section aria-labelledby="category-heading" class="pt-24 sm:pt-32 xl:mx-auto xl:max-w-7xl xl:px-8" v-loading="loadingVehicles">
                 <div class="px-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8 xl:px-0">
                     <h2 id="category-heading" class="text-2xl font-bold tracking-tight text-gray-900">Vehicles
                     </h2>
@@ -238,7 +238,7 @@
                     </router-link>
                 </div>
 
-                <div class="mt-4 flow-root">
+                <div class="mt-4 flow-root" v-if="(vehiclesData.length > 0)">
                     <div class="-my-2">
                         <div class="relative box-content h-80 overflow-x-auto py-2 xl:overflow-visible">
                             <div
