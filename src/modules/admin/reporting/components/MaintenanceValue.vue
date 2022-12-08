@@ -8,7 +8,7 @@
                 </div>
                 <div class="sm:col-span-1">
                     <dt class="text-sm font-medium text-gray-500">Type</dt>
-                    <dd class="mt-1 text-sm text-gray-900">{{formatType(maintenance.type_of_maintenance)}}</dd>
+                    <dd class="mt-1 text-sm text-gray-900">{{maintenance.type_of_maintenance}}</dd>
                 </div>
                 <div class="sm:col-span-1">
                     <dt class="text-sm font-medium text-gray-500">Price</dt>
@@ -36,7 +36,5 @@ const formatDateTime = (dateTime) => {
     return moment(dateTime).format('MMM D YYYY')
 }
 
-const formatType = (type) => {
-    return type.split('_').join(' ')
-}
+
 </script>
