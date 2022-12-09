@@ -21,5 +21,14 @@ export const downloadDailyReport = (date) => {
 }
 
 export const downloadMonthReport = (year, month, monthInNumber) => {
-    return httpFile().get(`/reports/download-dialy-report?year=${year}&month=${month}&month_in_number=${monthInNumber}`)
+    return httpFile().get(`/reports/monthly?year=${year}&month=${month}&month_in_number=${monthInNumber}`)
+}
+
+
+export const downloadIncomeReport = (year = null, month = null, monthInNumber = 0) => {
+    return httpFile().get(`/reports/download-income?year=${year}&month=${month}&month_in_number=${monthInNumber}`)
+}
+
+export const downloadExpenseReport = (year = null, month = null, monthInNumber = 0) => {
+    return httpFile().get(`/reports/download-expense?year=${year}&month=${month}&month_in_number=${monthInNumber}`)
 }

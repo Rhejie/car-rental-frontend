@@ -53,7 +53,8 @@
                     </div>
                     <div class="flex">
                         <button type="button" @click="getMonthlyTransaction" class="inline-flex mt-1 w-20 items-center rounded border border-gray-300 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 mr-2 focus:ring-offset-2">Generate</button>
-                        <button type="button" @click="handleReset" class="inline-flex mt-1 w-15 items-center rounded border border-gray-300 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">Reset</button>
+                        <button type="button" @click="handleReset" class="inline-flex mt-1 w-15 mr-2 items-center rounded border border-gray-300 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">Reset</button>
+                        <button type="button" @click="handleDownload" class="inline-flex mt-1 w-15 items-center rounded border border-gray-300 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">Download</button>
                     </div>
                     <div class="">
                         <g-pagination class="mx-2" :size="params.size" :current_size="totalPayments"
@@ -118,6 +119,7 @@ import { useStore } from 'vuex';
 import { totalIncome, loadPayments } from '../composables/admin-report-composables';
 import GPagination from '@/components/GPagination.vue';
 import SelectMonths from './components/SelectMonths.vue';
+import { downloadIncomeReport } from '../composables/admin-download-composables';
 
 const route = useRoute();
 const store = useStore();
@@ -186,6 +188,21 @@ const handleReset = () => {
     yearData.value = null
     selectedMonth.value = null
     getPayments()
+}
+
+const handleDownload = async () => {
+    let yearValue = yearData.value
+    let monthInNumber = getMonthNumber.value
+    let month = selectedMonth.value
+    await downloadIncomeReport(yearValue, month, monthInNumber).then(res => {
+        console.log(res, 'asda');
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `income-report.pdf`);
+        document.body.appendChild(link);
+        link.click();
+    })
 }
 
 const handleGetAllMonths = async () => {
