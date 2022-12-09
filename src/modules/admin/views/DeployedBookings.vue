@@ -8,8 +8,8 @@ import SelectStatusFilter from '@/components/SelectStatusFilter.vue'
 import GSkeletonLoading from '@/components/GSkeletonLoading.vue'
 
 import GPagination from "@/components/GPagination.vue";
-import { CheckCircleIcon, EyeIcon, XCircleIcon, XMarkIcon, PlusCircleIcon, ArrowUturnLeftIcon, DocumentTextIcon, ExclamationCircleIcon } from '@heroicons/vue/20/solid'
-import { loadBookings, loadDeployedBookings, notofyOverdue } from '../components/composables/booking-composables';
+import { CheckCircleIcon,MapPinIcon, CalculatorIcon, EyeIcon, XCircleIcon, XMarkIcon, PlusCircleIcon, ArrowUturnLeftIcon, DocumentTextIcon, ExclamationCircleIcon } from '@heroicons/vue/20/solid'
+import { loadBookings, loadDeployedBookings, notifyExceeding, notofyOverdue } from '../components/composables/booking-composables';
 import AcceptBookingModal from '../components/modals/AcceptBookingModal.vue';
 import GNotification from '@/components/GNotification.vue';
 import ReturnBookingModal from '../components/modals/ReturnBookingModal.vue';
@@ -114,13 +114,28 @@ const handleReturnVehicle = (book, index) => {
 const handleClickOverdue = async (book) => {
   const {notify, hasError} = notofyOverdue(book);
   await notify();
-  if(!hasError) {
-    showNotif.value = true;
-    message.value = 'Successfully notify user for overdue.'
+  showNotif.value = true;
+  message.value = 'Successfully notify user for overdue.'
 
-    setTimeout(() => {
-      showNotif.value = false
-    }, 2000)
+  setTimeout(() => {
+    showNotif.value = false
+  }, 2000)
+  if(!hasError) {
+    
+  }
+}
+
+const handleClickExceeding = async (book) => {
+  const { notify, hasError } = notifyExceeding(book);
+  await notify();
+  showNotif.value = true;
+  message.value = 'Successfully notify user for exceeding.'
+
+  setTimeout(() => {
+    showNotif.value = false
+  }, 2000)
+  if (!hasError) {
+    
   }
 }
 
@@ -241,7 +256,7 @@ watch(params.value, () => {
                   <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ formatDateTime(book.booking_end) }}
                   </td>
                   <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ book.destination
-                    }}
+                  }}
                   </td>
                   <td class="relative flex flex-wrap w-80 whitespace-nowrap py-2 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                     <!-- <button type="button" @click="handleReturnVehicle(book, index)"
@@ -260,8 +275,14 @@ watch(params.value, () => {
                     <button type="button" @click="handleClickOverdue(book)"
                       v-if="book.booking_status != 'pending' && book.booking_status != 'decline'"
                       class="inline-flex items-center rounded-md mr-2 my-1 border border-transparent bg-orange-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
-                      <DocumentTextIcon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
+                      <CalculatorIcon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
                       Overdue
+                    </button>
+                    <button type="button" @click="handleClickExceeding(book)"
+                      v-if="book.booking_status != 'pending' && book.booking_status != 'decline'"
+                      class="inline-flex items-center rounded-md mr-2 my-1 border border-transparent bg-yellow-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2">
+                      <MapPinIcon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
+                      Exceeding Destination
                     </button>
                     <button type="button" @click="handleClickTransactionForm(book, index)"
                       v-if="book.booking_status != 'pending' && book.booking_status != 'decline'"

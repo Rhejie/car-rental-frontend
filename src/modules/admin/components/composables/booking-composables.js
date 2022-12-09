@@ -180,3 +180,18 @@ export const notofyOverdue = (book) => {
         notify, hasError
     }
 }
+
+export const notifyExceeding = (book) => {
+    const hasError = ref(false)
+    const notify = async () => {
+        await http().post('/booking/exceeding', book).then(() => {
+            hasError.value = true
+        }).catch(error => {
+            console.log('Error in notify user for overdue ', error)
+        })
+    }
+
+    return {
+        notify, hasError
+    }
+}
