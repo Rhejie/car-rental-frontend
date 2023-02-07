@@ -9,6 +9,7 @@ import axios from 'axios'
 import { registerModules } from './registerModules'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
+import { createPinia } from 'pinia'
 
 import adminModule from './modules/admin'
 import loginModule from './modules/login'
@@ -24,7 +25,7 @@ import { createAuth } from '@websanova/vue-auth';
 import driverAuthBearer from '@websanova/vue-auth/dist/drivers/auth/bearer.esm.js';
 import driverHttpAxios from '@websanova/vue-auth/dist/drivers/http/axios.1.x.esm.js';
 import driverRouterVueRouter from '@websanova/vue-auth/dist/drivers/router/vue-router.2.x.esm.js';
-
+const pinia = createPinia()
 
 const instance = axios.create({
     baseURL: '/api',
@@ -87,6 +88,7 @@ app.config.globalProperties.emitter = emitter;
 
 app.use(VueAxios, instance)
 app.use(auth)
+app.use(pinia)
 app.use(ElementPlus)
 app.provide('auth', auth)
 app.use(store).use(router).mount('#app')

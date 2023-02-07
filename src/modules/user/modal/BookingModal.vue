@@ -4,6 +4,7 @@ import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } fro
 import { storeBook, updateBook } from '../composables/booking-composables'
 import { BookmarkIcon } from '@heroicons/vue/24/outline'
 import { useRouter } from 'vue-router';
+import { useCurrentStore } from '@/store/useCurrentUser';
 
 const props = defineProps({
     openModal: {
@@ -30,12 +31,13 @@ const props = defineProps({
 const emit = defineEmits(['updateBook'])
 
 const router = useRouter()
+const currentUserStore = useCurrentStore()
 const open = computed(() => props.openModal)
 
 const vehicle = computed(() => props.vehicle)
 const bookingInfo = computed(() => props.bookingInfo)
 const mode = computed(() => props.mode)
-
+const userProfile = computed(() => currentUserStore.userProfile)
 const book = ref({
     booking_start: null,
     booking_end: null,
@@ -43,10 +45,11 @@ const book = ref({
     vehicle_id: vehicle.value.id,
     add_driver: false,
     has_secondary: false,
-    primary_operator_name: null,
+    primary_operator_name: userProfile.value && userProfile.value.id ? userProfile.value.first_name + ' ' + userProfile.value.last_name : null,
     primary_operator_license_no: null,
     secondary_operator_name: null,
-    secondary_operator_license_no: null
+    secondary_operator_license_no: null,
+    self_drive: true
 })
 
 const price = computed({
@@ -135,6 +138,16 @@ const storeData = async () => {
     }
 }
 
+const handleClickAddDriver = (event) => {
+    if(!event.target._modelValue) {
+        book.value.self_drive = false
+    }
+    else {
+        book.value.self_drive = false
+        console.log('asda')
+    }
+}
+
 onMounted(() => {
     if(bookingInfo.value && bookingInfo.value.id && mode.value) {
         book.value = {...bookingInfo.value}
@@ -144,7 +157,7 @@ onMounted(() => {
 
 onUpdated(() => {
     // initialize()
-    
+    console.log(userProfile.value)
 })
 
 watch(book.value, (val) => {
@@ -155,9 +168,23 @@ watch(book.value, (val) => {
         val.secondary_operator_license_no = null;
         val.has_secondary = false
     }
+
+    if(val.self_drive) {
+        val.add_driver = false
+    }
+    else {
+        val.add_driver = true
+        val.self_drive = false
+    }
+
+    if(val.add_driver) {
+        val.self_drive = false
+    }
+    else { 
+        val.add_driver = false;
+        val.self_drive = true
+    }
 })
-
-
 </script>
 <template>
     <TransitionRoot as="template" :show="open">
@@ -231,7 +258,7 @@ watch(book.value, (val) => {
                                                                             class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
                                                                             {{
                                                                                     vehicle.price
-                                                                            }} per day</dd>
+                                                                            }} per day (Disclaimer: this price still negotiable)</dd>
                                                                     </div>
                                                                     <div
                                                                         class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -369,13 +396,21 @@ watch(book.value, (val) => {
                                                                 </div>
                                                                 <div class="space-y-1">
                                                                     <div class="mt-1">
-                                                                        <input type="checkbox" class="mr-2" name="" v-model="book.add_driver" id="">
+                                                                        <input type="checkbox" class="mr-2" name="" v-model="book.self_drive" id="">
+                                                                        <span class="text-sm text-gray-700">Self drive</span>
+                                                                        <span class="text-sm text-red-400"
+                                                                                v-if="(errorValue && !loading && errorValue.self_drive)">
+                                                                                {{ errorValue.self_drive[0] ? 'Destination is required' : '' }}
+                                                                            </span>
+                                                                    </div>
+                                                                    <div class="mt-1">
+                                                                        <input type="checkbox" class="mr-2" name="" @change="handleClickAddDriver" v-model="book.add_driver" id="">
                                                                         <span class="text-sm text-gray-700">Hire a driver from the company? (optional)</span>
                                                                         <span class="text-sm text-red-400"
                                                                                 v-if="(errorValue && !loading && errorValue.add_driver)">
                                                                                 {{ errorValue.add_driver[0] ? 'Destination is required' : '' }}
                                                                             </span>
-                                                                    </div>
+                                                                    </div>  
                                                                 </div>
 
                                                                 <div class="space-y-1">

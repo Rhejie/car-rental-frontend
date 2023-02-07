@@ -16,6 +16,7 @@ import GNotification from '@/components/GNotification.vue';
 import DeployBookingModal from '../components/modals/DeployBookingModal.vue';
 import CancelBookingModal from '../components/modals/CancelBookingModal.vue';
 import moment from 'moment'
+import ViewBookingModal from '../components/bookings/ViewBookingModal.vue';
 
 const router = useRouter()
 const auth = inject('auth')
@@ -31,7 +32,8 @@ const params = ref({
   page: 1,
   search: null,
 })
-
+const openBookingInfoModal = ref(false);
+const bookingInfo = ref({})
 const showNotif = ref(false)
 const message = ref('')
 const selectedBooking = ref(null)
@@ -86,6 +88,7 @@ const handleCloseModal = () => {
   showDeployModal.value = false
   showDeclineModal.value = false
   showCancelBookingModal.value = false
+  openBookingInfoModal.value = false
 }
 
 const fetch = async () => {
@@ -179,6 +182,11 @@ const handleCLickDecline = (book, index) => {
   selectedBooking.value = book
 }
 
+const handleClickView = (book) => {
+  bookingInfo.value = book
+  openBookingInfoModal.value = true
+}
+
 const handleDeployedBooking = (book) => {
   let _index = bookings.value.findIndex(b => b.id == book.id);
   bookings.value.splice(_index, 1)
@@ -236,6 +244,7 @@ watch(params.value, () => {
     @declineBook="handleDeclinedBook" />
   <DeployBookingModal v-if="(selectedBooking && showDeployModal)" :openModal="showDeployModal"
     :selected-booking="selectedBooking" @closeModal="handleCloseModal" @deployedBooking="handleDeployedBooking" />
+  <ViewBookingModal :open-modal="openBookingInfoModal" :booking-info="bookingInfo" @closeModal="handleCloseModal"/>
   <div class="w-full bg-gray-500">
     <div class="mx-auto max-w-2xl  py-4 px-4 lg:max-w-7xl lg:px-0">
       <h1 class="text-2xl font-bold tracking-tight text-white sm:text-3xl">Manage Bookings</h1>
@@ -315,6 +324,12 @@ watch(params.value, () => {
                       View
                     </button> -->
                     <!-- Pending Booking -->
+                    <button type="button" @click="handleClickView(book)"
+                      v-if="book.booking_status != 'accept' && book.booking_status != 'decline' && book.booking_status != 'cancel'"
+                      class="inline-flex items-center rounded-md mr-2 border border-transparent bg-blue-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                      <EyeIcon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
+                      View
+                    </button>
                     <button type="button" @click="handleAcceptBook(book)"
                       v-if="book.booking_status != 'accept' && book.booking_status != 'decline' && book.booking_status != 'cancel'"
                       class="inline-flex items-center rounded-md mr-2 border border-transparent bg-green-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
