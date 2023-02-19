@@ -67,7 +67,14 @@
                                                             <dt class="text-sm font-medium text-gray-500">Price per day
                                                             </dt>
                                                             <dd class="mt-1 text-sm text-gray-900">
-                                                                {{ selected.vehicle.price }} Php
+                                                                <div class="mt-1 flex rounded-md shadow-sm">
+                                                                    <span class="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 px-3 text-gray-500 sm:text-sm">Php</span>
+                                                                    <input type="text" v-model="selected.vehicle.price" @change="handleChangeNamePrice" min="0" name="company-website" id="company-website" class="block w-full min-w-0 flex-1 rounded-none rounded-r-md border border-gray-300 px-3 py-2  sm:text-sm" placeholder="www.example.com" />
+                                                                </div>
+                                                                <span class="text-sm text-red-400"
+                                                                    v-if="errorValue && !loading && errorValue.price">
+                                                                    {{ errorValue.price[0] }}
+                                                                </span>
                                                             </dd>
                                                         </div>
                                                         <div class="sm:col-span-1">
@@ -146,7 +153,7 @@
                                                         <input id="email" type="text"
                                                             placeholder="Primary Operator name"
                                                             v-model="payment.primary_operator_name"
-                                                            class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
+                                                            class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-untitled-gray-500 focus:outline-none focus:ring-untitled-gray-500 sm:text-sm" />
                                                         <span class="text-sm text-red-400"
                                                             v-if="errorValue && !loading && errorValue.primary_operator_name">
                                                             {{ errorValue.primary_operator_name[0] }}
@@ -162,7 +169,7 @@
                                                         <input id="email" type="text"
                                                             v-model="payment.primary_operator_license_no"
                                                             placeholder="Primary Operator License Number"
-                                                            class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
+                                                            class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-untitled-gray-500 focus:outline-none focus:ring-untitled-gray-500 sm:text-sm" />
                                                         <span class="text-sm text-red-400"
                                                             v-if="errorValue && !loading && errorValue.primary_operator_license_no">
                                                             {{ errorValue.primary_operator_license_no[0] }}
@@ -180,7 +187,7 @@
                                                         <input id="email" type="text"
                                                             placeholder="Secondary Operator name"
                                                             v-model="payment.secondary_operator_name"
-                                                            class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
+                                                            class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-untitled-gray-500 focus:outline-none focus:ring-untitled-gray-500 sm:text-sm" />
                                                         <span class="text-sm text-red-400"
                                                             v-if="errorValue && !loading && errorValue.secondary_operator_name">
                                                             {{ errorValue.secondary_operator_name[0] }}
@@ -196,7 +203,7 @@
                                                         <input id="email" type="text"
                                                             v-model="payment.secondary_operator_license_no"
                                                             placeholder="Secondary Operator License Number"
-                                                            class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
+                                                            class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-untitled-gray-500 focus:outline-none focus:ring-untitled-gray-500 sm:text-sm" />
                                                         <span class="text-sm text-red-400"
                                                             v-if="errorValue && !loading && errorValue.secondary_operator_license_no">
                                                             {{ errorValue.secondary_operator_license_no[0] }}
@@ -320,10 +327,17 @@ const props = defineProps({
     }
 })
 
-const emit = defineEmits(['closeModal', 'deployedBooking'])
+const emit = defineEmits(['closeModal', 'deployedBooking', 'changePrice'])
 
 const open = computed(() => props.openModal)
-const selected = computed(() => props.selectedBooking)
+const selected = computed({
+    get() {
+        return props.selectedBooking
+    },
+    set(newValue) {
+        newValue
+    }
+})
 
 const countDays = computed({
     get() {
@@ -376,7 +390,7 @@ const drivers = ref([])
 const loadingDriver = ref(false)
 const errorValue = ref(null)
 
-const totalPriceData = ref(totalPrice.value)
+const totalPriceData = computed(() => totalPrice.value)
 const handleCloseModal = () => {
     emit('closeModal')
 }
@@ -411,6 +425,10 @@ const handleRemoveDriver = () => {
 
 const onHandleChangePaymentMethod = () => {
 
+}
+
+const handleChangeNamePrice = (event) => {
+    emit('changePrice', event.target.value)
 }
 
 const handleGetPaymentMethods = (method) => {

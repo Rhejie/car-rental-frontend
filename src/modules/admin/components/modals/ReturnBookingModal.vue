@@ -66,7 +66,7 @@
                                                             <dt class="text-sm font-medium text-gray-500">Price per day
                                                             </dt>
                                                             <dd class="mt-1 text-sm text-gray-900">
-                                                                {{ selected.vehicle.price }} Php
+                                                                {{ selected.price ? selected.price : selected.vehicle.price }} Php
                                                             </dd>
                                                         </div>
                                                         <div class="sm:col-span-1">
@@ -385,9 +385,9 @@ const countDays = computed({
 
 const totalPrice = computed({
     get() {
-        if (selected.value.vehicle.price && countDays.value) {
+        if (selected.value.price && countDays.value) {
 
-            return (selected.value.vehicle.price * countDays.value).toFixed(2)
+            return (selected.value.price * countDays.value).toFixed(2)
         }
 
         return 0

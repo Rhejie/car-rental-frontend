@@ -40,6 +40,7 @@ const selectedBooking = ref(null)
 const showDeployModal = ref(false)
 const showDeclineModal = ref(false)
 const showCancelBookingModal = ref(false)
+const oldPrice = ref(0)
 
 const url = storageUrl();
 
@@ -89,6 +90,7 @@ const handleCloseModal = () => {
   showDeclineModal.value = false
   showCancelBookingModal.value = false
   openBookingInfoModal.value = false
+  selectedBooking.value.vehicle.price = oldPrice.value
 }
 
 const fetch = async () => {
@@ -164,7 +166,13 @@ const handleChangePage = (page) => {
 
 const handleDeployeButton = (book, index) => {
   showDeployModal.value = true
-  selectedBooking.value = book
+  oldPrice.value = book.vehicle.price
+  selectedBooking.value = {...book}
+}
+
+const handleChangePrice = (price) => {
+
+  selectedBooking.value.vehicle.price = price ? parseFloat(price).toFixed(2) : 0
 }
 
 const formatDateTime = (dateTime) => {
@@ -243,7 +251,8 @@ watch(params.value, () => {
   <DeclineBookingModal :openModal="showDeclineModal" :selected-book="selectedBooking" @closeModal="handleCloseModal"
     @declineBook="handleDeclinedBook" />
   <DeployBookingModal v-if="(selectedBooking && showDeployModal)" :openModal="showDeployModal"
-    :selected-booking="selectedBooking" @closeModal="handleCloseModal" @deployedBooking="handleDeployedBooking" />
+    :selected-booking="selectedBooking" @closeModal="handleCloseModal" @deployedBooking="handleDeployedBooking" 
+    @changePrice="handleChangePrice"/>
   <ViewBookingModal :open-modal="openBookingInfoModal" :booking-info="bookingInfo" @closeModal="handleCloseModal"/>
   <div class="w-full bg-gray-500">
     <div class="mx-auto max-w-2xl  py-4 px-4 lg:max-w-7xl lg:px-0">
