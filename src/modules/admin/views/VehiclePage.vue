@@ -160,7 +160,7 @@ watch(params.value, () => {
                   <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ vehicle.cr_expiration_date }}
                   </td>
                   <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ vehicle.cr_no }}</td>
-                  <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ vehicle.fuel_capacity }} Letters
+                  <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ vehicle.fuel_capacity }} Liters
                   </td>
                   <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ vehicle.capacity }} Person</td>
                   <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{
