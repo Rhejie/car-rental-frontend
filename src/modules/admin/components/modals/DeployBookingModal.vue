@@ -317,6 +317,7 @@ import SelectPayment from '../settings/payment-utilities/SelectPayment.vue';
 import SelectPaymentMethod from '../settings/payment-utilities/SelectPaymentMethod.vue'
 import { deployBooking } from '../composables/booking-composables';
 import { getAvailableDrivers } from '../composables/driver-composables';
+import { useRouter } from 'vue-router';
 const props = defineProps({
     openModal: {
         type: Boolean,
@@ -328,6 +329,8 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['closeModal', 'deployedBooking', 'changePrice'])
+
+const router = useRouter();
 
 const open = computed(() => props.openModal)
 const selected = computed({
@@ -403,6 +406,7 @@ const handleDeployClick = async () => {
     errorValue.value = errorData.value
     loading.value = false
     if (!loading.value && !errorValue.value, !errorData.value) {
+        router.push({ name: 'Trackers'})
         emit('deployedBooking', data.value)
     }
 }

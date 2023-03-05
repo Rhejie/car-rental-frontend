@@ -60,7 +60,7 @@
     <!-- Static sidebar for desktop -->
     <div class="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col">
       <!-- Sidebar component, swap this element with another sidebar if you like -->
-      <div class="flex flex-grow flex-col overflow-y-auto bg-cyan-700 pt-5 pb-4">
+      <div class="flex flex-grow flex-col overflow-y-auto bg-sky-600 pt-5 pb-4">
         <div class="flex flex-shrink-0 items-center px-4">
           <img class="h-8 w-auto" src="../../assets/APCLogo.jpg" alt="Easywire logo" /> <span
             class="text-white text-sm ml-2">Car Rental</span>
@@ -68,7 +68,7 @@
         <nav class="mt-5 flex flex-1 flex-col divide-y divide-cyan-800 overflow-y-auto" aria-label="Sidebar">
           <div class="space-y-1 px-2">
             <router-link v-for="item in navigation" :key="item.name" :to="{ name: item.routeName }"
-              :class="[item.current ? 'bg-cyan-800 text-white' : 'text-cyan-100 hover:text-white hover:bg-cyan-600', 'group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md']"
+              :class="[item.current ? 'bg-cyan-800 text-white' : 'text-cyan-100 hover:text-white hover:bg-cyan-600', 'group flex items-center px-2 py-2 text-md leading-6 font-medium rounded-md']"
               :aria-current="item.current ? 'page' : undefined">
               <component :is="item.icon" class="mr-4 h-6 w-6 flex-shrink-0 text-cyan-200" aria-hidden="true" />
               {{ item.name }}
@@ -79,7 +79,7 @@
     </div>
 
     <div class="flex flex-1 flex-col lg:pl-64">
-      <div class="flex h-16 flex-shrink-0 border-b border-gray-200 bg-cyan-600 lg:border-none">
+      <div class="flex h-16 flex-shrink-0 border-b border-gray-200 bg-sky-400 shadow-md lg:border-none">
         <button type="button"
           class="border-r border-gray-200 px-4 text-gray-400 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-cyan-500 lg:hidden"
           @click="sidebarOpen = true">

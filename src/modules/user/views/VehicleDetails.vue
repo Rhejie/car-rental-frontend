@@ -44,7 +44,7 @@ onMounted(async () => {
 <template>
     <BookingModal v-if="!loading" :open-modal="openModal" :handleClickCloseModal="handleClickCloseModal" :vehicle="vehicle"/>
     <div class="border-b border-gray-200">
-        <nav aria-label="Breadcrumb" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <nav aria-label="Breadcrumb" class="mx-auto max-w-8xl px-4 sm:px-6 lg:px-8">
             <ol role="list" class="flex items-center space-x-4 py-4">
                 <li v-for="breadcrumb in breadcrumbs" :key="breadcrumb.id">
                     <div class="flex items-center">
@@ -76,7 +76,6 @@ onMounted(async () => {
                 <div
                     class="mx-auto mt-8 grid max-w-3xl grid-cols-1 gap-6 sm:px-6 lg:max-w-7xl lg:grid-flow-col-dense lg:grid-cols-3">
                     <div class="space-y-6 lg:col-span-2 lg:col-start-1">
-                        <!-- Description list-->
                         <section aria-labelledby="applicant-information-title">
                             <div class="bg-white shadow sm:rounded-lg  border-t border-cyan-600">
                                 <div class="px-4 py-5 sm:px-6">
@@ -167,9 +166,6 @@ onMounted(async () => {
 
                     <section aria-labelledby="timeline-title" class="lg:col-span-1 lg:col-start-3">
                         <div class="bg-white px-4 py-5 shadow sm:rounded-lg sm:px-6 border-t border-cyan-600">
-                            <!-- <h2 id="timeline-title" class="text-lg font-medium text-gray-900">Available Destinations
-                            </h2> -->
-                            
                             <div class="justify-stretch mt-6 flex flex-col">
                                 <button type="button"
                                     @click="handleClickBookModal"
@@ -178,14 +174,10 @@ onMounted(async () => {
                                     Book Now
                                 </button>
                             </div>
-                            <!-- Activity Feed -->
                             <div class="mt-6 flow-root">
                                 <ul role="list" class="-mb-8">
                                     <li v-for="(event) in vehicle.vehicle_place" :key="event.id">
                                         <div class="relative pb-5">
-                                            <!-- <span v-if="eventIdx !== timeline.length - 10"
-                                                class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200"
-                                                aria-hidden="true" /> -->
                                             <div class="relative flex space-x-3">
                                                 <div>
                                                     <span

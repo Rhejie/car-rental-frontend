@@ -91,9 +91,9 @@ watch(params.value, () => {
 </script>
 <template>
   <CreatevehicleModal :openModal="openModal" @closeModal="handleCloseAddVehicleModal" />
-  <div class="w-full bg-gray-500">
+  <div class="w-full bg-white">
     <div class="mx-auto max-w-2xl  py-4 px-4 lg:max-w-7xl lg:px-0">
-      <h1 class="text-2xl font-bold tracking-tight text-white sm:text-3xl">Manage Vehicles</h1>
+      <h1 class="text-2xl font-bold tracking-tight text-gray-600 sm:text-3xl">Manage Vehicles</h1>
     </div>
   </div>
   <div class="px-4 bg-gray-200 h-screen sm:px-6 sm:py-4 lg:px-8">

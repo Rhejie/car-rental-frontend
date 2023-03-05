@@ -117,7 +117,7 @@
 
       <header class="relative bg-white">
 
-        <nav aria-label="Top" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <nav aria-label="Top" class="mx-auto max-w-8xl  px-4 sm:px-6 lg:px-8">
           <div class="border-b border-gray-200">
             <div class="flex h-16 items-center">
               <button type="button" class="rounded-md bg-white p-2 text-gray-400 lg:hidden"

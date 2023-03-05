@@ -173,9 +173,9 @@ watch(params.value, () => {
 
   <GNotification :show-notif="showNotif" :message="message" />
   <ReturnBookingModal v-if="selectedBooking" :open-modal="showReturnedModal" :total-paid-by-user="totalPaidByUser" :selected-booking="selectedBooking" @closeModal="handleCloseModal" @returnedBooking="handleClickReturned"/>
-  <div class="w-full bg-gray-500">
+  <div class="w-full bg-white">
     <div class="mx-auto max-w-2xl  py-4 px-4 lg:max-w-7xl lg:px-0">
-      <h1 class="text-2xl font-bold tracking-tight text-white sm:text-3xl">Booking History</h1>
+      <h1 class="text-2xl font-bold tracking-tight text-gray-600 sm:text-3xl">Booking History</h1>
     </div>
   </div>
   <div class="px-4 bg-gray-200 h-screen sm:px-6 sm:py-4 lg:px-8">
