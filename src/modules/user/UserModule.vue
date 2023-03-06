@@ -167,9 +167,12 @@
                     leave-to-class="opacity-0 translate-y-1">
                     <PopoverPanel
                       class="absolute left-1/2 z-10 mt-3 w-screen max-w-xs -translate-x-1/2 transform px-2 sm:px-0">
-                      <div class="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5"
-                        v-loading="loadingNotification">
-                        <div class="relative grid gap-6 bg-white px-3 py-6 sm:gap-8 overflow-y-auto h-96">
+                      <div class="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
+                        <div class="px-4 py-2">
+                          <span class="text-sm">Filter:</span>
+                          <BookingFilters v-model="status" :notifications="true"/>
+                        </div>
+                        <div class="relative grid gap-6 bg-white px-3 py-6 sm:gap-8 overflow-y-auto h-96" v-loading="loadingNotification">
                           <router-link @click="handleClickViewNotification(notification.id)"
                             v-for="(notification, index) in myNotifications" :key="notification.id"
                             :to="`${notification.data.link}`"
@@ -277,7 +280,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, inject, computed } from 'vue'
+import { ref, onMounted, inject, computed, watch } from 'vue'
 import {
   Dialog,
   DialogPanel,
@@ -306,6 +309,7 @@ import { loadUser, logoutUser } from '@/global-composables/get-user-profile';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import {useEmitter} from '@/global-composables/emitter'
+import BookingFilters from './user-components/BookingFilters.vue';
 
 const router = useRouter()
 const store = useStore();
@@ -324,6 +328,10 @@ const navigation = {
 }
 const loading = ref(true)
 const hasError = ref(null)
+const status = ref({
+    name: "All",
+    value: "ALL",
+})
 const userProfile = computed(() => JSON.parse(auth.remember()))
 console.log(userProfile.value)
 
@@ -333,9 +341,9 @@ const hasNotification = computed({
       return false
     }
 
-    let find = myNotifications.value.find(notif => notif.read_at == null || notif.read_at == '');
+    const notif = myNotifications.value.length ? myNotifications.value.find(notif => notif.read_at == null || notif.read_at == '') : false;
 
-    if (!find) {
+    if (!notif) {
       return false
     }
 
@@ -360,7 +368,11 @@ const handleClickViewNotification = async () => {
 
 
 const loadNotifications = async () => {
-  const { data, load } = getMyNotifications();
+  loadingNotification.value = true
+  let params = {
+    status_filter: status.value.value
+  }
+  const { data, load } = getMyNotifications(params);
   await load();
   myNotifications.value = data.value
   loadingNotification.value = false
@@ -436,4 +448,7 @@ const filters = [
 const mobileMenuOpen = ref(false)
 const mobileFiltersOpen = ref(false)
 
+watch(status, () => {
+  loadNotifications();
+})
 </script>

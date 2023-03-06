@@ -6,7 +6,7 @@ export const loadBookings = (params) => {
     const data = ref([])
     const totalBookings = ref(0)
     const load = async () => {
-        await http().get(`/booking/list?search=${params.search}&page=${params.page}&size=${params.page_size}`).then(res => {
+        await http().get(`/booking/list?search=${params.search}&page=${params.page}&size=${params.page_size}&status_filter=${params.statusFilter}`).then(res => {
             data.value = res.data.data
             totalBookings.value = res.data.total
         }).catch(error => {

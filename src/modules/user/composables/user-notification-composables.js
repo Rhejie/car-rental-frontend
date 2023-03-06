@@ -1,11 +1,11 @@
 import { http } from "@/global-composables/http_service"
 import { ref } from "vue"
 
-export const getMyNotifications = () => {
+export const getMyNotifications = (params) => {
     const data = ref([])
 
     const load = async () => {
-        await http().get('/notification/user').then(res => {
+        await http().get('/notification/user', {params}).then(res => {
             data.value = res.data
         })
     }

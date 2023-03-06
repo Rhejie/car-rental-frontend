@@ -615,3 +615,10 @@ const loadAllBookedDates = async () => {
         </Dialog>
     </TransitionRoot>
 </template>
+<style>
+.normal, .disabled {
+  background-color: red;
+  color: #000;
+  pointer-events: none;
+}
+</style>

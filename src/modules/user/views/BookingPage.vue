@@ -8,7 +8,7 @@
                     <div class="min-w-0 flex-1">
                         <!-- Profile -->
                         <div class="flex items-center">
-                            <div v-loading="loading">
+                            <div>
                                 <div class="flex items-center">
                                     <h1 class=" text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:leading-9">
                                         Your Bookings
@@ -28,9 +28,9 @@
         </div>
         <main class="mx-auto px-4 lg:max-w-8xl lg:px-8">
 
-            <GLoadingDiv v-if="loading" />
+            <!-- <GLoadingDiv v-if="loading" /> -->
 
-            <div class=" pb-24 " v-if="!loading">
+            <div class=" pb-24 ">
                 <main class="">
                     <div class="mx-auto mt-8 grid  grid-cols-1 gap-6 sm:px-6  lg:grid-flow-col-dense lg:grid-cols-3">
                         <div class="space-y-6 lg:col-span-2 lg:col-start-1">
@@ -39,10 +39,12 @@
                                     <div class="px-4 py-5 sm:px-6">
                                         <h3 class="text-lg font-medium leading-6 text-gray-900">
                                             History</h3>
+
+                                        <BookingFilters v-model="status" />
                                     </div>
                                     <div class="border-t border-gray-200">
 
-                                        <ul role="list" class="divide-y divide-gray-200">
+                                        <ul role="list" class="divide-y divide-gray-200"  v-if="!loading">
                                             <li v-for="book in bookings" :key="book.applicant">
                                                 <a :href="book.href" class="block hover:bg-gray-50">
                                                     <div class="flex items-center px-4 py-4 sm:px-6">
@@ -55,13 +57,11 @@
                                                             <div
                                                                 class="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
                                                                 <div>
-                                                                    <p
-                                                                        class="truncate text-sm font-medium text-cyan-600">
+                                                                    <p class="truncate text-sm font-medium text-cyan-600">
                                                                         {{ book.vehicle.model }} - {{
-                                                                                book.vehicle.vehicle_brand.name
+                                                                            book.vehicle.vehicle_brand.name
                                                                         }}</p>
-                                                                    <p
-                                                                        class="mt-2 flex items-center text-sm text-gray-500">
+                                                                    <p class="mt-2 flex items-center text-sm text-gray-500">
                                                                         <MapPinIcon
                                                                             class="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
                                                                             aria-hidden="true" />
@@ -69,8 +69,7 @@
                                                                             {{ book.destination }}
                                                                         </span>
                                                                     </p>
-                                                                    <p
-                                                                        class="mt-2 flex items-center text-sm text-gray-500">
+                                                                    <p class="mt-2 flex items-center text-sm text-gray-500">
                                                                         <ClockIcon
                                                                             class="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
                                                                             aria-hidden="true" />
@@ -78,14 +77,13 @@
                                                                             Start: {{ formatDateTime(book.booking_start) }}
                                                                         </span>
                                                                     </p>
-                                                                    <p
-                                                                        class="mt-2 flex items-center text-sm text-gray-500">
+                                                                    <p class="mt-2 flex items-center text-sm text-gray-500">
                                                                         <ClockIcon
                                                                             class="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
                                                                             aria-hidden="true" />
                                                                         <span class="truncate">
                                                                             End: {{
-                                                                                    formatDateTime(book.booking_end)
+                                                                                formatDateTime(book.booking_end)
                                                                             }}
                                                                         </span>
                                                                     </p>
@@ -98,7 +96,9 @@
                                                                                 class="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
                                                                                 aria-hidden="true" />
                                                                             <span class="truncate">
-                                                                                Model: {{book.vehicle.model}} | {{book.vehicle.vehicle_brand.name}} | {{book.vehicle.make}}
+                                                                                Model: {{ book.vehicle.model }} |
+                                                                                {{ book.vehicle.vehicle_brand.name }} |
+                                                                                {{ book.vehicle.make }}
                                                                             </span>
                                                                         </p>
                                                                         <p
@@ -107,7 +107,7 @@
                                                                                 class="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
                                                                                 aria-hidden="true" />
                                                                             <span class="truncate">
-                                                                                Applied on: {{book.created_at}}
+                                                                                Applied on: {{ book.created_at }}
                                                                             </span>
                                                                         </p>
                                                                         <p
@@ -122,10 +122,10 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <!-- <div>
+                                                    <!-- <div>
                                                             <InformationCircleIcon class="h-5 w-5 text-gray-400"
                                                                 aria-hidden="true" />
-                                                        </div> -->
+                                                            </div> -->
                                                         <div class="flex flex-wrap w-40">
                                                             <button type="button" v-if="handleBookingEdit(book)"
                                                                 @click="handeClickEdit(book)"
@@ -141,23 +141,26 @@
                                                                     aria-hidden="true" />
                                                                 Cancel
                                                             </button>
-                                                            <button type="button" v-if="handleBookingCancelButton(book)" @click="handlePrintInvoice(book)"
+                                                            <button type="button" v-if="handleBookingCancelButton(book)"
+                                                                @click="handlePrintInvoice(book)"
                                                                 class="inline-flex h-6 mr-1 items-center mr-2 my-1 rounded border border-transparent bg-cyan-500 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2">
                                                                 <DocumentCheckIcon class="h-5 w-5 text-white"
                                                                     aria-hidden="true" />
                                                                 Print Invoice
                                                             </button>
-                                                            <button type="button" v-if="handleBookingCancelButton(book)" @click="hnadlePrintForm(book)"
+                                                            <button type="button" v-if="handleBookingCancelButton(book)"
+                                                                @click="hnadlePrintForm(book)"
                                                                 class="inline-flex h-6 items-center mr-2 my-1 rounded border border-transparent bg-emerald-500 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
                                                                 <DocumentTextIcon class="h-5 w-5 text-white"
                                                                     aria-hidden="true" />
                                                                 Form
                                                             </button>
-                                                            <button type="button" v-if="handleBookingCancelButton(book)" @click="handleClickAgreement(book, index)"
-                                                            
-                                                            class="inline-flex h-6 items-center mr-2 my-1 rounded border border-transparent bg-stone-500 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-stone-700 focus:outline-none focus:ring-2 focus:ring-stone-500 focus:ring-offset-2">
-                                                            <DocumentTextIcon class="h-5 w-5 text-white" aria-hidden="true" />
-                                                            Agreement Form
+                                                            <button type="button" v-if="handleBookingCancelButton(book)"
+                                                                @click="handleClickAgreement(book, index)"
+                                                                class="inline-flex h-6 items-center mr-2 my-1 rounded border border-transparent bg-stone-500 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-stone-700 focus:outline-none focus:ring-2 focus:ring-stone-500 focus:ring-offset-2">
+                                                                <DocumentTextIcon class="h-5 w-5 text-white"
+                                                                    aria-hidden="true" />
+                                                                Agreement Form
                                                             </button>
                                                         </div>
                                                     </div>
@@ -197,50 +200,46 @@
                                                         {{ handleStatus(currentBook).status
                                                         }}</dd>
                                                 </div>
-                                                <div
-                                                    class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                                     <dt class="text-sm font-medium text-gray-500">Destination</dt>
                                                     <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{
-                                                            currentBook.destination
+                                                        currentBook.destination
                                                     }}</dd>
                                                 </div>
                                                 <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                                     <dt class="text-sm font-medium text-gray-500">Booking Start</dt>
                                                     <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{
-                                                            formatDateTime(currentBook.booking_start)
+                                                        formatDateTime(currentBook.booking_start)
                                                     }}</dd>
                                                 </div>
-                                                <div
-                                                    class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                                     <dt class="text-sm font-medium text-gray-500">Booking End</dt>
                                                     <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{
-                                                            formatDateTime(currentBook.booking_end)
+                                                        formatDateTime(currentBook.booking_end)
                                                     }}</dd>
                                                 </div>
                                                 <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                                     <dt class="text-sm font-medium text-gray-500">Model</dt>
                                                     <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{
-                                                            currentBook.vehicle.model
+                                                        currentBook.vehicle.model
                                                     }}</dd>
                                                 </div>
-                                                <div
-                                                    class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                                     <dt class="text-sm font-medium text-gray-500">Brand</dt>
                                                     <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{
-                                                            currentBook.vehicle.vehicle_brand.name
+                                                        currentBook.vehicle.vehicle_brand.name
                                                     }}</dd>
                                                 </div>
                                                 <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                                     <dt class="text-sm font-medium text-gray-500">Price</dt>
                                                     <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{
-                                                            currentBook.vehicle.price
+                                                        currentBook.vehicle.price
                                                     }} per day</dd>
                                                 </div>
-                                                <div
-                                                    class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                                     <dt class="text-sm font-medium text-gray-500">Mileage</dt>
                                                     <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{
-                                                            currentBook.vehicle.odometer
+                                                        currentBook.vehicle.odometer
                                                     }}</dd>
                                                 </div>
                                             </dl>
@@ -259,8 +258,9 @@
         <CancelBookingModal :openModal="showCancelModal" :selected-book="selectedBook" @closeModal="handleCloseModal"
             @cancelBook="handleCancelBooking" />
 
-        <BookingModal v-if="(openModalBook && selecteVehicle)" :open-modal="openModalBook" :handleClickCloseModal="handleClickCloseModal"
-        :vehicle="selecteVehicle" :booking-info="bookingInfo" :mode="true" @updateBook="handleUpdateBook"/>
+        <BookingModal v-if="(openModalBook && selecteVehicle)" :open-modal="openModalBook"
+            :handleClickCloseModal="handleClickCloseModal" :vehicle="selecteVehicle" :booking-info="bookingInfo"
+            :mode="true" @updateBook="handleUpdateBook" />
     </main>
 </template>
 <script setup>
@@ -302,6 +302,7 @@ import { downloadAgreement, downloadTransactionForm } from '@/modules/admin/comp
 import BookingModal from '../modal/BookingModal.vue';
 import moment from 'moment';
 import { useEmitter } from '@/global-composables/emitter';
+import BookingFilters from '../user-components/BookingFilters.vue';
 
 const emitter = useEmitter;
 const url = storageUrl();
@@ -312,6 +313,7 @@ const params = ref({
     page_size: 10,
     page: 1,
     search: null,
+    statusFilter: 'ALL'
 })
 const openModalBook = ref(false)
 const showNotif = ref(false)
@@ -323,6 +325,10 @@ const selectedBook = ref(null)
 const forms = ref([])
 const selecteVehicle = ref(null)
 const bookingInfo = ref(null)
+const status = ref({
+    name: "All",
+    value: "ALL",
+})
 
 const handleChangeSize = (size) => {
     params.value.page_size = size
@@ -338,8 +344,8 @@ const handleClickCloseModal = () => {
 
 const handleUpdateBook = (book) => {
     bookings.value.map(b => {
-        if(b.id == book.id){
-            for(let key in book) {
+        if (b.id == book.id) {
+            for (let key in book) {
                 b[key] = book[key]
             }
         }
@@ -460,35 +466,35 @@ const handleBookingCancelButton = (book) => {
     if (book.booking_status == 'cancel' || book.booking_status == 'decline' || book.booking_status == 'pending') {
         return false
     }
-    
+
     return true
 }
 
 const handleBookingCancel = (book) => {
-    if (book.booking_status == 'cancel' || book.booking_status == 'decline' ) {
+    if (book.booking_status == 'cancel' || book.booking_status == 'decline') {
         return false
     }
 
-    if(book.deployed || book.returned) {
+    if (book.deployed || book.returned) {
         return false
     }
-    
+
     return true
 }
 
 const handleBookingEdit = (book) => {
-    if (book.booking_status != 'pending' ) {
+    if (book.booking_status != 'pending') {
         return false
     }
 
-    if(book.deployed || book.returned) {
+    if (book.deployed || book.returned) {
         return false
     }
-    
+
     return true
 }
 
-const handeClickEdit = (book)  => {
+const handeClickEdit = (book) => {
     console.log(book.vehicle)
     openModalBook.value = true
     selecteVehicle.value = book.vehicle
@@ -503,7 +509,7 @@ const getCurrentBookData = async () => {
 }
 
 const handleClickAgreement = async (book, index) => {
-  await downloadAgreement(book.id).then(res => {
+    await downloadAgreement(book.id).then(res => {
         console.log(res, 'asda');
         const url = window.URL.createObjectURL(new Blob([res.data]));
         const link = document.createElement('a');
@@ -511,7 +517,7 @@ const handleClickAgreement = async (book, index) => {
         link.setAttribute('download', `${book.user.first_name} - ${book.user.last_name} - agreement.pdf`);
         document.body.appendChild(link);
         link.click();
-      })
+    })
 }
 
 const handleGetImage = (images) => {
@@ -531,10 +537,14 @@ onMounted(async () => {
     emitter.on('REFRESH_BOOKING', async () => {
         await fetch();
     })
-    
+
 })
 
 watch(params.value, async () => {
     await fetch();
+})
+
+watch(status, (val) => {
+    params.value.statusFilter = val.value
 })
 </script>
