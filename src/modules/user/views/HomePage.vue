@@ -195,7 +195,7 @@ onMounted(async () => {
             </aside>
 
 
-            <section aria-labelledby="product-heading" class="mt-6 lg:col-span-2 lg:mt-0 xl:col-span-3 overflow-y-auto max-h-screen">
+            <section aria-labelledby="product-heading" class="mt-6 lg:col-span-2 lg:mt-0 xl:col-span-3 ">
                 <h2 id="product-heading" class="sr-only">Vehciles</h2>
                 <GLoadingDiv v-if="loading" />
                 <div>
