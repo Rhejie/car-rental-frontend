@@ -217,7 +217,7 @@
 
             <div class="relative mx-auto flex max-w-3xl flex-col items-center py-32 px-6 text-center sm:py-64 lg:px-0">
                 <h1 class="text-4xl font-bold tracking-tight text-white lg:text-6xl">Your are safe here</h1>
-                <p class="mt-4 text-xl text-white">Check out the latest and beautifull car release while they're still in stock.</p>
+                <p class="mt-4 text-xl text-white">Check out the latest and beautiful car release while they're still in stock.</p>
                 <router-link to="/login" 
                     
                     class="mt-8 inline-block rounded-md border border-transparent bg-white py-3 px-8 text-base font-medium text-gray-900 hover:bg-gray-100">

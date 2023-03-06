@@ -168,7 +168,7 @@ onMounted(async () => {
     <main class="mx-auto px-4  lg:px-8">
         <div class="border-b border-gray-400 pt-2 pb-2">
             <h1 class="text-4xl font-bold tracking-tight text-gray-900">Vehicles</h1>
-            <p class="mt-1 text-base text-gray-500">Checkout out the latest and beautifull cars!</p>
+            <p class="mt-1 text-base text-gray-500">Checkout out the latest and beautiful cars!</p>
         </div>
 
         <div class="pt-2 pb-24 lg:grid lg:grid-cols-3 lg:gap-x-8 xl:grid-cols-4">
