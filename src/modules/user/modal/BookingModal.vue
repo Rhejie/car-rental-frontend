@@ -586,6 +586,7 @@ const loadAllBookedDates = async () => {
                                                                 <div class="space-y-1 flex flex-col">
                                                                     <span class="text-gray-600 text-sm" v-if="countDays != null && countDays != ''">Total Days: {{countDays}}</span>
                                                                     <span class="text-gray-600 text-sm" v-if="totalPrice != null && totalPrice != ''">Total Price: {{totalPrice}}</span>
+                                                                    <span class="text-gray-600 text-sm" v-if="countDays != null && countDays != ''">(Disclaimer: Price may vary)</span>
                                                                 </div>
                                                             </form>
                                                             <div
