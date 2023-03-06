@@ -58,3 +58,19 @@ export const getCurrentBook = () => {
 export const downloadInvoice = (id) => {
     return httpFile().get(`/booking/download/${id}`)
 }
+
+
+export const getAllBookedDates = () => {
+    const data = ref([]);
+    const load= async () => {
+        await http().get('/booking/all-booked')
+            .then(res => {
+                data.value = res.data
+            })
+    }
+
+    return {
+        data,
+        load
+    }
+}

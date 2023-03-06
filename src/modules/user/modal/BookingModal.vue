@@ -1,10 +1,11 @@
 <script setup>
 import { computed, onMounted, onUpdated, ref, watch, defineEmits } from 'vue'
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
-import { storeBook, updateBook } from '../composables/booking-composables'
+import { getAllBookedDates, storeBook, updateBook } from '../composables/booking-composables'
 import { BookmarkIcon } from '@heroicons/vue/24/outline'
 import { useRouter } from 'vue-router';
 import { useCurrentStore } from '@/store/useCurrentUser';
+import moment from 'moment';
 
 const props = defineProps({
     openModal: {
@@ -33,6 +34,11 @@ const emit = defineEmits(['updateBook'])
 const router = useRouter()
 const currentUserStore = useCurrentStore()
 const open = computed(() => props.openModal)
+const dateRanges = [
+        // { start: new Date('2023-01-01'), end: new Date('2023-01-07') },
+        // { start: new Date('2023-02-01'), end: new Date('2023-02-14') },
+        { start: new Date('2023-03-01'), end: new Date('2023-03-10') }
+      ];
 
 const vehicle = computed(() => props.vehicle)
 const bookingInfo = computed(() => props.bookingInfo)
@@ -50,6 +56,28 @@ const book = ref({
     secondary_operator_name: null,
     secondary_operator_license_no: null,
     self_drive: true
+})
+const bookedDates = ref([])
+
+const disabledDates = computed({
+    get() {
+        if(bookedDates.value.length) {
+            return bookedDates.value.map(booked => {
+            
+                let dates = [];
+
+                dates.push(moment(booked.booking_start).format('YYYY-MM-DD'))
+                dates.push(moment(booked.booking_end).format('YYYY-MM-DD'))
+                
+                booked = dates
+                return booked
+            })
+        }
+        return []
+    },
+    set(newValue) {
+        newValue
+    }
 })
 
 const price = computed({
@@ -153,6 +181,8 @@ onMounted(() => {
         book.value = {...bookingInfo.value}
         book.value.add_driver = book.value.add_driver == 1 ? true : false
     }
+
+    loadAllBookedDates();
 })
 
 onUpdated(() => {
@@ -185,6 +215,32 @@ watch(book.value, (val) => {
         val.self_drive = true
     }
 })
+
+const disabledDate = (date) => {
+    const disabledDateRanges = bookedDates.value.map(booked => {
+            
+            let dates = [];
+
+            dates.push(moment(booked.booking_start).format('YYYY-MM-DD'))
+            dates.push(moment(booked.booking_end).format('YYYY-MM-DD'))
+            
+            booked = dates
+            return booked
+        })
+    
+    return disabledDateRanges.some(
+        ([start, end]) => date >= new Date(start) && date <= new Date(end)
+    );
+}
+
+const loadingBookedDates = ref(true)
+const loadAllBookedDates = async () => {
+    loadingBookedDates.value = true
+    const {data, load} = getAllBookedDates();
+    await load();
+    bookedDates.value = data.value
+    loadingBookedDates.value = false
+}
 </script>
 <template>
     <TransitionRoot as="template" :show="open">
@@ -214,7 +270,7 @@ watch(book.value, (val) => {
                                         Book a vehicle
                                     </DialogTitle>
                                     <div class="mt-2">
-                                        <main class="" v-if="vehicle && vehicle.id">
+                                        <main class="" v-if="vehicle && vehicle.id && !loadingBookedDates">
                                             <div
                                                 class="mx-auto mt-2 grid grid-cols-1 gap-6 sm:px-6 lg:grid-flow-col-dense lg:grid-cols-3">
                                                 <div class="space-y-6 lg:col-span-1 lg:col-start-1">
@@ -368,10 +424,21 @@ watch(book.value, (val) => {
                                                                             Booking Start
                                                                         </label>
                                                                         <div class="mt-1">
-                                                                            <input id="email" type="datetime-local"
+                                                                            <!-- <input id="email" type="datetime-local"
                                                                                 placeholder="Book Start"
                                                                                 v-model="book.booking_start"
-                                                                                class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
+                                                                                class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" /> -->
+                                                                            <el-date-picker
+                                                                                v-model="book.booking_start"
+                                                                                range
+                                                                                type="datetime"
+                                                                                :class="'w-full'"
+                                                                                format="YYYY-MM-DD h:mm a"
+                                                                                placeholder="Booking Start"
+                                                                                value-format="YYYY-MM-DD HH:mm:ss"
+                                                                                :disabled-date="disabledDate"
+                                                                            ></el-date-picker>
+                                                                            <br/>
                                                                             <span class="text-sm text-red-400"
                                                                                 v-if="errorValue && !loading && errorValue.booking_start">
                                                                                 {{ errorValue.booking_start[0] }}
@@ -383,10 +450,21 @@ watch(book.value, (val) => {
                                                                             class="block text-sm font-medium text-gray-700">Booking End
                                                                             </label>
                                                                         <div class="mt-1">
-                                                                            <input id="email" type="datetime-local"
+                                                                            <!-- <input id="email" type="datetime-local"
                                                                                 v-model="book.booking_end"
                                                                                 placeholder="First Name"
-                                                                                class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
+                                                                                class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" /> -->
+                                                                            <el-date-picker
+                                                                                v-model="book.booking_end"
+                                                                                range
+                                                                                type="datetime"
+                                                                                :class="'w-11/12'"
+                                                                                format="YYYY-MM-DD h:mm a"
+                                                                                placeholder="Booking End"
+                                                                                value-format="YYYY-MM-DD HH:mm:ss"
+                                                                                :disabled-date="disabledDate"
+                                                                            ></el-date-picker>
+                                                                            <br/>
                                                                             <span class="text-sm text-red-400"
                                                                                 v-if="errorValue && !loading && errorValue.booking_end">
                                                                                 {{ errorValue.booking_end[0] }}
