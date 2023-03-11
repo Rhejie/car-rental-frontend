@@ -60,10 +60,10 @@ export const downloadInvoice = (id) => {
 }
 
 
-export const getAllBookedDates = () => {
+export const getAllBookedDates = (id) => {
     const data = ref([]);
     const load= async () => {
-        await http().get('/booking/all-booked')
+        await http().get(`/booking/all-booked/${id}`)
             .then(res => {
                 data.value = res.data
             })

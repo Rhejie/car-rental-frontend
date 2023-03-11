@@ -180,6 +180,7 @@ onMounted(() => {
     if(bookingInfo.value && bookingInfo.value.id && mode.value) {
         book.value = {...bookingInfo.value}
         book.value.add_driver = book.value.add_driver == 1 ? true : false
+        
     }
 
     loadAllBookedDates();
@@ -216,6 +217,10 @@ watch(book.value, (val) => {
     }
 })
 
+watch(vehicle.value, () => {
+    loadAllBookedDates()
+})
+
 const disabledDate = (date) => {
     const disabledDateRanges = bookedDates.value.map(booked => {
             
@@ -235,8 +240,10 @@ const disabledDate = (date) => {
 
 const loadingBookedDates = ref(true)
 const loadAllBookedDates = async () => {
+    console.log('booked')
+    if(!vehicle.value.id) return
     loadingBookedDates.value = true
-    const {data, load} = getAllBookedDates();
+    const {data, load} = getAllBookedDates(vehicle.value.id);
     await load();
     bookedDates.value = data.value
     loadingBookedDates.value = false

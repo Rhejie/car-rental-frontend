@@ -70,7 +70,7 @@ onMounted(async () => {
                     <li
                         :class="['relative cursor-default select-none py-2 pl-3 pr-9', active ? 'bg-indigo-600 text-white' : 'text-gray-900']">
                         <span :class="['block truncate', selected && 'font-semibold']">
-                            {{ vehicle.name }}
+                            {{ vehicle.model }} | {{  vehicle.tracker.name }}
                         </span>
 
                         <span v-if="selected"

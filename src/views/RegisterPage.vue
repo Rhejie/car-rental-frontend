@@ -1,7 +1,6 @@
 <template>
     <div class="flex h-screen overflow-hidden ">
-        <div
-            class="flex flex-1 flex-col overflow-y-auto  justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
+        <div class="flex flex-1 flex-col overflow-y-auto  justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
             <div class="mx-auto w-full max-w-sm lg:w-96">
 
 
@@ -75,7 +74,7 @@
                                         Contact Number
                                     </label>
                                     <div class="mt-1">
-                                        <input  type="text" v-model="registerData.contact_number"
+                                        <input type="text" v-model="registerData.contact_number"
                                             placeholder="Contact Number"
                                             class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
                                         <span class="text-sm text-red-400"
@@ -120,8 +119,7 @@
                                 <div class="mt-1">
                                     <textarea v-model="registerData.address" placeholder="Address"
                                         class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
-                                    <span class="text-sm text-red-400"
-                                        v-if="errorValue && !loading && errorValue.address">
+                                    <span class="text-sm text-red-400" v-if="errorValue && !loading && errorValue.address">
                                         {{ errorValue.address[0] }}
                                     </span>
                                 </div>
@@ -132,8 +130,7 @@
                                     <input id="email" name="email" v-model="registerData.email" type="email"
                                         placeholder="Email address"
                                         class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
-                                    <span class="text-sm text-red-400"
-                                        v-if="errorValue && !loading && errorValue.email">
+                                    <span class="text-sm text-red-400" v-if="errorValue && !loading && errorValue.email">
                                         {{ errorValue.email[0] }}
                                     </span>
                                 </div>
@@ -145,8 +142,7 @@
                                     <input id="password" v-model="registerData.password" name="password" type="password"
                                         placeholder="Enter your password"
                                         class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
-                                    <span class="text-sm text-red-400"
-                                        v-if="errorValue && !loading && errorValue.password">
+                                    <span class="text-sm text-red-400" v-if="errorValue && !loading && errorValue.password">
                                         {{ errorValue.password[0] }}
                                     </span>
                                 </div>
@@ -165,15 +161,46 @@
                                 </div>
                             </div>
 
-                            <span class="text-sm text-gray-600">By signing up, you are agreeing to the APC Car Rental <span class="text-cyan-500 cursor-pointer"
-                                    @click="handleClickPolicy"> terms and condition</span>, View our <span @click="handleClickPrivacy" class="text-cyan-500 cursor-pointer">privacy policy</span></span>
+                            <span class="text-sm text-gray-600">By signing up, you are agreeing to the APC Car Rental</span>
+                            <!-- <span
+                                    class="text-cyan-500 cursor-pointer" @click="handleClickPolicy"> terms and
+                                    condition</span>, View our <span @click="handleClickPrivacy"
+                                    class="text-cyan-500 cursor-pointer">privacy policy</span></span> -->
+                            <fieldset>
+                                <legend class="sr-only">Notifications</legend>
+                                <div class="space-y-1">
+                                    <div class="relative flex items-start">
+                                        <div class="flex h-6 items-center">
+                                            <input id="comments" v-model="checkTermsAndConditions" aria-describedby="comments-description" name="comments"
+                                                type="checkbox"
+                                                class="h-4 w-4 rounded border-gray-300 text-cyan-500 focus:ring-indigo-600" />
+                                        </div>
+                                        <div class="ml-3 text-sm leading-6">
+                                            <label for="comments" @click="handleClickPrivacy" class="font-medium text-cyan-500 cursor-pointer">terms and
+                                                condition</label>
+                                        </div>
+                                    </div>
+                                    <div class="relative flex items-start">
+                                        <div class="flex h-6 items-center">
+                                            <input id="candidates" v-model="checkPrivacyAndPolicy" aria-describedby="candidates-description"
+                                                name="candidates" type="checkbox"
+                                                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600" />
+                                        </div>
+                                        <div class="ml-3 text-sm leading-6">
+                                            <label for="candidates" @click="handleClickPolicy" class="font-medium text-cyan-500 cursor-pointer">privacy policy</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
 
                             <div class="mt-10 border-t border-gray-200 pt-10">
-                                <button type="button" @click="handleRegister" class="inline-flex 
-                                        float-right bg-cyan-500 text-white text-white items-center 
-                                        rounded-md border border-cyan-300 px-3 py-2 text-sm font-medium 
-                                        leading-4 shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 
-                                        focus:ring-indigo-500 focus:ring-offset-2">
+                                <button :disabled="!checkPrivacyAndPolicy || !checkTermsAndConditions"
+                                    :class="[!checkPrivacyAndPolicy || !checkTermsAndConditions ? 'cursor-not-allowed' : '']"
+                                    type="button" @click="handleRegister" class="inline-flex 
+                                                        float-right bg-cyan-500 text-white text-white items-center 
+                                                        rounded-md border border-cyan-300 px-3 py-2 text-sm font-medium 
+                                                        leading-4 shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 
+                                                        focus:ring-indigo-500 focus:ring-offset-2">
                                     Register
                                 </button>
                                 <button type="button" @click="handleClickLogin"
@@ -189,9 +216,10 @@
         <div class="relative hidden w-0 flex-1 lg:block">
             <img class="absolute inset-0 h-full w-full object-cover" src=".././assets/suv2.webp" alt="" />
         </div>
-        <PolicyModal :open-modal="showModal" @close-modal="handleCloseModal" />
-        <PrivacyModal :open-modal="showModalPrivacy" @close-modal="handleCloseModal" />
     </div>
+    <PolicyModal :open-modal="showModal" @close-modal="handleCloseModal" />
+    <PrivacyModal :open-modal="showModalPrivacy" @close-modal="handleCloseModal" />
+    <IndentificationReminder :open-modal="openIdentification" @close-modal="handleCloseModal" />
 </template>
 <script setup>
 import { registerUser } from '@/global-composables/authentication';
@@ -200,6 +228,7 @@ import PrivacyModal from '@/modules/user/modal/PrivacyModal.vue';
 import UserProfileUploader from '@/modules/user/user-components/UserProfileUploader.vue';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import IndentificationReminder from '@/components/IndentificationReminder.vue';
 const router = useRouter();
 const agreed = ref(false)
 
@@ -214,9 +243,12 @@ const registerData = ref({
 })
 
 const showModalPrivacy = ref(false)
+const checkPrivacyAndPolicy = ref(false)
+const checkTermsAndConditions = ref(false)
 
 const errorValue = ref(null)
 const loading = ref(false)
+const openIdentification = ref(true)
 
 const handleRegister = async () => {
     const imageUrl = localStorage.getItem('id')
@@ -259,5 +291,6 @@ const handleClickPrivacy = () => {
 const handleCloseModal = () => {
     showModal.value = false
     showModalPrivacy.value = false
+    openIdentification.value = false
 }
 </script>

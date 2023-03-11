@@ -1,5 +1,5 @@
 <template>
-    <label for="location" class="block text-sm font-medium text-gray-700">Select Type</label>
+    <label for="location" class="block text-sm font-medium text-gray-700">Select Payment</label>
     <select id="location" name="location" :disabled="readOnly"
         v-model="selectedValue"
         :placeholder="'asdasd'"

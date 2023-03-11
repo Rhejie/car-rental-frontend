@@ -69,7 +69,7 @@
                                                             <dd class="mt-1 text-sm text-gray-900">
                                                                 <div class="mt-1 flex rounded-md shadow-sm">
                                                                     <span class="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 px-3 text-gray-500 sm:text-sm">Php</span>
-                                                                    <input type="text" v-model="selected.vehicle.price" @change="handleChangeNamePrice" min="0" name="company-website" id="company-website" class="block w-full min-w-0 flex-1 rounded-none rounded-r-md border border-gray-300 px-3 py-2  sm:text-sm" placeholder="www.example.com" />
+                                                                    <input type="number" v-model="selected.vehicle.price" @change="handleChangeNamePrice" min="0" name="company-website" id="company-website" class="block w-full min-w-0 flex-1 rounded-none rounded-r-md border border-gray-300 px-3 py-2  sm:text-sm" placeholder="Enter rental amount" />
                                                                 </div>
                                                                 <span class="text-sm text-red-400"
                                                                     v-if="errorValue && !loading && errorValue.price">
