@@ -15,7 +15,7 @@ export const loadUser = () => {
             router.push('/login')
             console.log('Error in getting user profile -->', error)
             localStorage.removeItem('car_rental_access_token')
-            hasError = true
+            hasError.value = true
             
         })
     }
@@ -39,7 +39,7 @@ export const loadUserProfile = (id) => {
             router.push('/login')
             console.log('Error in getting user profile -->', error)
             localStorage.removeItem('car_rental_access_token')
-            hasError = true
+            hasError.value = true
             
         })
     }
