@@ -72,7 +72,7 @@ const handleStoreRole = async () => {
     }
 
     loading.value = true
-    // maintenance.value.vehicle = vehicle.value
+    maintenance.value.vehicle = maintenance.value.vehicle && maintenance.value.vehicle.id ? maintenance.value.vehicle : vehicle.value
     const {data, post, errorData} = storeMaintenance(maintenance.value);
     await post();
     errorValue.value = errorData.value
