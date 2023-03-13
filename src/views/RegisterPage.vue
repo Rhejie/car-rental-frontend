@@ -12,23 +12,6 @@
                             <h2 class="mt-2 text-3xl font-bold tracking-tight text-gray-900">Register Account</h2>
                         </div>
                         <form class="">
-                            <div>
-                                <div class="mt-1">
-                                    <UserProfileUploader @newImage="handleUploadedSelfi" :storage-name="'selfi'"
-                                        :message="'Image of person holding the valid id'" />
-                                    <span class="text-sm text-red-400"
-                                        v-if="(errorValue && !loading && errorValue.user_selfi)">
-                                        {{ errorValue.user_selfi[0] }}
-                                    </span>
-                                </div>
-                                <div class="mt-1">
-                                    <UserProfileUploader @newImage="handleUploadedProfile" :storage-name="'id'" />
-                                    <span class="text-sm text-red-400"
-                                        v-if="(errorValue && !loading && errorValue.user_identification)">
-                                        {{ errorValue.user_identification[0] }}
-                                    </span>
-                                </div>
-                            </div>
                             <div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
                                 <div>
                                     <label for="email" class="block text-sm font-medium text-gray-700">First
@@ -157,6 +140,24 @@
                                     <span class="text-sm text-red-400"
                                         v-if="errorValue && !loading && errorValue.password_confirmation">
                                         {{ errorValue.password_confirmation[0] }}
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <div class="mt-1">
+                                    <UserProfileUploader @newImage="handleUploadedSelfi" :storage-name="'selfi'"
+                                        :message="'Image of person holding the valid id'" />
+                                    <span class="text-sm text-red-400"
+                                        v-if="(errorValue && !loading && errorValue.user_selfi)">
+                                        {{ errorValue.user_selfi[0] }}
+                                    </span>
+                                </div>
+                                <div class="mt-1">
+                                    <UserProfileUploader @newImage="handleUploadedProfile" :storage-name="'id'" />
+                                    <span class="text-sm text-red-400"
+                                        v-if="(errorValue && !loading && errorValue.user_identification)">
+                                        {{ errorValue.user_identification[0] }}
                                     </span>
                                 </div>
                             </div>

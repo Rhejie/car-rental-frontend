@@ -18,100 +18,25 @@ import {
     RocketLaunchIcon,
     BackspaceIcon
 } from '@heroicons/vue/24/outline'
-import { countTotalAcceptBookings, countTotalBookings, countTotalCancelBookings, countTotalDeclineBookings, countTotalDeployedBookings, countTotalPendingBookings, countTotalReturnedBookings, countTotalVehicles, countUnVerifiedAccounts, countUsers, countVerifiedAccounts } from '../composables/dashboard-composables';
+import { getDashboardData } from '../composables/dashboard-composables';
 import { onMounted, ref } from 'vue'
 import DashboardMap from '../components/dashboard/DashboardMap.vue';
 const users = ref(0)
 const usersVerified = ref(0)
 const usersUnVerified = ref(0)
 const totalBookings = ref(0)
-const totalUser = async () => {
-    const { data, load } = countUsers();
+const totalDashboardData = ref(null)
+
+const fetchDashboardData = async () => {
+    const { data, load } = getDashboardData();
     await load();
-    users.value = data.value
+    totalDashboardData.value = data.value
 }
 
-const totalVerified = async () => {
-    const { data, load } = countVerifiedAccounts();
-    await load()
-    usersVerified.value = data.value
-}
-
-const totalUnVerified = async () => {
-    const { data, load } = countUnVerifiedAccounts();
-    await load()
-    usersUnVerified.value = data.value
-}
-
-const totalBookingData = async () => {
-    const { data, load } = countTotalBookings();
-    await load()
-    totalBookings.value = data.value
-}
-
-const totalPendings = ref(0) 
-
-const getTotalPendings = async () => {
-    const {data, load} = countTotalPendingBookings()
-    await load()
-    totalPendings.value = data.value
-}
-
-const totalAcceptBooking = ref(0)
-const getTotalAcceptBooking = async () => {
-    const {data, load} = countTotalAcceptBookings()
-    await load()
-    totalAcceptBooking.value = data.value
-}
-
-const totalCancelBooking = ref(0)
-const getCancelBooking = async () => {
-    const {data, load} = countTotalCancelBookings()
-    await load()
-    totalCancelBooking.value = data.value
-}
-const totalDeclineBooking = ref(0)
-const getTotalDeclinedBooking = async () => {
-    const {data, load} = countTotalDeclineBookings();
-    await load();
-    totalDeclineBooking.value = data.value
-}
-
-const totalVehicle = ref(0)
-
-const getTotalVehicle = async () => {
-    const {data, load} = countTotalVehicles();
-    await load();
-    totalVehicle.value = data.value
-}
-
-const totalDeployedBooking = ref(0)
-
-const getTotalDeployedBooking = async () => {
-    const {data, load} = countTotalDeployedBookings();
-    await load();
-    totalDeployedBooking.value = data.value
-}
-
-const totalReturnedBooking = ref(0)
-const getTotalReturnedBooking = async() => {
-    const {data, load} = countTotalReturnedBookings()
-    await load();
-    totalReturnedBooking.value = data.value
-}
 
 
 onMounted(async () => {
-    await totalUser();
-    await totalVerified();
-    await totalUnVerified();
-    await totalBookingData();
-    await getTotalPendings();
-    await getTotalAcceptBooking();
-    await getCancelBooking();
-    await getTotalVehicle();
-    await getTotalDeployedBooking();
-    await getTotalReturnedBooking();
+    await fetchDashboardData();
 })
 const transactions = [
     {
@@ -159,7 +84,7 @@ const statusStyles = {
         </div>
 
         <div class="mt-8">
-            <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8" v-if="totalDashboardData">
                 <h2 class="text-lg font-medium leading-6 text-gray-900">Overview</h2>
                 <div class="mt-2 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                     <!-- Card -->
@@ -173,7 +98,7 @@ const statusStyles = {
                                     <dl>
                                         <dt class="truncate text-sm font-medium">Total Users</dt>
                                         <dd>
-                                            <div class="text-lg font-medium">{{ users }}</div>
+                                            <div class="text-lg font-medium">{{ totalDashboardData.users_count }}</div>
                                         </dd>
                                     </dl>
                                 </div>
@@ -198,7 +123,7 @@ const statusStyles = {
                                     <dl>
                                         <dt class="truncate text-sm font-medium">Verified Users</dt>
                                         <dd>
-                                            <div class="text-lg font-medium">{{ usersVerified }}</div>
+                                            <div class="text-lg font-medium">{{ totalDashboardData.usersVerified }}</div>
                                         </dd>
                                     </dl>
                                 </div>
@@ -222,7 +147,7 @@ const statusStyles = {
                                     <dl>
                                         <dt class="truncate text-sm font-medium">Unverified Users</dt>
                                         <dd>
-                                            <div class="text-lg font-medium">{{ usersUnVerified }}</div>
+                                            <div class="text-lg font-medium">{{ totalDashboardData.count_unverified_account }}</div>
                                         </dd>
                                     </dl>
                                 </div>
@@ -250,7 +175,7 @@ const statusStyles = {
                                     <dl>
                                         <dt class="truncate text-sm font-medium">Total Bookings</dt>
                                         <dd>
-                                            <div class="text-lg font-medium">{{ totalBookings }}</div>
+                                            <div class="text-lg font-medium">{{ totalDashboardData.total_bookings }}</div>
                                         </dd>
                                     </dl>
                                 </div>
@@ -276,7 +201,7 @@ const statusStyles = {
                                     <dl>
                                         <dt class="truncate text-sm font-medium">Total Pendings</dt>
                                         <dd>
-                                            <div class="text-lg font-medium">{{ totalPendings }}</div>
+                                            <div class="text-lg font-medium">{{ totalDashboardData.total_pending_bookings }}</div>
                                         </dd>
                                     </dl>
                                 </div>
@@ -301,7 +226,7 @@ const statusStyles = {
                                     <dl>
                                         <dt class="truncate text-sm font-medium">Total Accepted Bookings</dt>
                                         <dd>
-                                            <div class="text-lg font-medium">{{ totalAcceptBooking }}</div>
+                                            <div class="text-lg font-medium">{{ totalDashboardData.total_accept_bookings }}</div>
                                         </dd>
                                     </dl>
                                 </div>
@@ -325,7 +250,7 @@ const statusStyles = {
                                     <dl>
                                         <dt class="truncate text-sm font-medium">Total Cancelled Bookings</dt>
                                         <dd>
-                                            <div class="text-lg font-medium">{{ totalCancelBooking }}</div>
+                                            <div class="text-lg font-medium">{{ totalDashboardData.total_cancel_bookings }}</div>
                                         </dd>
                                     </dl>
                                 </div>
@@ -349,7 +274,7 @@ const statusStyles = {
                                     <dl>
                                         <dt class="truncate text-sm font-medium">Total Declined Bookings</dt>
                                         <dd>
-                                            <div class="text-lg font-medium">{{ totalDeclineBooking }}</div>
+                                            <div class="text-lg font-medium">{{ totalDashboardData.total_decline_bookings }}</div>
                                         </dd>
                                     </dl>
                                 </div>
@@ -373,7 +298,7 @@ const statusStyles = {
                                     <dl>
                                         <dt class="truncate text-sm font-medium">Total Deployed Booking</dt>
                                         <dd>
-                                            <div class="text-lg font-medium">{{ totalDeployedBooking }}</div>
+                                            <div class="text-lg font-medium">{{ totalDashboardData.total_deployed_bookings }}</div>
                                         </dd>
                                     </dl>
                                 </div>
@@ -396,7 +321,7 @@ const statusStyles = {
                                     <dl>
                                         <dt class="truncate text-sm font-medium">Total Returned Booking</dt>
                                         <dd>
-                                            <div class="text-lg font-medium">{{ totalReturnedBooking }}</div>
+                                            <div class="text-lg font-medium">{{ totalDashboardData.total_returned_bookings }}</div>
                                         </dd>
                                     </dl>
                                 </div>
@@ -419,7 +344,7 @@ const statusStyles = {
                                     <dl>
                                         <dt class="truncate text-sm font-medium">Total Vehicles</dt>
                                         <dd>
-                                            <div class="text-lg font-medium">{{ totalVehicle }}</div>
+                                            <div class="text-lg font-medium">{{ totalDashboardData.total_vehicles }}</div>
                                         </dd>
                                     </dl>
                                 </div>
