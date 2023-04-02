@@ -444,10 +444,16 @@ const handleStatus = (book) => {
         status = 'decline'
     }
 
-    if (book.deployed) {
+    if (book.deployed && !book.returned) {
         color = 'text-cyan-400'
         icon = RocketLaunchIcon
         status = 'deployed'
+    }
+
+    if (book.deployed && book.returned) {
+        color = 'text-green-400'
+        icon = RocketLaunchIcon
+        status = 'returned'
     }
 
     return {

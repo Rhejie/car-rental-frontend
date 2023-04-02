@@ -16,7 +16,9 @@ import {
   DocumentCheckIcon
 } from '@heroicons/vue/24/solid'
 import { ChevronLeftIcon } from '@heroicons/vue/20/solid'
+import SettingsSlideOver from '../components/settings/SettingsSlideOver.vue';
 
+const openModal = ref(false)
 const subNavigation = ref([
   {
     name: 'Account',
@@ -95,19 +97,28 @@ const handleClickSelect = (item) => {
         return nav
     })
 }
+
+const handleCloseModal = () => {
+  openModal.value = false
+}
+
+const handleClickOpenSetting = () => {
+  openModal.value = true
+}
 </script>
 <template>
+  <SettingsSlideOver :open-modal="openModal" @close-modal="handleCloseModal" :sub-navigation="subNavigation"/>
     <main class="flex flex-1 overflow-hidden">
         <div class="flex flex-1 flex-col xl:overflow-hidden">
           <!-- Breadcrumb -->
-          <nav aria-label="Breadcrumb" class="border-b border-blue-gray-200 bg-white xl:hidden">
+          <div aria-label="Breadcrumb" class="border-b border-blue-gray-200 bg-white xl:hidden" @click="handleClickOpenSetting">
             <div class="mx-auto flex max-w-3xl items-start py-3 px-4 sm:px-6 lg:px-8">
-              <a href="#" class="-ml-1 inline-flex items-center space-x-3 text-sm font-medium text-blue-gray-900">
+              <span  class="-ml-1 inline-flex items-center space-x-3 text-sm font-medium text-blue-gray-900">
                 <ChevronLeftIcon class="h-5 w-5 text-blue-gray-400" aria-hidden="true" />
                 <span>Settings</span>
-              </a>
+              </span>
             </div>
-          </nav>
+          </div>
 
           <div class="flex flex-1 xl:overflow-hidden">
             <!-- Secondary sidebar -->

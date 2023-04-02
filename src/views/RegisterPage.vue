@@ -1,13 +1,10 @@
 <template>
-    <div class="flex h-screen overflow-hidden ">
+    <div class="flex h-screen overflow-hidden">
         <div class="flex flex-1 flex-col overflow-y-auto  justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
             <div class="mx-auto w-full max-w-sm lg:w-96">
-
-
-                <div class="mt-2">
-
+                <div class="md:mt-2 mt-96 " >
                     <div class="mt-6 h-auto">
-                        <div>
+                        <div class="mt-96 md:mt-0">
                             <img class="h-12 w-auto" src="../assets/APCLogo.jpg" alt="Your Company" />
                             <h2 class="mt-2 text-3xl font-bold tracking-tight text-gray-900">Register Account</h2>
                         </div>
@@ -218,8 +215,8 @@
             <img class="absolute inset-0 h-full w-full object-cover" src=".././assets/suv2.webp" alt="" />
         </div>
     </div>
-    <PolicyModal :open-modal="showModal" @close-modal="handleCloseModal" />
-    <PrivacyModal :open-modal="showModalPrivacy" @close-modal="handleCloseModal" />
+    <PolicyModal :open-modal="showModal" @close-modal="handleCloseModal" @agree="handleAgree"/>
+    <PrivacyModal :open-modal="showModalPrivacy" @close-modal="handleCloseModal" @agreeTermsOfCondition="handleAgreeTermsOfCondition"/>
     <IndentificationReminder :open-modal="openIdentification" @close-modal="handleCloseModal" />
 </template>
 <script setup>
@@ -293,5 +290,15 @@ const handleCloseModal = () => {
     showModal.value = false
     showModalPrivacy.value = false
     openIdentification.value = false
+}
+
+const handleAgree = () => {
+    showModal.value = false
+    checkPrivacyAndPolicy.value = true
+}
+
+const handleAgreeTermsOfCondition = () => {
+    showModalPrivacy.value = false;
+    checkTermsAndConditions.value = true
 }
 </script>

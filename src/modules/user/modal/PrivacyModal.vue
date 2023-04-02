@@ -14,7 +14,7 @@
                         leave-from="opacity-100 translate-y-0 sm:scale-100"
                         leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
                         <DialogPanel
-                            class="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 w-2/5 sm:p-6">
+                            class="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 lg:w-2/5 xs:w-full sm:p-6">
                             <div>
                                 <div class="mx-auto flex text-center h-12 w-12 items-center rounded-full bg-green-100">
                                     <CheckIcon class="h-6 w-6 mx-auto text-green-600" aria-hidden="true" />
@@ -337,8 +337,11 @@
                             </div>
                             <div class="mt-5 sm:mt-6">
                                 <button type="button"
+                                    class="inline-flex w-full mb-2 justify-center rounded-md border border-transparent bg-cyan-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 sm:text-sm"
+                                    @click="handleAgree">Agree</button>
+                                <button type="button"
                                     class="inline-flex w-full justify-center rounded-md border border-transparent bg-cyan-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 sm:text-sm"
-                                    @click="handleCloseModal">Go back to register</button>
+                                    @click="handleCloseModal">Close</button>
                             </div>
                         </DialogPanel>
                     </TransitionChild>
@@ -358,10 +361,14 @@ const props = defineProps({
     },
 })
 
-const emit = defineEmits(['closeModal'])
+const emit = defineEmits(['closeModal', 'agreeTermsOfCondition'])
 const open = computed(() => props.openModal)
 
 const handleCloseModal = () => {
     emit('closeModal')
+}
+
+const handleAgree = () => {
+    emit('agreeTermsOfCondition')
 }
 </script>

@@ -27,16 +27,16 @@
                 </div>
               </TransitionChild>
               <div class="flex flex-shrink-0 items-center px-4">
-                <img class="h-8 w-auto" src="../../assets/APCLogo.jpg" alt="Easywire logo" /> Car Rental
+                <img class="h-8 mr-2 w-auto" src="../../assets/APCLogo.jpg" alt="Easywire logo" /> <span class="text-white">Car Rental</span>
               </div>
               <nav class="mt-5 h-full flex-shrink-0 divide-y divide-cyan-800 overflow-y-auto" aria-label="Sidebar">
                 <div class="space-y-1 px-2">
-                  <a v-for="item in navigation" :key="item.name" :href="item.href"
+                  <router-link v-for="item in navigation" :key="item.name" :to="{ name: item.routeName }"
                     :class="[item.current ? 'bg-cyan-800 text-white' : 'text-cyan-100 hover:text-white hover:bg-cyan-600', 'group flex items-center px-2 py-2 text-base font-medium rounded-md']"
                     :aria-current="item.current ? 'page' : undefined">
                     <component :is="item.icon" class="mr-4 h-6 w-6 flex-shrink-0 text-cyan-200" aria-hidden="true" />
                     {{ item.name }}
-                  </a>
+                  </router-link>
                 </div>
                 <div class="mt-6 pt-6">
                   <div class="space-y-1 px-2">

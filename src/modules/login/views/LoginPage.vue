@@ -14,7 +14,7 @@ const error = ref({
         password: []
 });
 const login = ref({
-    email: 'admin@gmail.com',
+    email: '',
     password: null
 });
 
