@@ -16,6 +16,13 @@ export const verifiedUser = (user) => {
     }
 }
 
+export const blockUser = async (user) => {
+    const res = await http().post('/user/block/'+user.id)
+    return {
+        data: res.data
+    }
+}
+
 export const updateAdmin = (admin) => {
     const data = ref(null)
     const errorData = ref(null)

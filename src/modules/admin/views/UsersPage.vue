@@ -14,11 +14,14 @@ import { fectUsersData } from '../components/users/composables/users-composables
 import { verifiedUser } from './../composables/admin-user-composable'
 import GNotification from '@/components/GNotification.vue';
 import VerifyUserModal from '../components/modals/VerifyUserModal.vue';
+import BlockUserModal from '../components/modals/BlockUserModal.vue';
 
 const router = useRouter()
 
 const openModal = ref(false)
 const showVerifyModal = ref(false)
+const showBlockUserModal = ref(false)
+const notificationMessage = ref('')
 const users = ref([])
 const loading = ref(true)
 const total = ref(0)
@@ -41,6 +44,7 @@ const handleClickAddVehicle = () => {
 const handleCloseAddVehicleModal = () => {
     openModal.value = false
     showVerifyModal.value = false
+    showBlockUserModal.value = false
 }
 
 const fetch = async () => {
@@ -61,7 +65,31 @@ const handleClickVerifiedUser = async (user) => {
     selectedUserData.value = user
 }
 
+const handleClickBlockUser = (user) => {
+    showBlockUserModal.value = true;
+    selectedUserData.value = user;
+}
+
 const handleVerifiedUser = (data) => {
+    notificationMessage.value = 'Successfully verified'
+    showNotif.value = true
+    users.value.map(user => {
+        if(user.id == data.id) {
+            for(let key in data) {
+                user[key] = data[key]
+            }
+        }
+
+        return user;
+    })
+    setTimeout(() => {
+        showNotif.value = false
+    }, 2000)
+    showVerifyModal.value = false
+}
+
+const handleBlockUser = (data) => { 
+    notificationMessage.value = `Successfully ${data.is_block ? 'unblock' : 'block' }`
     showNotif.value = true
     users.value.map(user => {
         if(user.id == data.id) {
@@ -76,7 +104,7 @@ const handleVerifiedUser = (data) => {
     setTimeout(() => {
         showNotif.value = false
     }, 2000)
-    showVerifyModal.value = false
+    showBlockUserModal.value = false
 }
 
 const handleUserName = (user) => {
@@ -138,7 +166,9 @@ watch(params.value, () => {
     <CreatevehicleModal :openModal="openModal" @closeModal="handleCloseAddVehicleModal" />
     <VerifyUserModal :open-modal="showVerifyModal" :selected-book="selectedUserData" @closeModal="handleCloseAddVehicleModal"
         @verifiedUser="handleVerifiedUser"/>
-    <GNotification :show-notif="showNotif" :message="'Successfully verified'"/>
+    <BlockUserModal :open-modal="showBlockUserModal" :selected-user="selectedUserData" @closeModal="handleCloseAddVehicleModal"
+        @blockUser="handleBlockUser"/>
+    <GNotification :show-notif="showNotif" :message="notificationMessage"/>
     <div class="w-full bg-white shadow">
         <div class="mx-auto max-w-2xl  py-4 px-4 lg:max-w-7xl lg:px-0">
             <h1 class="text-2xl font-bold tracking-tight text-gray-600 sm:text-3xl">Manage Users</h1>
@@ -223,6 +253,15 @@ watch(params.value, () => {
                                             class="inline-flex items-center rounded-md mr-2 border border-transparent bg-cyan-400 px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2">
                                             <XCircleIcon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
                                             {{loadingVerified ? 'Verifying' : 'Verify'}}
+                                        </button>
+                                        
+
+                                        <button type="button"
+                                            @click="handleClickBlockUser(user)"
+                                            :class="[user.is_block ? 'bg-yellow-500' : 'bg-red-400']"
+                                            class="inline-flex items-center rounded-md mr-2 border border-transparent px-2 py-1 text-sm font-sm leading-4 text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2">
+                                            <XCircleIcon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
+                                            {{user.is_block ? 'Unblock' : 'Block'}}
                                         </button>
                                     </td>
                                 </tr>
