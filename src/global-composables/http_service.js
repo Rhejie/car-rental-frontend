@@ -31,5 +31,5 @@ export function httpFile() {
 }
 
 export const storageUrl = () => {
-    return process.env.VUE_APP_API_URL + '/storage/'
+    return process.env.VUE_APP_API_URL
 }
